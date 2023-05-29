@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../supabase";
 import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import ChangeCircleIcon from "@mui/icons-material/changeCircle";
+import {ChangeCircle} from "@mui/icons-material";
 
 function TopBar() {
   const [name, setName] = useState<any>("");
@@ -24,7 +24,7 @@ function TopBar() {
           </Typography>
           {hasName && <Typography>Welcome back, {name}!</Typography>}
           <IconButton sx={{ color: "white" }} onClick={handleNameChangeClick}>
-            <ChangeCircleIcon />
+            <ChangeCircle />
           </IconButton>
           <Button
             variant="text"
