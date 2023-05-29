@@ -9,7 +9,7 @@ import HomeScreen from "./components/HomeScreen";
 const theme = createTheme({
   palette: {
     background: {
-      default: "#eee",
+      default: "#FCFFFA",
     },
   },
 });
