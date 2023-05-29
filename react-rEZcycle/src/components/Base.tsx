@@ -1,17 +1,25 @@
-import { ReactNode } from "react";
+// import { ReactNode } from "react";
+import { useState } from "react";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
-interface Props {
-  children: ReactNode;
-}
+// interface Props {
+//   curPage: string;
+//   onPageChange: (item: string) => void;
+//   // children: ReactNode;
+// }
 
-function Base({ children }: Props) {
+function Base() {
+  const [curPage, setCurPage] = useState<string>("home");
+
+  const handlePageChange = (newPage: string) => {
+    setCurPage(newPage);
+    console.log(`setCurPage to ${newPage}`);
+  };
+
   return (
     <>
-      <TopBar />
-      <SideBar />
-      {children}
+      <SideBar curPage={curPage} onPageChange={handlePageChange} />
     </>
   );
 }
