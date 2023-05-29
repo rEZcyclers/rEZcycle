@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 // import "./App.css";
 import { supabase } from "./supabase";
 import { Session } from "@supabase/supabase-js";
-import { ThemeProvider } from "@emotion/react";
-import { CssBaseline, createTheme } from "@mui/material";
+import { CssBaseline, createTheme, ThemeProvider } from "@mui/material";
 import LoginScreen from "./components/LoginScreen";
 import HomeScreen from "./components/HomeScreen";
 
 const theme = createTheme({
   palette: {
     background: {
-      default: "#FCFFFA",
+      default: "#eee",
     },
   },
 });
