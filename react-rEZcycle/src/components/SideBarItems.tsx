@@ -1,5 +1,10 @@
-import { Home } from "@mui/icons-material";
-import { Dashboard } from "@mui/icons-material";
+import {
+  Diversity1,
+  EventAvailable,
+  History,
+  Home,
+  Dashboard,
+} from "@mui/icons-material";
 
 export const SideBarItems = [
   {
@@ -14,17 +19,17 @@ export const SideBarItems = [
   },
   {
     name: "history",
-    icon: <Dashboard />,
+    icon: <History />,
     link: "/history",
   },
   {
     name: "friends",
-    icon: <Dashboard />,
+    icon: <Diversity1 />,
     link: "/friends",
   },
   {
     name: "calendar",
-    icon: <Dashboard />,
+    icon: <EventAvailable />,
     link: "/calendar",
   },
 ];
