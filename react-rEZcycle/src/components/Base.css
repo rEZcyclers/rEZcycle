@@ -4,19 +4,19 @@
     height: 100vh;
     display: flex;
     flex-wrap: nowrap;
-    background-color: rgb(179, 128, 128);
+    background-color: rgb(255, 255, 255);
 }
 
 .SideBar {
     height: 100%;
-    width: 25%;
-    max-width: 250px;
-    background-color: yellowgreen;
+    width: 25vw;
+    max-width: 200px;
+    background-color: rgb(64, 222, 143);
 }
 
 .WebPage {
-    width: 75%;
-    background-color: goldenrod;
+    width: 100vw;
+    background-color: rgb(227, 255, 191);
 }
 
 .SideBarList {
@@ -61,7 +61,7 @@
 }
 
 .TopBar {
-    background-color: rgba(29, 187, 5, 0.565);
+    background-color: rgb(67, 187, 83);
     padding: 0;
     border-bottom: solid green;
 }
