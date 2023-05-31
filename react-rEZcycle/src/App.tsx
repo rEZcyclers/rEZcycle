@@ -1,24 +1,20 @@
-import { CssBaseline, createTheme } from "@mui/material";
-import Base from "./components/Base";
-import HomePage from "./pages/HomePage";
+// import elements for react routing & sharing of state
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
 import { createContext, useEffect, useState } from "react";
+
+// import supabase database
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
+
+// import pages
+import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
+import LoginPage from "./pages/LoginPage";
 import HistoryPage from "./pages/HistoryPage";
 import FriendsPage from "./pages/FriendsPage";
 import CalendarPage from "./pages/CalendarPage";
 
-// const theme = createTheme({
-//   palette: {
-//     background: {
-//       default: "#FCFFFA",
-//     },
-//   },
-// });
-
+// App router logic
 const router = createBrowserRouter([
   {
     path: "/",
@@ -46,21 +42,23 @@ const router = createBrowserRouter([
   },
 ]);
 
-// Make loginStatus glboally available via loginContext
+// loginContext object allows for sharing of state globally as seen later on
 export const loginContext = createContext<Session | null>(null);
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
 
+  // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
     const subscription = supabase.auth.onAuthStateChange((event, session) => {
       setLoginStatus(session);
     });
-    console.log("useEffect called");
+    console.log("loginStatus changed");
     return () => subscription.data.subscription.unsubscribe();
   }, [loginStatus]);
 
   return (
+    // Make loginStatus glboally available to all pages via loginContext object
     <loginContext.Provider value={loginStatus}>
       <RouterProvider router={router} />
     </loginContext.Provider>

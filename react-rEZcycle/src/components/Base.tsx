@@ -1,19 +1,15 @@
-import { ReactNode } from "react";
-import SideBar from "./SideBar";
 import TopBar from "./TopBar";
+import SideBar from "./SideBar";
 import "./Base.css";
 import { CssBaseline } from "@mui/material";
+import { ReactNode } from "react";
 
 interface Props {
-  children: ReactNode;
+  children: ReactNode; // Page specific content
 }
 
+// Base layout component for every web page
 function Base({ children }: Props) {
-  // const handlePageChange = (newPage: string) => {
-  //   setCurPage(newPage);
-  //   console.log(`setCurPage to ${newPage}`);
-  // };
-
   return (
     <div>
       <CssBaseline />
