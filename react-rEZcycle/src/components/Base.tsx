@@ -19,7 +19,7 @@ function Base({ children }: Props) {
       <CssBaseline />
       <TopBar />
       <SideBar />
-      <div className="page">{children}</div>
+      <div className="WebPage">{children}</div>
     </div>
   );
 }
