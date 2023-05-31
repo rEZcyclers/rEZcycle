@@ -1,19 +1,22 @@
 /* styling for base layout */
 
+.FlexContainer {
+    height: 100vh;
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: rgb(179, 128, 128);
+}
+
 .SideBar {
     height: 100%;
-    width: 250px;
+    width: 25%;
+    max-width: 250px;
     background-color: yellowgreen;
-    display: inline-block;
-    position: absolute;
-    left: 0;
 }
 
 .WebPage {
-    display: inline-block;
-    position: absolute;
-    right: 0;
-    
+    width: 75%;
+    background-color: goldenrod;
 }
 
 .SideBarList {

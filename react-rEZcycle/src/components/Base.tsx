@@ -14,8 +14,10 @@ function Base({ children }: Props) {
     <div>
       <CssBaseline />
       <TopBar />
-      <SideBar />
-      <div className="WebPage">{children}</div>
+      <div className="FlexContainer">
+        <SideBar />
+        <div className="WebPage">{children}</div>
+      </div>
     </div>
   );
 }
