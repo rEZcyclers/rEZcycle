@@ -1,46 +1,11 @@
 // import elements for react routing & sharing of state
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { AppRouter } from "./AppRouter";
 import { createContext, useEffect, useState } from "react";
 
 // import supabase database
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
-
-// import pages
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
-import LoginPage from "./pages/LoginPage";
-import HistoryPage from "./pages/HistoryPage";
-import FriendsPage from "./pages/FriendsPage";
-import CalendarPage from "./pages/CalendarPage";
-
-// App router logic
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "profile",
-    element: <ProfilePage />,
-  },
-  {
-    path: "login",
-    element: <LoginPage />,
-  },
-  {
-    path: "history",
-    element: <HistoryPage />,
-  },
-  {
-    path: "friends",
-    element: <FriendsPage />,
-  },
-  {
-    path: "Calendar",
-    element: <CalendarPage />,
-  },
-]);
 
 // loginContext object allows for sharing of state globally as seen later on
 export const loginContext = createContext<Session | null>(null);
@@ -60,7 +25,7 @@ function App() {
   return (
     // Make loginStatus glboally available to all pages via loginContext object
     <loginContext.Provider value={loginStatus}>
-      <RouterProvider router={router} />
+      <RouterProvider router={AppRouter} />
     </loginContext.Provider>
   );
 }
