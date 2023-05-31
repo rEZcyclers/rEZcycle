@@ -2,6 +2,9 @@ import { Container } from "@mui/material";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../supabase";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginContext } from "../App";
 
 // To create a custom theme for the login page
 // const customTheme = {
@@ -16,7 +19,11 @@ import { supabase } from "../supabase";
 //   },
 // };
 
-export default function LoginScreen() {
+export default function LoginPage() {
+  const navigateTo = useNavigate();
+
+  const loginStatus = useContext(loginContext);
+
   return (
     <>
       <Container
@@ -37,6 +44,7 @@ export default function LoginScreen() {
           providers={[]}
         />
       </Container>
+      {loginStatus != null && navigateTo("/")}
     </>
   );
 }
