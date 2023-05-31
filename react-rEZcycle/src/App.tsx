@@ -46,7 +46,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-// For handling loginStatus
+// Make loginStatus glboally available via loginContext
 export const loginContext = createContext<Session | null>(null);
 
 function App() {
