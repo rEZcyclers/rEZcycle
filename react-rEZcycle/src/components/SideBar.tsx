@@ -13,7 +13,7 @@ function SideBar() {
               id={window.location.pathname == val.link ? "active" : ""}
               onClick={() => {}}
             >
-              <div id="icon">{val.icon}</div>{" "}
+              <div id="icon">{val.icon}</div>
               <div id="name">
                 <Link to={val.link}>{val.name}</Link>
               </div>
