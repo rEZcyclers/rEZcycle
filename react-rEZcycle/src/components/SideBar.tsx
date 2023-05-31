@@ -1,22 +1,22 @@
 import { SideBarItems } from "./SideBarItems";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SideBar() {
+  const navigateTo = useNavigate();
+
   return (
     <div className="SideBar">
-      <ul className="SideBarItems">
+      <ul className="SideBarList">
         {SideBarItems.map((val, key) => {
           return (
             <li
               key={key}
-              className="item"
+              className="SideBarItem"
               id={window.location.pathname == val.link ? "active" : ""}
-              onClick={() => {}}
+              onClick={() => navigateTo(val.link)}
             >
               <div id="icon">{val.icon}</div>
-              <div id="name">
-                <Link to={val.link}>{val.name}</Link>
-              </div>
+              <div id="name">{val.name}</div>
             </li>
           );
         })}
