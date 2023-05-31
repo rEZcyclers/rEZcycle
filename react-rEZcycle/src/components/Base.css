@@ -1,3 +1,5 @@
+/* styling for base layout */
+
 .SideBar {
     height: 100%;
     width: 250px;
@@ -14,13 +16,13 @@
     
 }
 
-.SideBarItems {
+.SideBarList {
     height: 100%;
     padding: 0;
     width: 100%;
 }
 
-.SideBarItems .item {
+.SideBarList .SideBarItem {
     width: 100%;
     height: 60px;
     /* border: 1px solid white; */
@@ -34,22 +36,22 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
-.SideBarItems .item:hover {
+.SideBarList .SideBarItem:hover {
     cursor: pointer;
     background-color: green;
 }
 
-.SideBarItems #active {
+.SideBarList #active {
     background-color: blueviolet;
 }
 
-.item #icon {
+.SideBarItem #icon {
     flex: 30%;
     display: grid;
     place-items: center;
 }
 
-.item #name {
+.SideBarItem #name {
     flex: 70%;
     font-size: larger;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'sLucida Sans Unicode', Geneva, Verdana, sans-serif;
