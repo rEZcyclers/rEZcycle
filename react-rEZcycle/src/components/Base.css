@@ -10,19 +10,21 @@
 .SideBar {
     height: 100%;
     width: 25vw;
-    max-width: 200px;
-    background-color: rgb(64, 222, 143);
+    min-width: 120px;
+    max-width: 190px;
+    background-color: rgb(41, 227, 134);
 }
 
 .WebPage {
     width: 100vw;
-    background-color: rgb(227, 255, 191);
+    padding-left: 3%;
 }
 
 .SideBarList {
     height: 100%;
     padding: 0;
     width: 100%;
+    margin-top: 0px;
 }
 
 .SideBarList .SideBarItem {
@@ -41,11 +43,11 @@
 
 .SideBarList .SideBarItem:hover {
     cursor: pointer;
-    background-color: green;
+    background-color: rgb(81, 208, 81);
 }
 
 .SideBarList #active {
-    background-color: blueviolet;
+    background-color: green;
 }
 
 .SideBarItem #icon {
@@ -56,12 +58,12 @@
 
 .SideBarItem #name {
     flex: 70%;
-    font-size: larger;
+    font-size: large;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'sLucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .TopBar {
-    background-color: rgb(67, 187, 83);
+    background-color: rgb(13, 172, 130);
     padding: 0;
-    border-bottom: solid green;
+    border-bottom: solid rgb(19, 161, 114);
 }
