@@ -20,7 +20,8 @@ function App() {
     });
     console.log("loginStatus changed");
     return () => subscription.data.subscription.unsubscribe();
-  }, [loginStatus]);
+  }, []); // Note: infinite useEffect() call occurs when loginStatus != null if
+  // loginStatus is included in dependency
 
   return (
     // Make loginStatus glboally available to all pages via loginContext object
