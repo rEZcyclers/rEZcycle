@@ -9,7 +9,7 @@ import { supabase } from "../supabase";
 // import UI elements
 import { Button, Toolbar, Typography } from "@mui/material";
 import { green, red } from "@mui/material/colors";
-import logo from "../images/logo.png";
+import logo from "../images/logov2.png";
 
 function TopBar() {
   const loginStatus = useContext(loginContext);
@@ -39,7 +39,7 @@ function TopBar() {
             margin: 0,
           }}
         >
-          <img src={logo} height={40} />
+          <img src={logo} height={35} />
         </Typography>
         <Button
           variant="text"
