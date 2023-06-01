@@ -3,7 +3,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../supabase";
 
-// import elements for react reacting & accessing loginStatus
+// import elements for react routing & accessing loginStatus
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginContext } from "../App";
