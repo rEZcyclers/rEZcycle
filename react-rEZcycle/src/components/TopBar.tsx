@@ -8,7 +8,8 @@ import { supabase } from "../supabase";
 
 // import UI elements
 import { Button, Toolbar, Typography } from "@mui/material";
-import { green } from "@mui/material/colors";
+import { green, red } from "@mui/material/colors";
+import logo from "../images/logo.png";
 
 function TopBar() {
   const loginStatus = useContext(loginContext);
@@ -25,15 +26,20 @@ function TopBar() {
 
   return (
     <div className="TopBar">
-      <Toolbar>
+      <Toolbar variant="dense">
         <Typography
           variant="h5"
           noWrap
           component="div"
-          sx={{ flexGrow: 1, paddingLeft: 5, color: green }}
+          sx={{
+            flexGrow: 1,
+            paddingLeft: 3,
+            display: "flex",
+            alignItems: "center",
+            margin: 0,
+          }}
         >
-          rEZcycle
-          {/* <img src="./icons/..." height={30} /> */}
+          <img src={logo} height={40} />
         </Typography>
         <Button
           variant="text"
