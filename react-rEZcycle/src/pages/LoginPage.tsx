@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { loginContext } from "../App";
 
 // import UI elements
-import { Container } from "@mui/material";
+import { Button, Container } from "@mui/material";
 
 export default function LoginPage() {
   const navigateTo = useNavigate();
@@ -21,14 +21,23 @@ export default function LoginPage() {
         maxWidth="xs"
         sx={{ height: "100vh", justifyContent: "center" }}
       >
-        <h1
-          style={{
-            textAlign: "center",
-            color: "green",
-          }}
-        >
-          Login to rEZcycle
-        </h1>
+        <div>
+          <Button
+            sx={{ margin: 0, fontSize: "small" }}
+            onClick={() => navigateTo("/")}
+          >
+            {"<"} Return to Home Page
+          </Button>
+          <h1
+            style={{
+              textAlign: "center",
+              color: "green",
+              marginTop: 0,
+            }}
+          >
+            Login to rEZcycle
+          </h1>
+        </div>
         <Auth
           supabaseClient={supabase}
           appearance={{ theme: ThemeSupa }}
