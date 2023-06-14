@@ -8,9 +8,6 @@ interface Props {
   setSelectedItems: (newArray: boolean[][]) => void;
 }
 const ChecklistPage = ({ stage, selectedItems, setSelectedItems }: Props) => {
-  const handleClick = () => {
-    console.log(selectedItems);
-  };
   return (
     <>
       <div>ChecklistPage</div>
