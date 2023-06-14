@@ -20,10 +20,6 @@ function EWaste(props: Props) {
       ...selected,
       [id]: selected[id] == "outlined" ? "filled" : "outlined",
     });
-    // props.setSelectedItems({
-    //   ...props.selectedItems,
-    //   [2]: { ...props.selectedItems[2], [id]: !props.selectedItems[2][id] },
-    // });
     props.setSelectedItems([
       props.selectedItems[0],
       props.selectedItems[1],

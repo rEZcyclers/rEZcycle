@@ -29,10 +29,6 @@ function Donatables(props: Props) {
       ],
       props.selectedItems[2],
     ]);
-    // props.setSelectedItems({
-    //   ...props.selectedItems,
-    //   [1]: { ...props.selectedItems[1], [id]: !props.selectedItems[1][id] },
-    // });
   };
 
   return (

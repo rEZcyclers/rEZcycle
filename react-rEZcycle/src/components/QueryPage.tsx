@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Recyclables from "./Recyclables";
-import Donatables from "./Donatables";
-import EWaste from "./EWaste";
+import Recyclables from "./QueryPageComponents/Recyclables";
+import Donatables from "./QueryPageComponents/Donatables";
+import EWaste from "./QueryPageComponents/EWaste";
 import { Button } from "@mui/material";
-import { useState } from "react";
 
 interface Props {
   stage: number;

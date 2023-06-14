@@ -1,7 +1,5 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import React, { useEffect } from "react";
 
 interface Props {
   stage: number;

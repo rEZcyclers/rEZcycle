@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Base from "../components/Base";
 import QueryPage from "../components/QueryPage";
 import ChecklistPage from "../components/ChecklistPage";
