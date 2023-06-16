@@ -2,6 +2,9 @@ import { useState } from "react";
 import Base from "../components/Base";
 import QueryPage from "../components/QueryPage";
 import ChecklistPage from "../components/ChecklistPage";
+import ResultsPage from "../components/ResultsPage";
+
+type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
 function HomePage() {
   const [selectedItems, setSelectedItems] = useState<boolean[][]>([
@@ -10,6 +13,18 @@ function HomePage() {
     new Array<boolean>(6).fill(false),
   ]);
   const [stage, setStage] = useState(1);
+
+  const [recyclableConditions, setRecyclableConditions] = useState(
+    selectedItems[0].map(() => false)
+  );
+
+  const [donatableConditions, setDonatableConditions] = useState<Condition[]>(
+    selectedItems[1].map(() => "")
+  );
+
+  const [eWasteConditions, setEWasteConditions] = useState<Condition[]>(
+    selectedItems[2].map(() => "")
+  );
 
   return (
     <Base>
@@ -20,12 +35,29 @@ function HomePage() {
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
         />
-      ) : (
+      ) : stage == 2 ? (
         <ChecklistPage
           stage={stage}
           setStage={setStage}
           selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
+          recyclableConditions={recyclableConditions}
+          setRecyclableConditions={setRecyclableConditions}
+          donatableConditions={donatableConditions}
+          setDonatableConditions={setDonatableConditions}
+          eWasteConditions={eWasteConditions}
+          setEWasteConditions={setEWasteConditions}
+        />
+      ) : (
+        <ResultsPage
+          stage={stage}
+          setStage={setStage}
+          selectedItems={selectedItems}
+          recyclableConditions={recyclableConditions}
+          setRecyclableConditions={setRecyclableConditions}
+          donatableConditions={donatableConditions}
+          setDonatableConditions={setDonatableConditions}
+          eWasteConditions={eWasteConditions}
+          setEWasteConditions={setEWasteConditions}
         />
       )}
     </Base>
