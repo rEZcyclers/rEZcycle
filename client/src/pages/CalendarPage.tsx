@@ -1,9 +1,9 @@
 import Base from "../components/Base";
 import { useContext } from "react";
-import { loginContext } from "../App";
+import { backendContext } from "../App";
 
 function CalendarPage() {
-  const loginStatus = useContext(loginContext);
+  const { loginStatus } = useContext(backendContext);
   return (
     <Base>
       {loginStatus == null ? (

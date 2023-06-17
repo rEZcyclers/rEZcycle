@@ -1,7 +1,7 @@
 // import elements for react routing & accessing loginStatus
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { loginContext } from "../App";
+import { backendContext } from "../App";
 
 // import supabase to handle logout
 import { supabase } from "../supabase";
@@ -11,7 +11,7 @@ import { Button, Toolbar, Typography } from "@mui/material";
 import logo from "../images/logov2.png";
 
 function TopBar() {
-  const loginStatus = useContext(loginContext);
+  const { loginStatus } = useContext(backendContext);
 
   const navigateTo = useNavigate();
 
