@@ -1,2 +1,2 @@
 # rEZcycle
-A simple web app meant to make recycling easier, NUS Orbital #5737
+A simple web app for making recycling easier, NUS Orbital #5737
