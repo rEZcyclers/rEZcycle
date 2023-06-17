@@ -14,7 +14,6 @@ interface Props {
 
 function QueryPage(props: Props) {
   const handleClick = () => {
-    console.log(props);
     props.setStage(2);
   };
   return (

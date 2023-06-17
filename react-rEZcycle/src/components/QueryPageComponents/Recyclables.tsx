@@ -112,6 +112,7 @@ export default Recyclables;
 // WARNING: this javascript object is for testing only: the id numbers are not accurate
 
 export const RecyclableItems = [
+  // Paper
   [
     {
       id: 1,
