@@ -8,7 +8,6 @@ import { supabase } from "../supabase";
 
 // import UI elements
 import { Button, Toolbar, Typography } from "@mui/material";
-import { green, red } from "@mui/material/colors";
 import logo from "../images/logov2.png";
 
 function TopBar() {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Base from "../components/Base";
-import QueryPage from "../components/QueryPage";
-import ChecklistPage from "../components/ChecklistPage";
+import QueryForm from "../components/QueryForm";
+import ChecklistForm from "../components/ChecklistForm";
 import ResultsPage from "../components/ResultsPage";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
@@ -29,14 +29,14 @@ function HomePage() {
   return (
     <Base>
       {stage == 1 ? (
-        <QueryPage
+        <QueryForm
           stage={stage}
           setStage={setStage}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
         />
       ) : stage == 2 ? (
-        <ChecklistPage
+        <ChecklistForm
           stage={stage}
           setStage={setStage}
           selectedItems={selectedItems}

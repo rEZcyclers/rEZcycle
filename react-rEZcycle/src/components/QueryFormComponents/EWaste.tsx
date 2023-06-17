@@ -7,12 +7,11 @@ interface Props {
   setSelectedItems: (newArray: boolean[][]) => void;
 }
 
-function Donatables(props: Props) {
+function EWaste(props: Props) {
   // Chip selection logic
-
   type Fill = "outlined" | "filled";
   const [selected, setSelected] = React.useState<Fill[]>(
-    DonatableItems.map(() => "outlined")
+    EWasteItems.map(() => "outlined")
   );
 
   const toggleSelected = (id: number) => {
@@ -22,18 +21,19 @@ function Donatables(props: Props) {
     });
     props.setSelectedItems([
       props.selectedItems[0],
+      props.selectedItems[1],
       [
-        ...props.selectedItems[1].slice(0, id),
-        !props.selectedItems[1][id],
-        ...props.selectedItems[1].slice(id + 1),
+        ...props.selectedItems[2].slice(0, id),
+        !props.selectedItems[2][id],
+        ...props.selectedItems[2].slice(id + 1),
       ],
-      props.selectedItems[2],
     ]);
   };
 
+  // Display chips
   return (
     <Box display="flex" sx={{ flexWrap: "wrap" }}>
-      {DonatableItems.map((item) => {
+      {EWasteItems.map((item) => {
         return (
           <Chip
             label={item["name"]}
@@ -47,43 +47,31 @@ function Donatables(props: Props) {
   );
 }
 
-export default Donatables;
+export default EWaste;
 
-export const DonatableItems = [
+export const EWasteItems = [
   {
     id: 1,
-    name: "Baby and children's items",
+    name: "ICT Equipment",
   },
   {
     id: 2,
-    name: "Bags and accessories",
+    name: "Batteries",
   },
   {
     id: 3,
-    name: "Books, Stationery",
+    name: "Bulbs & Lamps",
   },
   {
     id: 4,
-    name: "Clothing",
+    name: "Large Household Appliances",
   },
   {
     id: 5,
-    name: "Unexpired Dry or Canned Food",
+    name: "Electric Mobility Devices",
   },
   {
     id: 6,
-    name: "Furniture",
-  },
-  {
-    id: 7,
-    name: "Linen and Tableware",
-  },
-  {
-    id: 8,
-    name: "Shoes",
-  },
-  {
-    id: 9,
-    name: "Toys",
+    name: "Non-regulated E-waste",
   },
 ];

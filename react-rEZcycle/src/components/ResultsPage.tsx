@@ -1,6 +1,6 @@
-import { RecyclableItems } from "./QueryPageComponents/Recyclables";
-import { DonatableItems } from "./QueryPageComponents/Donatables";
-import { EWasteItems } from "./QueryPageComponents/EWaste";
+import { RecyclableItems } from "./QueryFormComponents/Recyclables";
+import { DonatableItems } from "./QueryFormComponents/Donatables";
+import { EWasteItems } from "./QueryFormComponents/EWaste";
 import { Box, Stack, Typography } from "@mui/material";
 
 interface Props {

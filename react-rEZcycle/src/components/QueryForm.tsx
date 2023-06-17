@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Recyclables from "./QueryPageComponents/Recyclables";
-import Donatables from "./QueryPageComponents/Donatables";
-import EWaste from "./QueryPageComponents/EWaste";
+import Recyclables from "./QueryFormComponents/Recyclables";
+import Donatables from "./QueryFormComponents/Donatables";
+import EWaste from "./QueryFormComponents/EWaste";
 import { Button } from "@mui/material";
 
 interface Props {
