@@ -23,6 +23,7 @@ interface Props {
 }
 
 function Recyclables(props: Props) {
+  // Modal popup logic
   const [open, setOpen] = React.useState(RecyclableItems.map(() => false));
 
   const handleOpen = (modalIndex: number) => {
@@ -39,7 +40,6 @@ function Recyclables(props: Props) {
   };
 
   // Chip selection logic
-
   type Fill = "outlined" | "filled";
   const [selected, setSelected] = React.useState<Fill[]>(
     RecyclableItems.flatMap((material) => material.map(() => "outlined"))
@@ -61,14 +61,15 @@ function Recyclables(props: Props) {
     ]);
   };
 
-  const recyclables = ["Paper", "Plastic", "Glass", "Metal", "Others"];
+  // Display chips
+  const categories = ["Paper", "Plastic", "Glass", "Metal", "Others"];
   return (
     <Box display="flex" sx={{ flexWrap: "wrap" }}>
       {RecyclableItems.map((material, modalIndex) => {
         return (
           <>
             <Chip
-              label={recyclables[modalIndex]}
+              label={categories[modalIndex]}
               onClick={() => handleOpen(modalIndex)}
               sx={{ mr: 1, mb: 1 }}
               variant="outlined"
