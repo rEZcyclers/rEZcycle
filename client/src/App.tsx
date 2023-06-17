@@ -12,7 +12,9 @@ export const backendContext = createContext<any>(null);
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
-  const [backendData, setBackendData] = useState<any>([]);
+  const [recyclablesData, setRecyclablesData] = useState<any>([]);
+  const [donatablesData, setDonatablesData] = useState<any>([]);
+  const [eWasteData, setEWasteData] = useState<any>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
@@ -20,22 +22,41 @@ function App() {
       setLoginStatus(session);
     });
     console.log("loginStatus changed");
+    // return a clean up function to clear the previous effect before the new one
     return () => subscription.data.subscription.unsubscribe();
   }, []); // Note: infinite useEffect() call occurs when loginStatus != null if
   // loginStatus is included in dependency
 
   // useEffect to fetch all backend data upon initialising App
   useEffect(() => {
-    fetch("http://localhost:8000/api")
+    fetch("http://localhost:8000/recyclables")
       .then((res) => res.json())
-      .then((data) => setBackendData(data))
-      .then(() => console.log("backendData fetched"))
+      .then((data) => setRecyclablesData(data))
+      .then(() => console.log("recyclablesData fetched"))
+      .catch((e) => console.log(e));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/donatables")
+      .then((res) => res.json())
+      .then((data) => setDonatablesData(data))
+      .then(() => console.log("donatablesData fetched"))
+      .catch((e) => console.log(e));
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/eWaste")
+      .then((res) => res.json())
+      .then((data) => setEWasteData(data))
+      .then(() => console.log("eWasteData fetched"))
       .catch((e) => console.log(e));
   }, []);
 
   return (
-    // Make loginStatus & backendData globally available to all pages via loginContext object
-    <backendContext.Provider value={{ loginStatus, backendData }}>
+    // Make loginStatus & backend data globally available to all pages via backendContext object
+    <backendContext.Provider
+      value={{ loginStatus, recyclablesData, donatablesData, eWasteData }}
+    >
       <RouterProvider router={AppRouter} />
     </backendContext.Provider>
   );

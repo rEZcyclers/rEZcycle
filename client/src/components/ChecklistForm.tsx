@@ -1,6 +1,5 @@
-import { RecyclableItems } from "./QueryFormComponents/Recyclables";
-import { DonatableItems } from "./QueryFormComponents/Donatables";
-import { EWasteItems } from "./QueryFormComponents/EWaste";
+import { useContext } from "react";
+import { backendContext } from "../App";
 import {
   Button,
   Checkbox,
@@ -16,6 +15,7 @@ import {
   Stack,
 } from "@mui/material";
 
+type Condition = "Good" | "Repairable" | "Spoilt" | "";
 interface Props {
   stage: number;
   setStage: (num: number) => void;
@@ -28,10 +28,7 @@ interface Props {
   setEWasteConditions: (newArray: Condition[]) => void;
 }
 
-const flatRecyclableItems = RecyclableItems.flatMap((cat) => cat);
-type Condition = "Good" | "Repairable" | "Spoilt" | "";
-
-const ChecklistPage = ({
+const ChecklistForm = ({
   setStage,
   selectedItems,
   recyclableConditions,
@@ -41,6 +38,11 @@ const ChecklistPage = ({
   eWasteConditions,
   setEWasteConditions,
 }: Props) => {
+  const { recyclablesData, donatablesData, eWasteData } =
+    useContext(backendContext);
+
+  const flatRecyclableItems = recyclablesData.flatMap((cat) => cat);
+
   // Keeping track of conditions of selected recyclables
   const handleRecyclableChange = (i: number) => {
     setRecyclableConditions([
@@ -68,8 +70,12 @@ const ChecklistPage = ({
     ]);
   };
 
-  const handleClick = () => {
+  const handleNextClick = () => {
     setStage(3);
+  };
+
+  const handleBackClick = () => {
+    setStage(1);
   };
 
   return (
@@ -155,7 +161,7 @@ const ChecklistPage = ({
                     </Select>
                   </FormControl>
                   <Typography variant="body1" sx={{ flex: 3 }}>
-                    {DonatableItems[index]["name"]}
+                    {donatablesData[index]["name"]}
                   </Typography>
                 </Stack>
               ))}
@@ -187,15 +193,26 @@ const ChecklistPage = ({
                     </Select>
                   </FormControl>
                   <Typography variant="body1" sx={{ flex: 3 }}>
-                    {EWasteItems[index]["name"]}
+                    {eWasteData[index]["name"]}
                   </Typography>
                 </Stack>
               ))}
           </Stack>
         </Box>
       </Stack>
-      <Box display="flex" justifyContent="right" sx={{ mt: 4 }}>
-        <Button variant="outlined" onClick={handleClick} sx={{ mr: 10 }}>
+      <Box
+        justifyContent="right"
+        sx={{
+          mt: 4,
+          display: "flex",
+          flexWrap: "nowrap",
+          flexDirection: "row",
+        }}
+      >
+        <Button variant="outlined" onClick={handleBackClick} sx={{ mr: 10 }}>
+          Back
+        </Button>
+        <Button variant="outlined" onClick={handleNextClick} sx={{ mr: 10 }}>
           Next
         </Button>
       </Box>
@@ -203,4 +220,4 @@ const ChecklistPage = ({
   );
 };
 
-export default ChecklistPage;
+export default ChecklistForm;

@@ -1,0 +1,40 @@
+const donatableItems = [
+  {
+    id: 1,
+    name: "Baby and children's items",
+  },
+  {
+    id: 2,
+    name: "Bags and accessories",
+  },
+  {
+    id: 3,
+    name: "Books, Stationery",
+  },
+  {
+    id: 4,
+    name: "Clothing",
+  },
+  {
+    id: 5,
+    name: "Unexpired Dry or Canned Food",
+  },
+  {
+    id: 6,
+    name: "Furniture",
+  },
+  {
+    id: 7,
+    name: "Linen and Tableware",
+  },
+  {
+    id: 8,
+    name: "Shoes",
+  },
+  {
+    id: 9,
+    name: "Toys",
+  },
+];
+
+module.exports = { donatableItems };

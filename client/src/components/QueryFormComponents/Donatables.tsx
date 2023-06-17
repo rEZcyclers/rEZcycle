@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import React from "react";
+import { useContext } from "react";
+import { backendContext } from "../../App";
 
 interface Props {
   selectedItems: boolean[][];
@@ -8,10 +10,12 @@ interface Props {
 }
 
 function Donatables(props: Props) {
+  const { donatablesData } = useContext(backendContext);
+
   // Chip selection logic
   type Fill = "outlined" | "filled";
   const [selected, setSelected] = React.useState<Fill[]>(
-    DonatableItems.map(() => "outlined")
+    props.selectedItems[1].map((sel) => (sel ? "filled" : "outlined"))
   );
 
   const toggleSelected = (id: number) => {
@@ -32,58 +36,26 @@ function Donatables(props: Props) {
 
   // Display chips
   return (
-    <Box display="flex" sx={{ flexWrap: "wrap" }}>
-      {DonatableItems.map((item) => {
-        return (
-          <Chip
-            label={item["name"]}
-            variant={selected[item["id"] - 1]}
-            onClick={() => toggleSelected(item["id"] - 1)}
-            sx={{ mr: 1, mb: 1 }}
-          />
-        );
-      })}
-    </Box>
+    <>
+      {!donatablesData ? (
+        <h1>Loading...</h1>
+      ) : (
+        <Box display="flex" sx={{ flexWrap: "wrap" }}>
+          {donatablesData.map((item: any) => {
+            return (
+              <Chip
+                key={item["id"]}
+                label={item["name"]}
+                variant={selected[item["id"] - 1]}
+                onClick={() => toggleSelected(item["id"] - 1)}
+                sx={{ mr: 1, mb: 1 }}
+              />
+            );
+          })}
+        </Box>
+      )}
+    </>
   );
 }
 
 export default Donatables;
-
-export const DonatableItems = [
-  {
-    id: 1,
-    name: "Baby and children's items",
-  },
-  {
-    id: 2,
-    name: "Bags and accessories",
-  },
-  {
-    id: 3,
-    name: "Books, Stationery",
-  },
-  {
-    id: 4,
-    name: "Clothing",
-  },
-  {
-    id: 5,
-    name: "Unexpired Dry or Canned Food",
-  },
-  {
-    id: 6,
-    name: "Furniture",
-  },
-  {
-    id: 7,
-    name: "Linen and Tableware",
-  },
-  {
-    id: 8,
-    name: "Shoes",
-  },
-  {
-    id: 9,
-    name: "Toys",
-  },
-];
