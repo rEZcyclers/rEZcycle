@@ -1,8 +1,8 @@
-import { RecyclableItems } from "./QueryFormComponents/Recyclables";
-import { DonatableItems } from "./QueryFormComponents/Donatables";
-import { EWasteItems } from "./QueryFormComponents/EWaste";
+import { useContext } from "react";
+import { backendContext } from "../App";
 import { Box, Stack, Typography } from "@mui/material";
 
+type Condition = "Good" | "Repairable" | "Spoilt" | "";
 interface Props {
   stage: number;
   setStage: (num: number) => void;
@@ -15,15 +15,17 @@ interface Props {
   setEWasteConditions: (newArray: Condition[]) => void;
 }
 
-const flatRecyclableItems = RecyclableItems.flatMap((cat) => cat);
-type Condition = "Good" | "Repairable" | "Spoilt" | "";
-
 const ResultsPage = ({
   selectedItems,
   recyclableConditions,
   donatableConditions,
   eWasteConditions,
 }: Props) => {
+  const { recyclablesData, donatablesData, eWasteData } =
+    useContext(backendContext);
+
+  const flatRecyclableItems = recyclablesData.flatMap((cat) => cat);
+
   return (
     <>
       <h1>Here's where to recycle your items</h1>
@@ -60,7 +62,7 @@ const ResultsPage = ({
             .filter((i) => i != -1 && donatableConditions[i] == "Good")
             .map((i) => (
               <Typography variant="body1">
-                {DonatableItems[i]["name"]}
+                {donatablesData[i]["name"]}
               </Typography>
             ))}
           <h4>Here's where to repair these items</h4>
@@ -69,7 +71,7 @@ const ResultsPage = ({
             .filter((i) => i != -1 && donatableConditions[i] == "Repairable")
             .map((i) => (
               <Typography variant="body1">
-                {DonatableItems[i]["name"]}
+                {donatablesData[i]["name"]}
               </Typography>
             ))}
         </Box>
@@ -80,14 +82,14 @@ const ResultsPage = ({
             .map((selected, i) => (selected ? i : -1))
             .filter((i) => i != -1 && eWasteConditions[i] == "Good")
             .map((i) => (
-              <Typography variant="body1">{EWasteItems[i]["name"]}</Typography>
+              <Typography variant="body1">{eWasteData[i]["name"]}</Typography>
             ))}
           <h4>Here's where to repair these items</h4>
           {selectedItems[2]
             .map((selected, i) => (selected ? i : -1))
             .filter((i) => i != -1 && eWasteConditions[i] == "Repairable")
             .map((i) => (
-              <Typography variant="body1">{EWasteItems[i]["name"]}</Typography>
+              <Typography variant="body1">{eWasteData[i]["name"]}</Typography>
             ))}
         </Box>
       </Stack>
@@ -107,13 +109,13 @@ const ResultsPage = ({
           .map((selected, i) => (selected ? i : -1))
           .filter((i) => i != -1 && donatableConditions[i] == "Spoilt")
           .map((i) => (
-            <Typography variant="body1">{DonatableItems[i]["name"]}</Typography>
+            <Typography variant="body1">{donatablesData[i]["name"]}</Typography>
           ))}
         {selectedItems[1]
           .map((selected, i) => (selected ? i : -1))
           .filter((i) => i != -1 && eWasteConditions[i] == "Spoilt")
           .map((i) => (
-            <Typography variant="body1">{EWasteItems[i]["name"]}</Typography>
+            <Typography variant="body1">{eWasteData[i]["name"]}</Typography>
           ))}
       </Stack>
     </>
