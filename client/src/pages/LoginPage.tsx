@@ -6,14 +6,14 @@ import { supabase } from "../supabase";
 // import elements for react routing & accessing loginStatus
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginContext } from "../App";
+import { backendContext } from "../App";
 
 // import UI elements
 import { Button, Container } from "@mui/material";
 
 export default function LoginPage() {
   const navigateTo = useNavigate();
-  const loginStatus = useContext(loginContext);
+  const { loginStatus } = useContext(backendContext);
 
   return (
     <>

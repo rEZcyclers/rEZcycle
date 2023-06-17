@@ -8,10 +8,11 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 
 // loginContext object allows for sharing of state globally as seen later on
-export const loginContext = createContext<Session | null>(null);
+export const backendContext = createContext<any>(null);
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
+  const [backendData, setBackendData] = useState<any>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
@@ -23,11 +24,20 @@ function App() {
   }, []); // Note: infinite useEffect() call occurs when loginStatus != null if
   // loginStatus is included in dependency
 
+  // useEffect to fetch all backend data upon initialising App
+  useEffect(() => {
+    fetch("http://localhost:8000/api")
+      .then((res) => res.json())
+      .then((data) => setBackendData(data))
+      .then(() => console.log("backendData fetched"))
+      .catch((e) => console.log(e));
+  }, []);
+
   return (
-    // Make loginStatus glboally available to all pages via loginContext object
-    <loginContext.Provider value={loginStatus}>
+    // Make loginStatus & backendData globally available to all pages via loginContext object
+    <backendContext.Provider value={{ loginStatus, backendData }}>
       <RouterProvider router={AppRouter} />
-    </loginContext.Provider>
+    </backendContext.Provider>
   );
 }
 

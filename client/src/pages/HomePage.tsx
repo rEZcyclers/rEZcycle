@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useContext } from "react";
+import { backendContext } from "../App";
 import Base from "../components/Base";
 import QueryForm from "../components/QueryForm";
 import ChecklistForm from "../components/ChecklistForm";
@@ -7,6 +9,10 @@ import ResultsPage from "../components/ResultsPage";
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
 function HomePage() {
+  // use backendData state
+  const { backendData } = useContext(backendContext);
+
+  // states required for finding results: selected items & their conditions
   const [selectedItems, setSelectedItems] = useState<boolean[][]>([
     new Array<boolean>(26).fill(false),
     new Array<boolean>(9).fill(false),
@@ -28,6 +34,11 @@ function HomePage() {
 
   return (
     <Base>
+      <ul>
+        {backendData?.map((item: any) => {
+          return <li>{item}</li>;
+        })}
+      </ul>
       {stage == 1 ? (
         <QueryForm
           stage={stage}
