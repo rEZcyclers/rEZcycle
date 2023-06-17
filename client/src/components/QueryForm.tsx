@@ -12,7 +12,7 @@ interface Props {
   setSelectedItems: (newArray: boolean[][]) => void;
 }
 
-function QueryPage(props: Props) {
+function QueryForm(props: Props) {
   const handleClick = () => {
     props.setStage(2);
   };
@@ -54,4 +54,4 @@ function QueryPage(props: Props) {
   );
 }
 
-export default QueryPage;
+export default QueryForm;
