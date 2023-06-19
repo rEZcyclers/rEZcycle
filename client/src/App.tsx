@@ -20,6 +20,7 @@ function App() {
   useEffect(() => {
     const subscription = supabase.auth.onAuthStateChange((event, session) => {
       setLoginStatus(session);
+      console.log(event);
     });
     console.log("loginStatus changed");
     // return a clean up function to clear the previous effect before the new one
@@ -55,7 +56,12 @@ function App() {
   return (
     // Make loginStatus & backend data globally available to all pages via backendContext object
     <backendContext.Provider
-      value={{ loginStatus, recyclablesData, donatablesData, eWasteData }}
+      value={{
+        loginStatus,
+        recyclablesData,
+        donatablesData,
+        eWasteData,
+      }}
     >
       <RouterProvider router={AppRouter} />
     </backendContext.Provider>
