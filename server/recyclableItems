@@ -155,21 +155,6 @@ const recyclableItems = [
       checklist: "Make sure it is clean before recycling",
     },
   ],
-  //Others
-  [
-    {
-      id: 25,
-      name: "WRITING PAPER",
-      blueBin_Eligibility: 1,
-      checklist: "Make sure it is clean before recycling",
-    },
-    {
-      id: 26,
-      name: "NEWSPAPER",
-      blueBin_Eligibility: 1,
-      checklist: "Make sure it is clean before recycling",
-    },
-  ],
 ];
 
 module.exports = { recyclableItems };
