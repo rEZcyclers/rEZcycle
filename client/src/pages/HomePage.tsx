@@ -9,7 +9,7 @@ type Condition = "Good" | "Repairable" | "Spoilt" | "";
 function HomePage() {
   // states required for finding results: selected items & their conditions
   const [selectedItems, setSelectedItems] = useState<boolean[][]>([
-    new Array<boolean>(26).fill(false),
+    new Array<boolean>(62).fill(false),
     new Array<boolean>(9).fill(false),
     new Array<boolean>(6).fill(false),
   ]);
