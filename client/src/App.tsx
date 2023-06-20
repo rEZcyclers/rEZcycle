@@ -35,21 +35,24 @@ export type DonateLocation = {
   donate_id: number;
   organisation_name: string;
   address: string;
+  contact: string;
+  reuse_channel: string;
 };
 
 export type RepairLocation = {
   repair_id: number;
-  organisation_name: string;
-  address: string;
+  center_name: string;
+  stall_number: string;
+  repair_type: string;
 };
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
-  const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[][]>(
-    []
-  );
+  const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
   const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
   const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
+  const [donateLocData, setDonateLocData] = useState<DonateLocation[]>([]);
+  const [repairLocData, setRepairLocData] = useState<RepairLocation[]>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
