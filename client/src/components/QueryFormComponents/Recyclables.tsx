@@ -3,9 +3,9 @@ import Chip from "@mui/material/Chip";
 import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import React, { useEffect } from "react";
-import { useContext } from "react";
-import { backendContext, RecyclableItem } from "../../App";
+import { useContext, useState } from "react";
+import { backendContext } from "../../App";
+import { RecyclableItem } from "../../DataTypes";
 
 const style = {
   position: "absolute" as "absolute",
@@ -28,9 +28,7 @@ function Recyclables(props: Props) {
   const { recyclablesData } = useContext(backendContext);
 
   // Modal popup logic
-  const [open, setOpen] = React.useState(
-    props.selectedItems[0].map(() => false)
-  );
+  const [open, setOpen] = useState(props.selectedItems[0].map(() => false));
 
   const handleOpen = (modalIndex: number) => {
     setOpen({
@@ -47,7 +45,7 @@ function Recyclables(props: Props) {
 
   // Chip selection logic
   type Fill = "outlined" | "filled";
-  const [selectedChips, setSelectedChips] = React.useState<Fill[]>(
+  const [selectedChips, setSelectedChips] = useState<Fill[]>(
     props.selectedItems[0].map((sel) => (sel ? "filled" : "outlined"))
   );
 
