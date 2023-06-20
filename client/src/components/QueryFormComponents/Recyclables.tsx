@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { useContext } from "react";
-import { backendContext } from "../../App";
+import { backendContext, RecyclableItem } from "../../App";
 
 const style = {
   position: "absolute" as "absolute",
@@ -75,47 +75,49 @@ function Recyclables(props: Props) {
         <h1>Loading...</h1>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
-          {recyclablesData.map((material, modalIndex) => {
-            return (
-              <>
-                <Chip
-                  key={modalIndex}
-                  label={categories[modalIndex]}
-                  onClick={() => handleOpen(modalIndex)}
-                  sx={{ mr: 1, mb: 1 }}
-                  variant="outlined"
-                />
-                <Modal
-                  open={open[modalIndex]}
-                  onClose={() => handleClose(modalIndex)}
-                >
-                  <Box sx={style}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h6"
-                      component="h2"
-                      sx={{ mb: 1 }}
-                    >
-                      Choose Items
-                    </Typography>
-                    <Stack direction="row" sx={{ flexWrap: "wrap" }}>
-                      {material.map((item) => {
-                        return (
-                          <Chip
-                            key={item["id"]}
-                            label={item["name"]}
-                            variant={selected[item["id"] - 1]}
-                            onClick={() => toggleSelected(item["id"] - 1)}
-                            sx={{ mr: 1, mb: 1 }}
-                          />
-                        );
-                      })}
-                    </Stack>
-                  </Box>
-                </Modal>
-              </>
-            );
-          })}
+          {recyclablesData.map(
+            (material: RecyclableItem[], modalIndex: number) => {
+              return (
+                <>
+                  <Chip
+                    key={modalIndex}
+                    label={categories[modalIndex]}
+                    onClick={() => handleOpen(modalIndex)}
+                    sx={{ mr: 1, mb: 1 }}
+                    variant="outlined"
+                  />
+                  <Modal
+                    open={open[modalIndex]}
+                    onClose={() => handleClose(modalIndex)}
+                  >
+                    <Box sx={style}>
+                      <Typography
+                        id="modal-modal-title"
+                        variant="h6"
+                        component="h2"
+                        sx={{ mb: 1 }}
+                      >
+                        Choose Items
+                      </Typography>
+                      <Stack direction="row" sx={{ flexWrap: "wrap" }}>
+                        {material.map((item) => {
+                          return (
+                            <Chip
+                              key={item["id"]}
+                              label={item["name"]}
+                              variant={selected[item["id"] - 1]}
+                              onClick={() => toggleSelected(item["id"] - 1)}
+                              sx={{ mr: 1, mb: 1 }}
+                            />
+                          );
+                        })}
+                      </Stack>
+                    </Box>
+                  </Modal>
+                </>
+              );
+            }
+          )}
         </Box>
       )}
     </>

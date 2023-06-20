@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import React from "react";
 import { useContext } from "react";
-import { backendContext } from "../../App";
+import { EWasteItem, backendContext } from "../../App";
 
 interface Props {
   selectedItems: boolean[][];
@@ -41,7 +41,7 @@ function EWaste(props: Props) {
         <h1>Loading...</h1>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
-          {eWasteData.map((item) => {
+          {eWasteData.map((item: EWasteItem) => {
             return (
               <Chip
                 key={item["id"]}

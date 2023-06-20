@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import React from "react";
 import { useContext } from "react";
-import { backendContext } from "../../App";
+import { DonatableItem, backendContext } from "../../App";
 
 interface Props {
   selectedItems: boolean[][];
@@ -41,7 +41,7 @@ function Donatables(props: Props) {
         <h1>Loading...</h1>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
-          {donatablesData.map((item: any) => {
+          {donatablesData.map((item: DonatableItem) => {
             return (
               <Chip
                 key={item["id"]}
