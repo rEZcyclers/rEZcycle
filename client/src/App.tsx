@@ -45,9 +45,11 @@ export type RepairLocation = {
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
-  const [recyclablesData, setRecyclablesData] = useState<any>([]);
-  const [donatablesData, setDonatablesData] = useState<any>([]);
-  const [eWasteData, setEWasteData] = useState<any>([]);
+  const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[][]>(
+    []
+  );
+  const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
+  const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
