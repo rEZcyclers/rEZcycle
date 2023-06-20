@@ -10,11 +10,31 @@ import { supabase } from "./supabase";
 // loginContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
 
+// Defining types
+export type RecyclableItem = {
+  id: number;
+  name: string;
+  blueBin_Eligibility: number;
+  checklist: string;
+};
+
+export type DonatableItem = {
+  id: number;
+  name: string;
+};
+
+export type EWasteItem = {
+  id: number;
+  name: string;
+};
+
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
-  const [recyclablesData, setRecyclablesData] = useState<any>([]);
-  const [donatablesData, setDonatablesData] = useState<any>([]);
-  const [eWasteData, setEWasteData] = useState<any>([]);
+  const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[][]>(
+    []
+  );
+  const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
+  const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
