@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import React from "react";
-import { useContext } from "react";
-import { EWasteItem, backendContext } from "../../App";
+import { useContext, useState } from "react";
+import { backendContext } from "../../App";
+import { EWasteItem } from "../../DataTypes";
 
 interface Props {
   selectedItems: boolean[][];
@@ -14,7 +14,7 @@ function EWaste(props: Props) {
 
   // Chip selection logic
   type Fill = "outlined" | "filled";
-  const [selectedChips, setSelectedChips] = React.useState<Fill[]>(
+  const [selectedChips, setSelectedChips] = useState<Fill[]>(
     props.selectedItems[2].map((sel) => (sel ? "filled" : "outlined"))
   );
 

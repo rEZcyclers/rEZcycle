@@ -6,45 +6,20 @@ import { createContext, useEffect, useState } from "react";
 // import supabase database
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
+import {
+  RecyclableItem,
+  DonatableItem,
+  EWasteItem,
+  DonateLocation,
+  RepairLocation,
+  DDLoc,
+  DRLoc,
+  EDLoc,
+  ERLoc,
+} from "./DataTypes";
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
-
-// Defining types
-export type RecyclableItem = {
-  recyclable_id: number;
-  material: string;
-  name: string;
-  bluebin_eligibility: number;
-  checklist: string;
-};
-
-export type DonatableItem = {
-  donatable_id: number;
-  donatable_type: string;
-  description: string;
-};
-
-export type EWasteItem = {
-  eWaste_id: number;
-  eWaste_type: string;
-  description: string;
-};
-
-export type DonateLocation = {
-  donate_id: number;
-  organisation_name: string;
-  address: string;
-  contact: string;
-  reuse_channel: string;
-};
-
-export type RepairLocation = {
-  repair_id: number;
-  center_name: string;
-  stall_number: string;
-  repair_type: string;
-};
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
@@ -53,6 +28,10 @@ function App() {
   const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
   const [donateLocData, setDonateLocData] = useState<DonateLocation[]>([]);
   const [repairLocData, setRepairLocData] = useState<RepairLocation[]>([]);
+  const [DDLocData, setDDLocData] = useState<DDLoc[]>([]);
+  const [DRLocData, setDRLocData] = useState<DRLoc[]>([]);
+  const [EDLocData, setEDLocData] = useState<EDLoc[]>([]);
+  const [ERLocData, setERLocData] = useState<ERLoc[]>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
@@ -66,45 +45,113 @@ function App() {
   }, []); // Note: infinite useEffect() call occurs when loginStatus != null if
   // loginStatus is included in dependency
 
-  // useEffect to fetch all backend data directly from Supabase instead of server for now
-  useEffect(() => {
-    const fetchRecyclablesData = async () => {
-      const { data, error } = await supabase.from("Recyclables").select();
-      if (data) {
-        setRecyclablesData(data);
-        console.log("recyclablesData fetched");
-      } else {
-        console.log(error);
-      }
-    };
+  // Below are all the async functions needed for fetching backend data.
+  // 'data' is set to a default type from supabase which causes the type
+  // mismatch warning, but types are actually assignable and work, need to
+  // find some way to suppress the warning
+  const fetchRecyclablesData = async () => {
+    const { data, error } = await supabase.from("Recyclables").select();
+    if (data) {
+      setRecyclablesData(data);
+      console.log("recyclablesData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchDonatablesData = async () => {
+    const { data, error } = await supabase.from("Donatables").select();
+    if (data) {
+      setDonatablesData(data);
+      console.log("donatablesData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchEWasteData = async () => {
+    const { data, error } = await supabase.from("EWaste").select();
+    if (data) {
+      setEWasteData(data);
+      console.log("eWasteData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchDonateLocationsData = async () => {
+    const { data, error } = await supabase.from("DonateLocations").select();
+    if (data) {
+      setDonateLocData(data);
+      console.log("donateLocationsData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchRepairLocationsData = async () => {
+    const { data, error } = await supabase.from("RepairLocations").select();
+    if (data) {
+      setRepairLocData(data);
+      console.log("repairLocationsData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchDDLocationsData = async () => {
+    const { data, error } = await supabase
+      .from("DonatablesDonateLocations")
+      .select();
+    if (data) {
+      setDDLocData(data);
+      console.log("donatablesDonateLocationsData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchDRLocationsData = async () => {
+    const { data, error } = await supabase
+      .from("DonatablesRepairLocations")
+      .select();
+    if (data) {
+      setDRLocData(data);
+      console.log("donatablesRepairLocationsData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchEDLocationsData = async () => {
+    const { data, error } = await supabase
+      .from("EWasteDonateLocations")
+      .select();
+    if (data) {
+      setEDLocData(data);
+      console.log("eWasteDonateLocationsData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  const fetchERLocationsData = async () => {
+    const { data, error } = await supabase
+      .from("EWasteRepairLocations")
+      .select();
+    if (data) {
+      setERLocData(data);
+      console.log("eWasteRepairLocationsData fetched");
+    } else {
+      console.log(error);
+    }
+  };
+  function fetchBackendData() {
     fetchRecyclablesData();
-  }, []);
-
-  useEffect(() => {
-    const fetchDonatablesData = async () => {
-      const { data, error } = await supabase.from("Donatables").select();
-      if (data) {
-        setDonatablesData(data);
-        console.log("donatablesData fetched");
-      } else {
-        console.log(error);
-      }
-    };
     fetchDonatablesData();
-  }, []);
-
-  useEffect(() => {
-    const fetchEWasteData = async () => {
-      const { data, error } = await supabase.from("EWaste").select();
-      if (data) {
-        setEWasteData(data);
-        console.log("eWasteData fetched");
-      } else {
-        console.log(error);
-      }
-    };
     fetchEWasteData();
-  }, []);
+    fetchDonateLocationsData();
+    fetchRepairLocationsData();
+    fetchDDLocationsData();
+    fetchDRLocationsData();
+    fetchEDLocationsData();
+    fetchERLocationsData();
+  }
+
+  // useEffect to fetch all backend data directly from Supabase instead of server upon initialisation
+  useEffect(() => fetchBackendData(), []);
 
   return (
     // Make loginStatus & backend data globally available to all pages via backendContext object
@@ -114,6 +161,12 @@ function App() {
         recyclablesData,
         donatablesData,
         eWasteData,
+        donateLocData,
+        repairLocData,
+        DDLocData,
+        DRLocData,
+        EDLocData,
+        ERLocData,
       }}
     >
       <RouterProvider router={AppRouter} />

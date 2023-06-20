@@ -7,12 +7,13 @@ import ResultsPage from "../components/ResultsPage";
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
 function HomePage() {
-  // states required for finding results: selected items & their conditions
+  // states required for finding results: selected items, their conditions, & which form we're at
   const [selectedItems, setSelectedItems] = useState<boolean[][]>([
     new Array<boolean>(62).fill(false),
     new Array<boolean>(9).fill(false),
     new Array<boolean>(6).fill(false),
   ]);
+
   const [stage, setStage] = useState(1);
 
   const [recyclableConditions, setRecyclableConditions] = useState(

@@ -87,6 +87,7 @@ function ChecklistForm({
       <FormControlLabel
         control={
           <Checkbox
+            checked={recyclableConditions[index]}
             sx={{
               mt: -1,
             }}
