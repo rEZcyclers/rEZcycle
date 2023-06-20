@@ -14,14 +14,14 @@ function EWaste(props: Props) {
 
   // Chip selection logic
   type Fill = "outlined" | "filled";
-  const [selected, setSelected] = React.useState<Fill[]>(
+  const [selectedChips, setSelectedChips] = React.useState<Fill[]>(
     props.selectedItems[2].map((sel) => (sel ? "filled" : "outlined"))
   );
 
-  const toggleSelected = (id: number) => {
-    setSelected({
-      ...selected,
-      [id]: selected[id] == "outlined" ? "filled" : "outlined",
+  const toggleChipSelect = (id: number) => {
+    setSelectedChips({
+      ...selectedChips,
+      [id]: selectedChips[id] == "outlined" ? "filled" : "outlined",
     });
     props.setSelectedItems([
       props.selectedItems[0],
@@ -37,17 +37,17 @@ function EWaste(props: Props) {
   // Display chips
   return (
     <>
-      {!eWasteData ? (
-        <h1>Loading...</h1>
+      {eWasteData.length === 0 ? (
+        <h3>Loading...</h3>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
           {eWasteData.map((item: EWasteItem) => {
             return (
               <Chip
-                key={item["id"]}
-                label={item["name"]}
-                variant={selected[item["id"] - 1]}
-                onClick={() => toggleSelected(item["id"] - 1)}
+                key={item["eWaste_id"]}
+                label={item["eWaste_type"]}
+                variant={selectedChips[item["eWaste_id"] - 1]}
+                onClick={() => toggleChipSelect(item["eWaste_id"] - 1)}
                 sx={{ mr: 1, mb: 1 }}
               />
             );

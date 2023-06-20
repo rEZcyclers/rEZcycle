@@ -14,14 +14,14 @@ function Donatables(props: Props) {
 
   // Chip selection logic
   type Fill = "outlined" | "filled";
-  const [selected, setSelected] = React.useState<Fill[]>(
+  const [selectedChips, setSelectedChips] = React.useState<Fill[]>(
     props.selectedItems[1].map((sel) => (sel ? "filled" : "outlined"))
   );
 
-  const toggleSelected = (id: number) => {
-    setSelected({
-      ...selected,
-      [id]: selected[id] == "outlined" ? "filled" : "outlined",
+  const toggleChipSelect = (id: number) => {
+    setSelectedChips({
+      ...selectedChips,
+      [id]: selectedChips[id] == "outlined" ? "filled" : "outlined",
     });
     props.setSelectedItems([
       props.selectedItems[0],
@@ -37,17 +37,17 @@ function Donatables(props: Props) {
   // Display chips
   return (
     <>
-      {!donatablesData ? (
-        <h1>Loading...</h1>
+      {donatablesData.length === 0 ? (
+        <h3>Loading...</h3>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
           {donatablesData.map((item: DonatableItem) => {
             return (
               <Chip
-                key={item["id"]}
-                label={item["name"]}
-                variant={selected[item["id"] - 1]}
-                onClick={() => toggleSelected(item["id"] - 1)}
+                key={item["donatable_id"]}
+                label={item["donatable_type"]}
+                variant={selectedChips[item["donatable_id"] - 1]}
+                onClick={() => toggleChipSelect(item["donatable_id"] - 1)}
                 sx={{ mr: 1, mb: 1 }}
               />
             );

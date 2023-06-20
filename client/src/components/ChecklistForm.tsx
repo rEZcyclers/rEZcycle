@@ -42,9 +42,6 @@ function ChecklistForm({
   const { recyclablesData, donatablesData, eWasteData } =
     useContext(backendContext);
 
-  // Converts an array of arrays to just a single array
-  const flatRecyclableItems = recyclablesData.flatMap((cat) => cat);
-
   // Keeps track of conditions of selected recyclables
   const handleRecyclableChange = (i: number) => {
     setRecyclableConditions([
@@ -81,11 +78,12 @@ function ChecklistForm({
   };
 
   const recyclablesChecklist = selectedItems[0]
+    .map((selected, index) => (selected ? index : -1))
     .filter(
-      (selected, index) =>
-        selected && flatRecyclableItems[index]["blueBin_Eligibility"] != 0
+      (index) =>
+        index != -1 && recyclablesData[index]["bluebin_eligibility"] != 0
     )
-    .map((selected, index) => (
+    .map((index) => (
       <FormControlLabel
         control={
           <Checkbox
@@ -96,9 +94,9 @@ function ChecklistForm({
           />
         }
         label={
-          flatRecyclableItems[index]["name"] +
+          recyclablesData[index]["name"] +
           ": " +
-          flatRecyclableItems[index]["checklist"]
+          recyclablesData[index]["checklist"]
         }
         sx={{ alignItems: "flex-start" }}
       />
@@ -107,17 +105,16 @@ function ChecklistForm({
   const unrecyclables = selectedItems[0]
     .filter(
       (selected, index) =>
-        selected && flatRecyclableItems[index]["blueBin_Eligibility"] == 0
+        selected && recyclablesData[index]["blueBin_Eligibility"] == 0
     )
     .map((selected, index) => (
-      <Typography variant="body1">
-        {flatRecyclableItems[index]["name"]}
-      </Typography>
+      <Typography variant="body1">{recyclablesData[index]["name"]}</Typography>
     ));
 
   const donatablesChecklist = selectedItems[1]
-    .filter((selected) => selected)
-    .map((selected, index) => (
+    .map((selected, index) => (selected ? index : -1))
+    .filter((index) => index != -1)
+    .map((index) => (
       <Stack direction="row" spacing={2} alignItems="center">
         <FormControl fullWidth sx={{ flex: 2 }}>
           <InputLabel id="demo-simple-select-label">Condition</InputLabel>
@@ -134,14 +131,15 @@ function ChecklistForm({
           </Select>
         </FormControl>
         <Typography variant="body1" sx={{ flex: 3 }}>
-          {donatablesData[index]["name"]}
+          {donatablesData[index]["donatable_type"]}
         </Typography>
       </Stack>
     ));
 
   const eWasteChecklist = selectedItems[2]
-    .filter((selected) => selected)
-    .map((selected, index) => (
+    .map((selected, index) => (selected ? index : -1))
+    .filter((index) => index != -1)
+    .map((index) => (
       <Stack direction="row" spacing={2} alignItems="center">
         <FormControl fullWidth sx={{ flex: 2 }}>
           <InputLabel id="demo-simple-select-label">Condition</InputLabel>
@@ -158,7 +156,7 @@ function ChecklistForm({
           </Select>
         </FormControl>
         <Typography variant="body1" sx={{ flex: 3 }}>
-          {eWasteData[index]["name"]}
+          {eWasteData[index]["eWaste_type"]}
         </Typography>
       </Stack>
     ));

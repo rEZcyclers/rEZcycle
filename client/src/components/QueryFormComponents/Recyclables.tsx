@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import Modal from "@mui/material/Modal";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { backendContext, RecyclableItem } from "../../App";
 
@@ -12,7 +12,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 800,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -47,14 +47,14 @@ function Recyclables(props: Props) {
 
   // Chip selection logic
   type Fill = "outlined" | "filled";
-  const [selected, setSelected] = React.useState<Fill[]>(
+  const [selectedChips, setSelectedChips] = React.useState<Fill[]>(
     props.selectedItems[0].map((sel) => (sel ? "filled" : "outlined"))
   );
 
-  const toggleSelected = (id: number) => {
-    setSelected({
-      ...selected,
-      [id]: selected[id] == "outlined" ? "filled" : "outlined",
+  const toggleChipSelect = (id: number) => {
+    setSelectedChips({
+      ...selectedChips,
+      [id]: selectedChips[id] == "outlined" ? "filled" : "outlined",
     });
     props.setSelectedItems([
       [
@@ -68,14 +68,28 @@ function Recyclables(props: Props) {
   };
 
   // Display chips
-  const categories = ["Paper", "Plastic", "Glass", "Metal", "Others"];
+  const categories = ["Paper", "Plastic", "Glass", "Metal"];
+  const paperArr = recyclablesData.filter(
+    (item: RecyclableItem) => item["material"] === "PAPER"
+  );
+  const plasticArr = recyclablesData.filter(
+    (item: RecyclableItem) => item["material"] === "PLASTIC"
+  );
+  const glassArr = recyclablesData.filter(
+    (item: RecyclableItem) => item["material"] === "GLASS"
+  );
+  const metalArr = recyclablesData.filter(
+    (item: RecyclableItem) => item["material"] === "METAL"
+  );
+  const recyclablesByMaterial = [paperArr, plasticArr, glassArr, metalArr];
+
   return (
     <>
-      {!recyclablesData ? (
-        <h1>Loading...</h1>
+      {recyclablesData.length === 0 ? (
+        <h3>Loading...</h3>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
-          {recyclablesData.map(
+          {recyclablesByMaterial.map(
             (material: RecyclableItem[], modalIndex: number) => {
               return (
                 <>
@@ -103,10 +117,12 @@ function Recyclables(props: Props) {
                         {material.map((item) => {
                           return (
                             <Chip
-                              key={item["id"]}
+                              key={item["recyclable_id"]}
                               label={item["name"]}
-                              variant={selected[item["id"] - 1]}
-                              onClick={() => toggleSelected(item["id"] - 1)}
+                              variant={selectedChips[item["recyclable_id"] - 1]}
+                              onClick={() =>
+                                toggleChipSelect(item["recyclable_id"] - 1)
+                              }
                               sx={{ mr: 1, mb: 1 }}
                             />
                           );
