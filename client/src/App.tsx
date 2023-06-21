@@ -23,15 +23,23 @@ export const backendContext = createContext<any>(null);
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
-  const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
-  const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
-  const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
-  const [donateLocData, setDonateLocData] = useState<DonateLocation[]>([]);
-  const [repairLocData, setRepairLocData] = useState<RepairLocation[]>([]);
-  const [DDLocData, setDDLocData] = useState<DDLoc[]>([]);
-  const [DRLocData, setDRLocData] = useState<DRLoc[]>([]);
-  const [EDLocData, setEDLocData] = useState<EDLoc[]>([]);
-  const [ERLocData, setERLocData] = useState<ERLoc[]>([]);
+  const [recyclablesData, setRecyclablesData] = useState<
+    { [x: string]: any }[]
+  >([]);
+  const [donatablesData, setDonatablesData] = useState<{ [x: string]: any }[]>(
+    []
+  );
+  const [eWasteData, setEWasteData] = useState<{ [x: string]: any }[]>([]);
+  const [donateLocData, setDonateLocData] = useState<{ [x: string]: any }[]>(
+    []
+  );
+  const [repairLocData, setRepairLocData] = useState<{ [x: string]: any }[]>(
+    []
+  );
+  const [DDLocData, setDDLocData] = useState<{ [x: string]: any }[]>([]);
+  const [DRLocData, setDRLocData] = useState<{ [x: string]: any }[]>([]);
+  const [EDLocData, setEDLocData] = useState<{ [x: string]: any }[]>([]);
+  const [ERLocData, setERLocData] = useState<{ [x: string]: any }[]>([]);
 
   // useEffect to keep track of loginStatus changes using supabase auth feature
   useEffect(() => {
