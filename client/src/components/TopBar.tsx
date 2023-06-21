@@ -40,7 +40,7 @@ function TopBar() {
         >
           <img src={logo} height={35} />
         </Typography>
-        <Box sx={{ marginRight: 10 }}>
+        <Box sx={{ marginRight: 5 }}>
           Data Sauce:{" "}
           <a
             href="https://www.nea.gov.sg/our-services/towards-zero-waste"

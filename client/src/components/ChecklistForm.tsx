@@ -106,7 +106,7 @@ function ChecklistForm({
   const unrecyclables = selectedItems[0]
     .map((sel, i) => (sel ? i : -1))
     .filter((i) => i != -1 && recyclablesData[i]["bluebin_eligibility"] === 0)
-    .map((i) => recyclablesData[i]);
+    .map((index) => <li>{recyclablesData[index]["name"]}</li>);
 
   const donatablesChecklist = selectedItems[1]
     .map((selected, index) => (selected ? index : -1))
@@ -164,18 +164,22 @@ function ChecklistForm({
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
       >
-        {recyclablesChecklist.length !== 0 && (
+        {(recyclablesChecklist.length !== 0 || unrecyclables.length !== 0) && (
           <Box flex={1}>
             <h2>Recyclables</h2>
-            <h4>Have you checked your recyclables?</h4>
-            <FormGroup>{recyclablesChecklist}</FormGroup>
+            {recyclablesChecklist.length !== 0 && (
+              <>
+                <h4>Have you checked your recyclables?</h4>
+                <FormGroup>{recyclablesChecklist}</FormGroup>
+              </>
+            )}
             {unrecyclables.length !== 0 && (
               <>
                 <h4>
                   These items are not recyclable, please dispose of them as
                   general waste:
                 </h4>
-                <Stack>{unrecyclables}</Stack>
+                <ul>{unrecyclables}</ul>
               </>
             )}
           </Box>

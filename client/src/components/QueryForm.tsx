@@ -22,6 +22,7 @@ function QueryForm(props: Props) {
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
+        sx={{ flexWrap: "wrap" }}
       >
         <Box flex={1}>
           <h2>Recyclables</h2>
