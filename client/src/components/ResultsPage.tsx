@@ -331,7 +331,7 @@ function ResultsPage({
               <>
                 <h3>
                   (The following items may be of recyclable material, but its
-                  usage renders them unrecyclable:)
+                  usage or condition renders them unrecyclable)
                 </h3>
                 {unrecyclablesResults.map((item: RecyclableItem) => {
                   return (
@@ -342,7 +342,7 @@ function ResultsPage({
             )}
             {spoiltDonatables.length != 0 && (
               <>
-                <h3>(Spoilt Donatables:)</h3>
+                <h3>(Spoilt Donatables)</h3>
                 {spoiltDonatables.map((item: DonatableItem) => {
                   return (
                     <Typography variant="body1">
