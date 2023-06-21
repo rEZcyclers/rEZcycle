@@ -20,7 +20,7 @@ import {
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
-const serverAPI = "https://rezcycle-server.onrender.com/";
+const serverAPI = "https://rezcycle-server.onrender.com";
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
