@@ -195,8 +195,8 @@ function ResultsPage({
                               return (
                                 <li key={location["donate_id"]}>
                                   <Typography>
-                                    {location["organisation_name"]}, located at{" "}
-                                    {location["address"]}
+                                    {location["organisation_name"]}, contact
+                                    number: {location["contact"]}
                                   </Typography>
                                 </li>
                               );
