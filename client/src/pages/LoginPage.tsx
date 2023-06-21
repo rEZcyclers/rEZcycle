@@ -41,7 +41,7 @@ export default function LoginPage() {
         <Auth
           supabaseClient={supabase}
           appearance={{ theme: ThemeSupa }}
-          providers={["facebook"]}
+          providers={["discord"]}
         />
       </Container>
       {loginStatus != null && navigateTo("/")}
