@@ -20,6 +20,7 @@ import {
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
+const serverAPI = "https://rezcycle-server.onrender.com/";
 
 function App() {
   const [loginStatus, setLoginStatus] = useState<Session | null>(null);
@@ -47,55 +48,55 @@ function App() {
 
   // useEffect to fetch all backend data from backend server
   function fetchBackendData() {
-    fetch("http://localhost:8000/recyclables")
+    fetch(`${serverAPI}/recyclables`)
       .then((res) => res.json())
       .then((data) => setRecyclablesData(data))
       .then(() => console.log("recyclablesData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/donatables")
+    fetch(`${serverAPI}/donatables`)
       .then((res) => res.json())
       .then((data) => setDonatablesData(data))
       .then(() => console.log("donatablesData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/eWaste")
+    fetch(`${serverAPI}/eWaste`)
       .then((res) => res.json())
       .then((data) => setEWasteData(data))
       .then(() => console.log("eWasteData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/donateLocations")
+    fetch(`${serverAPI}/donateLocations`)
       .then((res) => res.json())
       .then((data) => setDonateLocData(data))
       .then(() => console.log("donateLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/repairLocations")
+    fetch(`${serverAPI}/repairLocations`)
       .then((res) => res.json())
       .then((data) => setRepairLocData(data))
       .then(() => console.log("repairLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/donatablesDonateLocations")
+    fetch(`${serverAPI}/donatablesDonateLocations`)
       .then((res) => res.json())
       .then((data) => setDDLocData(data))
       .then(() => console.log("donatablesDonateLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/donatablesRepairLocations")
+    fetch(`${serverAPI}/donatablesRepairLocations`)
       .then((res) => res.json())
       .then((data) => setDRLocData(data))
       .then(() => console.log("donatablesRepairLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/eWasteDonateLocations")
+    fetch(`${serverAPI}/eWasteDonateLocations`)
       .then((res) => res.json())
       .then((data) => setEDLocData(data))
       .then(() => console.log("eWasteDonateLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch("http://localhost:8000/eWasteRepairLocations")
+    fetch(`${serverAPI}/eWasteRepairLocations`)
       .then((res) => res.json())
       .then((data) => setERLocData(data))
       .then(() => console.log("eWasteRepairLocationsData fetched"))
