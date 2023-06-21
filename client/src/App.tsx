@@ -6,17 +6,17 @@ import { createContext, useEffect, useState } from "react";
 // import supabase database
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
-import {
-  RecyclableItem,
-  DonatableItem,
-  EWasteItem,
-  DonateLocation,
-  RepairLocation,
-  DDLoc,
-  DRLoc,
-  EDLoc,
-  ERLoc,
-} from "./DataTypes";
+// import {
+//   RecyclableItem,
+//   DonatableItem,
+//   EWasteItem,
+//   DonateLocation,
+//   RepairLocation,
+//   DDLoc,
+//   DRLoc,
+//   EDLoc,
+//   ERLoc,
+// } from "./DataTypes";
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);

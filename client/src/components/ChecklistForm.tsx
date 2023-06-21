@@ -104,13 +104,9 @@ function ChecklistForm({
     ));
 
   const unrecyclables = selectedItems[0]
-    .filter(
-      (selected, index) =>
-        selected && recyclablesData[index]["blueBin_Eligibility"] == 0
-    )
-    .map((selected, index) => (
-      <Typography variant="body1">{recyclablesData[index]["name"]}</Typography>
-    ));
+    .map((sel, i) => (sel ? i : -1))
+    .filter((i) => i != -1 && recyclablesData[i]["bluebin_eligibility"] === 0)
+    .map((i) => recyclablesData[i]);
 
   const donatablesChecklist = selectedItems[1]
     .map((selected, index) => (selected ? index : -1))
