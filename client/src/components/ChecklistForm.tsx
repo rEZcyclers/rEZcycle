@@ -163,6 +163,7 @@ function ChecklistForm({
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
+        sx={{ flexWrap: "wrap" }}
       >
         {(recyclablesChecklist.length !== 0 || unrecyclables.length !== 0) && (
           <Box flex={1}>
