@@ -19,12 +19,18 @@ export type EWasteItem = {
   description: string;
 };
 
-export type DonateLocation = {
-  donate_id: number;
+export type DonateOrganisation = {
+  donateOrg_id: number;
   organisation_name: string;
+  reuse_channel: string;
+}
+
+export type DonateLocation = {
+  donateLoc_id: number;
+  donateOrg_id: number;
+  location_name: string;
   address: string;
   contact: string;
-  reuse_channel: string;
 };
 
 export type RepairLocation = {
@@ -34,10 +40,10 @@ export type RepairLocation = {
   repair_type: string;
 };
 
-export type DDLoc = {
+export type DDOrg = {
   dd_id: number;
   donatable_id: number;
-  donate_id: number;
+  donateOrg_id: number;
 };
 
 export type DRLoc = {
@@ -46,10 +52,10 @@ export type DRLoc = {
   repair_id: number;
 };
 
-export type EDLoc = {
+export type EDOrg = {
   ed_id: number;
   eWaste_id: number;
-  donate_id: number;
+  donateOrg_id: number;
 };
 
 export type ERLoc = {

@@ -10,11 +10,12 @@ import {
   RecyclableItem,
   DonatableItem,
   EWasteItem,
+  DonateOrganisation,
   DonateLocation,
   RepairLocation,
-  DDLoc,
+  DDOrg,
   DRLoc,
-  EDLoc,
+  EDOrg,
   ERLoc,
 } from "./DataTypes";
 
@@ -27,11 +28,12 @@ function App() {
   const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
   const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
   const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
+  const [donateOrgData, setDonateOrgData] = useState<DonateOrganisation[]>([]);
   const [donateLocData, setDonateLocData] = useState<DonateLocation[]>([]);
   const [repairLocData, setRepairLocData] = useState<RepairLocation[]>([]);
-  const [DDLocData, setDDLocData] = useState<DDLoc[]>([]);
+  const [DDOrgData, setDDOrgData] = useState<DDOrg[]>([]);
   const [DRLocData, setDRLocData] = useState<DRLoc[]>([]);
-  const [EDLocData, setEDLocData] = useState<EDLoc[]>([]);
+  const [EDOrgData, setEDOrgData] = useState<EDOrg[]>([]);
   const [ERLocData, setERLocData] = useState<ERLoc[]>([]);
 
   // useEffect to keep track of userSession changes using supabase auth feature
@@ -67,6 +69,12 @@ function App() {
       .then(() => console.log("eWasteData fetched"))
       .catch((err) => console.log(err));
 
+    fetch(`${serverAPI}/donateOrganisations`)
+      .then((res) => res.json())
+      .then((data) => setDonateOrgData(data))
+      .then(() => console.log("donateOrganisationsData fetched"))
+      .catch((err) => console.log(err));
+
     fetch(`${serverAPI}/donateLocations`)
       .then((res) => res.json())
       .then((data) => setDonateLocData(data))
@@ -79,10 +87,10 @@ function App() {
       .then(() => console.log("repairLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch(`${serverAPI}/donatablesDonateLocations`)
+    fetch(`${serverAPI}/donatablesDonateOrganisations`)
       .then((res) => res.json())
-      .then((data) => setDDLocData(data))
-      .then(() => console.log("donatablesDonateLocationsData fetched"))
+      .then((data) => setDDOrgData(data))
+      .then(() => console.log("donatablesDonateOrganisationsData fetched"))
       .catch((err) => console.log(err));
 
     fetch(`${serverAPI}/donatablesRepairLocations`)
@@ -91,10 +99,10 @@ function App() {
       .then(() => console.log("donatablesRepairLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch(`${serverAPI}/eWasteDonateLocations`)
+    fetch(`${serverAPI}/eWasteDonateOrganisations`)
       .then((res) => res.json())
-      .then((data) => setEDLocData(data))
-      .then(() => console.log("eWasteDonateLocationsData fetched"))
+      .then((data) => setEDOrgData(data))
+      .then(() => console.log("eWasteDonateOrganisationsData fetched"))
       .catch((err) => console.log(err));
 
     fetch(`${serverAPI}/eWasteRepairLocations`)
@@ -114,11 +122,12 @@ function App() {
         recyclablesData,
         donatablesData,
         eWasteData,
+        donateOrgData,
         donateLocData,
         repairLocData,
-        DDLocData,
+        DDOrgData,
         DRLocData,
-        EDLocData,
+        EDOrgData,
         ERLocData,
       }}
     >

@@ -4,16 +4,21 @@ import {
   DonatableItem,
   EWasteItem,
   RecyclableItem,
+  DonateOrganisation,
   DonateLocation,
   RepairLocation,
-  DDLoc,
+  DDOrg,
   DRLoc,
-  EDLoc,
+  EDOrg,
   ERLoc,
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
+type DonateOrganisationLocations = {
+  donateOrg: DonateOrganisation;
+  donateLocations: DonateLocation[];
+};
 interface Props {
   stage: number;
   setStage: (num: number) => void;
@@ -38,11 +43,12 @@ function ResultsPage({
     recyclablesData,
     donatablesData,
     eWasteData,
+    donateOrgData,
     donateLocData,
     repairLocData,
-    DDLocData,
+    DDOrgData,
     DRLocData,
-    EDLocData,
+    EDOrgData,
     ERLocData,
   } = useContext(backendContext);
 
@@ -52,13 +58,13 @@ function ResultsPage({
   let goodDonatables: DonatableItem[] = []; // Selected donatables in good condition
   let repairDonatables: DonatableItem[] = []; // Selected donatables in repairable condition
   let spoiltDonatables: DonatableItem[] = []; // Selected donatables in spoilt condition
-  let goodDonatablesResults: DonateLocation[][] = []; // List of donateLocations for every selected good donatable
+  let goodDonatablesResults: DonateOrganisationLocations[][] = []; // List of donateOrganisations & their locations for every selected good donatable
   let repairDonatablesResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable donatable
 
   let goodEWaste: EWasteItem[] = []; // Selected EWaste in good condition
   let repairEWaste: EWasteItem[] = []; // Selected EWaste in repairable condition
   let spoiltEWaste: EWasteItem[] = []; // Selected EWaste in spoilt condition
-  let goodEWasteResults: DonateLocation[][] = []; // List of donateLocations for every selected good EWaste
+  let goodEWasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good EWaste
   let repairEWasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable EWaste
 
   function getResults() {
@@ -102,12 +108,25 @@ function ResultsPage({
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     goodDonatablesResults = goodDonatables.map((item: DonatableItem) => {
-      return DDLocData.filter(
-        (entry: DDLoc) => entry["donatable_id"] === item["donatable_id"]
-      ).map((entry: DDLoc) => {
-        return donateLocData[entry["donate_id"] - 1];
-      });
+      return DDOrgData.filter(
+        (entry: DDOrg) => entry["donatable_id"] === item["donatable_id"]
+      )
+        .map((entry: DDOrg) => {
+          return donateOrgData[entry["donateOrg_id"] - 1];
+        })
+        .map((org: DonateOrganisation) => {
+          const locations = donateLocData.filter(
+            (loc: DonateLocation) => loc["donateOrg_id"] === org["donateOrg_id"]
+          );
+          const res: DonateOrganisationLocations = {
+            donateOrg: org,
+            donateLocations: locations,
+          };
+          return res;
+        });
     });
+    console.log("HI");
+    console.log(goodDonatablesResults);
     repairDonatablesResults = repairDonatables.map((item: DonatableItem) => {
       return DRLocData.filter(
         (entry: DRLoc) => entry["donatable_id"] === item["donatable_id"]
@@ -129,11 +148,21 @@ function ResultsPage({
       .filter((i) => i != -1)
       .map((i) => eWasteData[i]);
     goodEWasteResults = goodEWaste.map((item: EWasteItem) => {
-      return EDLocData.filter(
-        (entry: EDLoc) => entry["eWaste_id"] === item["eWaste_id"]
-      ).map((entry: EDLoc) => {
-        return donateLocData[entry["donate_id"] - 1];
-      });
+      return EDOrgData.filter(
+        (entry: EDOrg) => entry["eWaste_id"] === item["eWaste_id"]
+      )
+        .map((entry: EDOrg) => {
+          return donateOrgData[entry["donateOrg_id"] - 1];
+        })
+        .map((org: DonateOrganisation) => {
+          const locations = donateLocData.filter(
+            (loc: DonateLocation) => loc["donateOrg_id"] === org["donateOrg_id"]
+          );
+          return {
+            donateOrg: org,
+            donateLocations: locations,
+          };
+        });
     });
     repairEWasteResults = repairEWaste.map((item: EWasteItem) => {
       return ERLocData.filter(
@@ -191,13 +220,19 @@ function ResultsPage({
                       ) : (
                         <ul>
                           {goodDonatablesResults[index].map(
-                            (location: DonateLocation) => {
+                            (entry: DonateOrganisationLocations) => {
+                              const org = entry["donateOrg"];
+                              const locations = entry["donateLocations"];
                               return (
-                                <li key={location["donate_id"]}>
+                                <li key={org["donateOrg_id"]}>
                                   <Typography>
-                                    {location["organisation_name"]}, contact
-                                    number: {location["contact"]}
+                                    {org["organisation_name"]}
                                   </Typography>
+                                  <ul>
+                                    {locations.map((loc: DonateLocation) => {
+                                      return <li>{loc["address"]}</li>;
+                                    })}
+                                  </ul>
                                 </li>
                               );
                             }
@@ -265,12 +300,13 @@ function ResultsPage({
                         ) : (
                           <ul>
                             {goodEWasteResults[index].map(
-                              (location: DonateLocation) => {
+                              (entry: DonateOrganisationLocations) => {
+                                const org = entry["donateOrg"];
+                                const locations = entry["donateLocations"];
                                 return (
-                                  <li key={location["donate_id"]}>
+                                  <li key={org["donateOrg_id"]}>
                                     <Typography>
-                                      {location["organisation_name"]}, located
-                                      at {location["address"]}
+                                      {org["organisation_name"]}
                                     </Typography>
                                   </li>
                                 );
