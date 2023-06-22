@@ -34,7 +34,7 @@ function Recyclables(props: Props) {
   const openModal = (modalIndex: number) => {
     setActiveModal(modalIndex);
   };
-  const closeModal = (modalIndex: number) => {
+  const closeModal = () => {
     setActiveModal(-1);
   };
 
@@ -111,7 +111,7 @@ function Recyclables(props: Props) {
                   />
                   <Modal open={modalIndex === activeModal}>
                     <Box sx={style}>
-                      <Button onClick={() => closeModal(modalIndex)}>x</Button>
+                      <Button onClick={() => closeModal()}>x</Button>
                       <Typography
                         id="modal-modal-title"
                         variant="h6"
