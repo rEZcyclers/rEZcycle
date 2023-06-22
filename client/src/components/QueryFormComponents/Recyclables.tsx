@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { useContext, useState } from "react";
 import { backendContext } from "../../App";
 import { RecyclableItem } from "../../DataTypes";
+import { Button } from "@mui/material";
 
 const style = {
   position: "absolute" as "absolute",
@@ -28,19 +29,13 @@ function Recyclables(props: Props) {
   const { recyclablesData } = useContext(backendContext);
 
   // Modal popup logic
-  const [open, setOpen] = useState(props.selectedItems[0].map(() => false));
+  const [activeModal, setActiveModal] = useState<number>(-1);
 
-  const handleOpen = (modalIndex: number) => {
-    setOpen({
-      ...open,
-      [modalIndex]: true,
-    });
+  const openModal = (modalIndex: number) => {
+    setActiveModal(modalIndex);
   };
-  const handleClose = (modalIndex: number) => {
-    setOpen({
-      ...open,
-      [modalIndex]: false,
-    });
+  const closeModal = (modalIndex: number) => {
+    setActiveModal(-1);
   };
 
   // Chip selection logic
@@ -81,6 +76,13 @@ function Recyclables(props: Props) {
   );
   const recyclablesByMaterial = [paperArr, plasticArr, glassArr, metalArr];
 
+  const numberOfSelections = (materialArray: RecyclableItem[]) => {
+    return materialArray.filter(
+      (item: RecyclableItem) =>
+        props.selectedItems[0][item["recyclable_id"] - 1]
+    ).length;
+  };
+
   return (
     <>
       {recyclablesData.length === 0 ? (
@@ -93,16 +95,23 @@ function Recyclables(props: Props) {
                 <>
                   <Chip
                     key={modalIndex}
-                    label={categories[modalIndex]}
-                    onClick={() => handleOpen(modalIndex)}
+                    label={
+                      numberOfSelections(material) === 0
+                        ? categories[modalIndex]
+                        : `${categories[modalIndex]} (${numberOfSelections(
+                            material
+                          )})`
+                    }
+                    color="secondary"
+                    onClick={() => openModal(modalIndex)}
                     sx={{ mr: 1, mb: 1 }}
-                    variant="outlined"
+                    variant={
+                      numberOfSelections(material) === 0 ? "outlined" : "filled"
+                    }
                   />
-                  <Modal
-                    open={open[modalIndex]}
-                    onClose={() => handleClose(modalIndex)}
-                  >
+                  <Modal open={modalIndex === activeModal}>
                     <Box sx={style}>
+                      <Button onClick={() => closeModal(modalIndex)}>x</Button>
                       <Typography
                         id="modal-modal-title"
                         variant="h6"
@@ -117,6 +126,7 @@ function Recyclables(props: Props) {
                             <Chip
                               key={item["recyclable_id"]}
                               label={item["name"]}
+                              color="secondary"
                               variant={selectedChips[item["recyclable_id"] - 1]}
                               onClick={() =>
                                 toggleChipSelect(item["recyclable_id"] - 1)

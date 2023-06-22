@@ -4,6 +4,7 @@ import Recyclables from "./QueryFormComponents/Recyclables";
 import Donatables from "./QueryFormComponents/Donatables";
 import EWaste from "./QueryFormComponents/EWaste";
 import { Button } from "@mui/material";
+import RecyclablesV2 from "./QueryFormComponents/RecyclablesV2";
 
 interface Props {
   stage: number;

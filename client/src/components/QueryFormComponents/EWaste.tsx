@@ -46,9 +46,11 @@ function EWaste(props: Props) {
               <Chip
                 key={item["eWaste_id"]}
                 label={item["eWaste_type"]}
+                color="secondary"
                 variant={selectedChips[item["eWaste_id"] - 1]}
                 onClick={() => toggleChipSelect(item["eWaste_id"] - 1)}
-                sx={{ mr: 1, mb: 1 }}
+                size="medium"
+                sx={{ mr: 1, mb: 1, fontSize: "0.9em" }}
               />
             );
           })}
