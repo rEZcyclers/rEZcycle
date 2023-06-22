@@ -308,6 +308,11 @@ function ResultsPage({
                                     <Typography>
                                       {org["organisation_name"]}
                                     </Typography>
+                                    <ul>
+                                      {locations.map((loc: DonateLocation) => {
+                                        return <li>{loc["address"]}</li>;
+                                      })}
+                                    </ul>
                                   </li>
                                 );
                               }
