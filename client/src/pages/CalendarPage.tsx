@@ -3,10 +3,10 @@ import { useContext } from "react";
 import { backendContext } from "../App";
 
 function CalendarPage() {
-  const { loginStatus } = useContext(backendContext);
+  const { userSession } = useContext(backendContext);
   return (
     <Base>
-      {loginStatus == null ? (
+      {userSession == null ? (
         <h1> Please log in to view calendar page </h1>
       ) : (
         <h1>Calendar Page</h1>

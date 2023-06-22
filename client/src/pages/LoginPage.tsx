@@ -3,7 +3,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "../supabase";
 
-// import elements for react routing & accessing loginStatus
+// import elements for react routing & accessing userSession
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { backendContext } from "../App";
@@ -13,7 +13,7 @@ import { Button, Container } from "@mui/material";
 
 export default function LoginPage() {
   const navigateTo = useNavigate();
-  const { loginStatus } = useContext(backendContext);
+  const { userSession } = useContext(backendContext);
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function LoginPage() {
             style={{
               textAlign: "center",
               color: "green",
-              marginTop: 0,
+              marginTop: 20,
             }}
           >
             Login to rEZcycle
@@ -44,7 +44,7 @@ export default function LoginPage() {
           providers={["discord", "google"]}
         />
       </Container>
-      {loginStatus != null && navigateTo("/")}
+      {userSession != null && navigateTo("/")}
     </>
   );
 }
