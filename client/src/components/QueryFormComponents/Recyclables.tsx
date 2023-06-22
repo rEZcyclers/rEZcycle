@@ -6,24 +6,26 @@ import Typography from "@mui/material/Typography";
 import { useContext, useState } from "react";
 import { backendContext } from "../../App";
 import { RecyclableItem } from "../../DataTypes";
-import { Button } from "@mui/material";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 800,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import { IconButton, Toolbar, styled } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
   selectedItems: boolean[][];
   setSelectedItems: (newArray: boolean[][]) => void;
 }
+
+// CustomChip from https://github.com/mui/material-ui/issues/15185
+const CustomChip = styled(Chip)(({ theme }) => ({
+  padding: theme.spacing(1),
+  height: "100%",
+  display: "flex",
+  flexDirection: "row",
+  "& .MuiChip-label": {
+    overflowWrap: "break-word",
+    whiteSpace: "normal",
+    textOverflow: "clip",
+  },
+}));
 
 function Recyclables(props: Props) {
   const { recyclablesData } = useContext(backendContext);
@@ -110,28 +112,55 @@ function Recyclables(props: Props) {
                     }
                   />
                   <Modal open={modalIndex === activeModal}>
-                    <Box sx={style}>
-                      <Button onClick={() => closeModal()}>x</Button>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                        sx={{ mb: 1 }}
-                      >
-                        Choose Items
-                      </Typography>
+                    <Box
+                      flex={1}
+                      sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: "70%",
+                        height: "70%",
+                        bgcolor: "background.paper",
+                        border: "2px solid #000",
+                        boxShadow: 24,
+                        p: 4,
+                        flexWrap: "wrap",
+                        overflow: "scroll",
+                      }}
+                    >
+                      <Toolbar sx={{ marginTop: -2 }}>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h6"
+                          component="h2"
+                          sx={{ mb: 1, flexGrow: 1 }}
+                        >
+                          Choose Items
+                        </Typography>
+                        <IconButton
+                          onClick={() => closeModal()}
+                          sx={{ marginTop: -2 }}
+                        >
+                          <CloseIcon></CloseIcon>
+                        </IconButton>
+                      </Toolbar>
                       <Stack direction="row" sx={{ flexWrap: "wrap" }}>
                         {material.map((item) => {
                           return (
-                            <Chip
+                            <CustomChip
                               key={item["recyclable_id"]}
                               label={item["name"]}
                               color="secondary"
+                              size="medium"
                               variant={selectedChips[item["recyclable_id"] - 1]}
                               onClick={() =>
                                 toggleChipSelect(item["recyclable_id"] - 1)
                               }
-                              sx={{ mr: 1, mb: 1 }}
+                              sx={{
+                                mr: 1,
+                                mb: 1,
+                              }}
                             />
                           );
                         })}
