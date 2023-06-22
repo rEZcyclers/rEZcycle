@@ -30,6 +30,11 @@ app.get("/eWaste", async (req, res) => {
   res.json(data);
 });
 
+app.get("/donateOrganisations", async (req, res) => {
+  const { data, error } = await supabase.from("DonateOrganisations").select();
+  res.json(data);
+});
+
 app.get("/donateLocations", async (req, res) => {
   const { data, error } = await supabase.from("DonateLocations").select();
   res.json(data);
@@ -40,9 +45,9 @@ app.get("/repairLocations", async (req, res) => {
   res.json(data);
 });
 
-app.get("/donatablesDonateLocations", async (req, res) => {
+app.get("/donatablesDonateOrganisations", async (req, res) => {
   const { data, error } = await supabase
-    .from("DonatablesDonateLocations")
+    .from("DonatablesDonateOrganisations")
     .select();
   res.json(data);
 });
@@ -54,8 +59,10 @@ app.get("/donatablesRepairLocations", async (req, res) => {
   res.json(data);
 });
 
-app.get("/eWasteDonateLocations", async (req, res) => {
-  const { data, error } = await supabase.from("EWasteDonateLocations").select();
+app.get("/eWasteDonateOrganisations", async (req, res) => {
+  const { data, error } = await supabase
+    .from("EWasteDonateOrganisations")
+    .select();
   res.json(data);
 });
 
