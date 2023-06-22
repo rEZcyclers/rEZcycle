@@ -23,7 +23,7 @@ export const backendContext = createContext<any>(null);
 const serverAPI = "https://rezcycle-server.onrender.com";
 
 function App() {
-  const [loginStatus, setLoginStatus] = useState<Session | null>(null);
+  const [userSession, setUserSession] = useState<Session | null>(null);
   const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
   const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
   const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
@@ -34,17 +34,18 @@ function App() {
   const [EDLocData, setEDLocData] = useState<EDLoc[]>([]);
   const [ERLocData, setERLocData] = useState<ERLoc[]>([]);
 
-  // useEffect to keep track of loginStatus changes using supabase auth feature
+  // useEffect to keep track of userSession changes using supabase auth feature
   useEffect(() => {
     const subscription = supabase.auth.onAuthStateChange((event, session) => {
-      setLoginStatus(session);
+      setUserSession(session);
       console.log(event);
+      console.log(session);
+      console.log(!session ? null : session["user"]["id"]);
     });
-    console.log("loginStatus changed");
     // return a clean up function to clear the previous effect before the new one
     return () => subscription.data.subscription.unsubscribe();
-  }, []); // Note: infinite useEffect() call occurs when loginStatus != null if
-  // loginStatus is included in dependency
+  }, []); // Note: infinite useEffect() call occurs when userSession != null if
+  // userSession is included in dependency
 
   // useEffect to fetch all backend data from backend server
   function fetchBackendData() {
@@ -106,10 +107,10 @@ function App() {
   useEffect(() => fetchBackendData(), []);
 
   return (
-    // Make loginStatus & backend data globally available to all pages via backendContext object
+    // Make userSession & backend data globally available to all pages via backendContext object
     <backendContext.Provider
       value={{
-        loginStatus,
+        userSession,
         recyclablesData,
         donatablesData,
         eWasteData,

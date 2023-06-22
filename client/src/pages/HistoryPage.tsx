@@ -3,10 +3,10 @@ import { useContext } from "react";
 import { backendContext } from "../App";
 
 function HistoryPage() {
-  const { loginStatus } = useContext(backendContext);
+  const { userSession } = useContext(backendContext);
   return (
     <Base>
-      {loginStatus == null ? (
+      {userSession == null ? (
         <h1> Please log in to view history page </h1>
       ) : (
         <h1>History Page</h1>

@@ -3,13 +3,15 @@ import { useContext } from "react";
 import { backendContext } from "../App";
 
 function ProfilePage() {
-  const { loginStatus } = useContext(backendContext);
+  const { userSession } = useContext(backendContext);
   return (
     <Base>
-      {loginStatus == null ? (
+      {userSession == null ? (
         <h1> Please log in to view profile page </h1>
       ) : (
-        <h1>Profile Page</h1>
+        <>
+          <h1>Welcome back, {userSession["user"]["email"]!}</h1>
+        </>
       )}
     </Base>
   );

@@ -1,4 +1,4 @@
-// import elements for react routing & accessing loginStatus
+// import elements for react routing & accessing userSession
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { backendContext } from "../App";
@@ -11,7 +11,7 @@ import { Box, Button, Toolbar, Typography } from "@mui/material";
 import logo from "../images/logov2.png";
 
 function TopBar() {
-  const { loginStatus } = useContext(backendContext);
+  const { userSession } = useContext(backendContext);
 
   const navigateTo = useNavigate();
 
@@ -40,8 +40,8 @@ function TopBar() {
         >
           <img src={logo} height={35} />
         </Typography>
-        <Box sx={{ marginRight: 5 }}>
-          Data Sauce:{" "}
+        <Box sx={{ color: "white", marginRight: "2%" }}>
+          Data Source:{" "}
           <a
             href="https://www.nea.gov.sg/our-services/towards-zero-waste"
             target="_blank"
@@ -53,9 +53,9 @@ function TopBar() {
         <Button
           variant="text"
           sx={{ color: "white" }}
-          onClick={loginStatus == null ? handleLogInClick : handleLogOutClick}
+          onClick={userSession == null ? handleLogInClick : handleLogOutClick}
         >
-          {loginStatus == null ? "Log In" : "Log Out"}
+          {userSession == null ? "Log In" : "Log Out"}
         </Button>
       </Toolbar>
     </div>
