@@ -46,9 +46,11 @@ function Donatables(props: Props) {
               <Chip
                 key={item["donatable_id"]}
                 label={item["donatable_type"]}
+                color="secondary"
                 variant={selectedChips[item["donatable_id"] - 1]}
                 onClick={() => toggleChipSelect(item["donatable_id"] - 1)}
-                sx={{ mr: 1, mb: 1 }}
+                size="medium"
+                sx={{ mr: 1, mb: 1, fontSize: "0.9em" }}
               />
             );
           })}
