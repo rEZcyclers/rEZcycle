@@ -125,8 +125,6 @@ function ResultsPage({
           return res;
         });
     });
-    console.log("HI");
-    console.log(goodDonatablesResults);
     repairDonatablesResults = repairDonatables.map((item: DonatableItem) => {
       return DRLocData.filter(
         (entry: DRLoc) => entry["donatable_id"] === item["donatable_id"]
