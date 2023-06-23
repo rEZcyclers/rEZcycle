@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { backendContext } from "../App";
 import {
   DonatableItem,
@@ -14,7 +14,6 @@ import {
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
-
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 type DonateOrganisationLocations = {
@@ -182,7 +181,7 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      <Locations/>
+      <Locations />
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
