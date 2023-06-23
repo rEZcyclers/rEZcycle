@@ -181,7 +181,18 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      <Locations />
+      <Locations
+        goodDonatables={goodDonatables}
+        repairDonatables={repairDonatables}
+        spoiltDonatables={spoiltDonatables}
+        goodDonatablesResults={goodDonatablesResults}
+        repairDonatablesResults={repairDonatablesResults}
+        goodEWaste={goodEWaste}
+        repairEWaste={repairEWaste}
+        spoiltEWaste={spoiltEWaste}
+        goodEWasteResults={goodEWasteResults}
+        repairEWasteResults={repairEWasteResults}
+      />
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
