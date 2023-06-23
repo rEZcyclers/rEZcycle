@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   DonatableItem,
@@ -13,6 +13,8 @@ import {
   ERLoc,
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import Locations from "./Locations";
+
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 type DonateOrganisationLocations = {
@@ -38,7 +40,7 @@ function ResultsPage({
   eWasteConditions,
   setStage,
 }: Props) {
-  // Retrive raw data first
+  // Retrieve raw data first
   const {
     recyclablesData,
     donatablesData,
@@ -180,6 +182,7 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
+      <Locations/>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
