@@ -14,7 +14,7 @@ function HomePage() {
     new Array<boolean>(6).fill(false),
   ]);
 
-  const [stage, setStage] = useState(3);
+  const [stage, setStage] = useState(1);
 
   const [recyclableConditions, setRecyclableConditions] = useState(
     selectedItems[0].map(() => false)

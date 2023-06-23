@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   DonatableItem,
@@ -14,65 +14,6 @@ import {
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
 
-type Location = {
-  latitude: number;
-  longitude: number;
-  name: string;
-};
-
-const locations = [
-  {
-    latitude: 1.3143,
-    longitude: 103.8455,
-    name: "Singapore Botanic Gardens",
-  },
-  {
-    latitude: 1.2929,
-    longitude: 103.844,
-    name: "Clarke Quay",
-  },
-  {
-    latitude: 1.2896,
-    longitude: 103.8504,
-    name: "Raffles Hotel",
-  },
-  {
-    latitude: 1.2897,
-    longitude: 103.8532,
-    name: "National Museum of Singapore",
-  },
-  {
-    latitude: 1.2494,
-    longitude: 103.8303,
-    name: "Sentosa Island",
-  },
-  {
-    latitude: 1.2712,
-    longitude: 103.808,
-    name: "Universal Studios Singapore",
-  },
-  {
-    latitude: 1.3539,
-    longitude: 103.985,
-    name: "Changi Airport",
-  },
-  {
-    latitude: 1.4371,
-    longitude: 103.7955,
-    name: "Singapore Zoo",
-  },
-  {
-    latitude: 1.2452,
-    longitude: 103.8303,
-    name: "S.E.A. Aquarium",
-  },
-  {
-    latitude: 1.2829,
-    longitude: 103.8584,
-    name: "Asian Civilisations Museum",
-  },
-  // Add more locations as needed
-];
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 interface Props {
@@ -94,7 +35,7 @@ function ResultsPage({
   eWasteConditions,
   setStage,
 }: Props) {
-  // Retrive raw data first
+  // Retrieve raw data first
   const {
     recyclablesData,
     donatablesData,
@@ -214,7 +155,7 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      <Locations locations={locations} />
+      <Locations/>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
