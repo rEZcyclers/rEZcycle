@@ -1,11 +1,41 @@
 import { Button } from "@mui/material";
 import { useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl";
+import {
+  DonatableItem,
+  DonateLocation,
+  DonateOrganisation,
+  EWasteItem,
+  RepairLocation,
+} from "../DataTypes";
 
-interface Location {
+interface LocationCoordinates {
   latitude: number;
   longitude: number;
-  name: string;
+}
+interface LocationInfo {
+  address: string;
+  organisationName: string;
+  contact: string;
+}
+
+type DonateOrganisationLocations = {
+  donateOrg: DonateOrganisation;
+  donateLocations: DonateLocation[];
+};
+
+interface Props {
+  goodDonatables: DonatableItem[]; // Selected donatables in good condition
+  repairDonatables: DonatableItem[]; // Selected donatables in repairable condition
+  spoiltDonatables: DonatableItem[]; // Selected donatables in spoilt condition
+  goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
+  repairDonatablesResults: RepairLocation[][]; // List of repairLocations for every selected repairable donatable
+
+  goodEWaste: EWasteItem[]; // Selected EWaste in good condition
+  repairEWaste: EWasteItem[]; // Selected EWaste in repairable condition
+  spoiltEWaste: EWasteItem[]; // Selected EWaste in spoilt condition
+  goodEWasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good EWaste
+  repairEWasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable EWaste
 }
 
 const MAPBOX_TOKEN =
@@ -21,38 +51,56 @@ const geocodeAddress = async (address: string) => {
   return data.features[0];
 };
 
-
 // const Locations = ({ locations }: { locations: Location[] }) => {
-const Locations = () => {
-  const addresses: string[] = [
-    "136 Joo Seng Road, #01-01",
-    "710A Ang Mo Kio Avenue 8, #01-2625",
-    "133 New Bridge Road, Chinatown Point #B1-07",
-    "135 Jurong Gateway Road, #01-315",
-  ];
+const Locations = (props: Props) => {
+  // const addresses: string[] = [
+  //   "136 Joo Seng Road, #01-01",
+  //   "710A Ang Mo Kio Avenue 8, #01-2625",
+  //   "133 New Bridge Road, Chinatown Point #B1-07",
+  //   "135 Jurong Gateway Road, #01-315",
+  // ];
+  const locationInfoList: LocationInfo[] = props.goodDonatablesResults.flatMap(
+    (itemRes: DonateOrganisationLocations[]) => {
+      return itemRes.flatMap((entry: DonateOrganisationLocations) => {
+        const org: DonateOrganisation = entry["donateOrg"];
+        const locations: DonateLocation[] = entry["donateLocations"];
+        return locations.flatMap((loc: DonateLocation) => {
+          const locInfo: LocationInfo = {
+            address: loc["address"],
+            organisationName: org["organisation_name"],
+            contact: loc["contact"],
+          };
+          return locInfo;
+        });
+      });
+    }
+  );
 
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<Location | null>(null);
+  const [locationCoordList, setLocationCoordList] = useState<
+    LocationCoordinates[]
+  >([]);
+  const [activeMarker, setActiveMarker] = useState<number>(-1);
 
-  const handleMarkerClick = (marker: Location) => {
-    setSelectedMarker(marker);
+  const handleMarkerClick = (marker: number) => {
+    setActiveMarker(marker);
   };
 
   const handlePopupClose = () => {
-    setSelectedMarker(null);
+    setActiveMarker(-1);
   };
 
   const handleButtonClick = () => {
-    const promises = addresses.map((address) => geocodeAddress(address));
+    const promises = locationInfoList.map((locInfo: LocationInfo) =>
+      geocodeAddress(locInfo["address"])
+    );
 
     Promise.all(promises)
       .then((results) => {
         const newLocations = results.map((data) => ({
           latitude: data.center[1],
           longitude: data.center[0],
-          name: data.place_name,
         }));
-        setLocations(newLocations);
+        setLocationCoordList(newLocations);
         console.log(newLocations);
       })
       .catch((error) => {
@@ -72,12 +120,12 @@ const Locations = () => {
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        {locations.map((marker) => (
+        {locationCoordList.map((coord, index) => (
           <Marker
-            longitude={marker.longitude}
-            latitude={marker.latitude}
+            longitude={coord.longitude}
+            latitude={coord.latitude}
             color="black"
-            onClick={() => handleMarkerClick(marker)}
+            onClick={() => handleMarkerClick(index)}
           >
             {/* <button
               className="marker-button"
@@ -86,19 +134,21 @@ const Locations = () => {
           </Marker>
         ))}
 
-        {selectedMarker && (
+        {activeMarker != -1 && (
           <Popup
-            longitude={selectedMarker.longitude}
-            latitude={selectedMarker.latitude}
+            longitude={locationCoordList[activeMarker].longitude}
+            latitude={locationCoordList[activeMarker].latitude}
             onClose={handlePopupClose}
             closeButton={true}
             closeOnClick={false}
             anchor="top"
           >
             <div>
-              <h3>{selectedMarker.name}</h3>
-              <p>Latitude: {selectedMarker.latitude}</p>
-              <p>Longitude: {selectedMarker.longitude}</p>
+              <h3>{locationInfoList[activeMarker]["organisationName"]}</h3>
+              <p>{locationInfoList[activeMarker]["address"]}</p>
+              <p>Contact: {locationInfoList[activeMarker]["contact"]}</p>
+              <p>Latitude: {locationCoordList[activeMarker].latitude}</p>
+              <p>Longitude: {locationCoordList[activeMarker].longitude}</p>
             </div>
           </Popup>
         )}
