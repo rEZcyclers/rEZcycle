@@ -7,7 +7,7 @@ import { backendContext } from "../App";
 import { supabase } from "../supabase";
 
 // import UI elements
-import { Box, Button, Toolbar, Typography } from "@mui/material";
+import { Button, Toolbar, Typography } from "@mui/material";
 import logo from "../images/logov2.png";
 
 function TopBar() {
