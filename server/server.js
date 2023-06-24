@@ -15,6 +15,19 @@ app.get("/", (req, res) => {
   res.json([{ testKey: "server is running!" }]);
 });
 
+app.get("/userProfile", async (req, res) => {
+  const id = req.query.id;
+  const { data, error } = await supabase
+    .from("UserProfiles")
+    .select()
+    .eq("user_id", id);
+  if (data) {
+    res.json(data);
+  } else {
+    console.log(error);
+  }
+});
+
 app.get("/recyclables", async (req, res) => {
   const { data, error } = await supabase.from("Recyclables").select();
   res.json(data);

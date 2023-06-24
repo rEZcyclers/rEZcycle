@@ -7,7 +7,7 @@ import { backendContext } from "../App";
 import { supabase } from "../supabase";
 
 // import UI elements
-import { Box, Button, Toolbar, Typography } from "@mui/material";
+import { Button, Toolbar, Typography } from "@mui/material";
 import logo from "../images/logov2.png";
 
 function TopBar() {
@@ -26,6 +26,7 @@ function TopBar() {
   return (
     <div className="TopBar">
       <Toolbar variant="dense">
+        <img src={logo} height={35} />
         <Typography
           variant="h5"
           noWrap
@@ -35,13 +36,11 @@ function TopBar() {
             paddingLeft: 3,
             display: "flex",
             alignItems: "center",
-            margin: 0,
+            marginRight: 5,
           }}
-        >
-          <img src={logo} height={35} />
-        </Typography>
-        <Box sx={{ color: "white", marginRight: "2%" }}>
-          Data Source:{" "}
+        ></Typography>
+        <Typography sx={{ color: "white", marginRight: "3%" }}>
+          Source:{" "}
           <a
             href="https://www.nea.gov.sg/our-services/towards-zero-waste"
             target="_blank"
@@ -49,7 +48,7 @@ function TopBar() {
           >
             NEA
           </a>
-        </Box>
+        </Typography>
         <Button
           variant="text"
           sx={{ color: "white" }}

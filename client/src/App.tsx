@@ -7,6 +7,7 @@ import { createContext, useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 import {
+  UserProfile,
   RecyclableItem,
   DonatableItem,
   EWasteItem,
@@ -25,6 +26,7 @@ const serverAPI = "https://rezcycle-server.onrender.com";
 
 function App() {
   const [userSession, setUserSession] = useState<Session | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
   const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
   const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
@@ -40,9 +42,8 @@ function App() {
   useEffect(() => {
     const subscription = supabase.auth.onAuthStateChange((event, session) => {
       setUserSession(session);
+      fetchUserProfile(session);
       console.log(event);
-      console.log(session);
-      console.log(!session ? null : session["user"]["id"]);
     });
     // return a clean up function to clear the previous effect before the new one
     return () => subscription.data.subscription.unsubscribe();
@@ -112,6 +113,14 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  function fetchUserProfile(session: Session | null) {
+    if (session == null) return;
+    fetch(`${serverAPI}/userProfile?id=${session["user"]["id"]}`)
+      .then((res) => res.json())
+      .then((data) => setUserProfile(data))
+      .then(() => console.log("userProfile fetched"))
+      .catch((err) => console.log(err));
+  }
   useEffect(() => fetchBackendData(), []);
 
   return (
@@ -119,6 +128,7 @@ function App() {
     <backendContext.Provider
       value={{
         userSession,
+        userProfile,
         recyclablesData,
         donatablesData,
         eWasteData,

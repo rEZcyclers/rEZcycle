@@ -1,4 +1,10 @@
 // Custom Data Types based on our Database Schema
+export type UserProfile = {
+  user_id: number;
+  user_name: string;
+  email: string;
+}
+
 export type RecyclableItem = {
   recyclable_id: number;
   material: string;
