@@ -420,7 +420,11 @@ function ResultsPage({
         </>
       )}
       <Box display="flex" justifyContent="right" sx={{ mt: 4 }}>
-        <Button variant="outlined" onClick={handleBackClick} sx={{ mr: 10 }}>
+        <Button
+          variant="outlined"
+          onClick={handleBackClick}
+          sx={{ mr: 10, mb: 10 }}
+        >
           Back
         </Button>
       </Box>
