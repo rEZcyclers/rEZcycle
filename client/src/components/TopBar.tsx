@@ -7,11 +7,17 @@ import { backendContext } from "../App";
 import { supabase } from "../supabase";
 
 // import UI elements
-import { Button, Toolbar, Typography } from "@mui/material";
+import { Button, IconButton, Toolbar, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../images/logov2.png";
 
-function TopBar() {
+interface Props {
+  sideBarState: any;
+}
+
+function TopBar({ sideBarState }: Props) {
   const { userSession } = useContext(backendContext);
+  const [sideBarOpen, setSidebarOpen] = sideBarState;
 
   const navigateTo = useNavigate();
 
@@ -23,9 +29,18 @@ function TopBar() {
     supabase.auth.signOut();
   };
 
+  const toggleSideBar = () => {
+    setSidebarOpen(!sideBarOpen);
+  };
+
   return (
     <div className="TopBar">
       <Toolbar variant="dense">
+        <Button onClick={toggleSideBar}>
+          <IconButton onClick={toggleSideBar}>
+            <MenuIcon></MenuIcon>
+          </IconButton>
+        </Button>
         <img src={logo} height={35} />
         <Typography
           variant="h5"
