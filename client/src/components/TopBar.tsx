@@ -36,11 +36,9 @@ function TopBar({ sideBarState }: Props) {
   return (
     <div className="TopBar">
       <Toolbar variant="dense">
-        <Button onClick={toggleSideBar}>
-          <IconButton onClick={toggleSideBar}>
-            <MenuIcon></MenuIcon>
-          </IconButton>
-        </Button>
+        <IconButton onClick={toggleSideBar}>
+          <MenuIcon></MenuIcon>
+        </IconButton>
         <img src={logo} height={35} />
         <Typography
           variant="h5"
