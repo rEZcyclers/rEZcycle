@@ -6,11 +6,15 @@ function ProfilePage() {
   const { userSession, userProfile } = useContext(backendContext);
   return (
     <Base>
-      {userSession == null || userProfile == null ? (
+      {userSession == null ? (
         <h1> Please log in to view profile page </h1>
       ) : (
         <>
-          <h1>Welcome back, {userSession["user"]["email"]!}</h1>
+          {userProfile == null ? (
+            <h1>Loading...</h1>
+          ) : (
+            <h1>Welcome back, {userSession["user"]["email"]!}</h1>
+          )}
         </>
       )}
     </Base>
