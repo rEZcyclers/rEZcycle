@@ -1,0 +1,39 @@
+.InfoList {
+  height: 100%;
+  padding-left: 5%;
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+.InfoList .InfoEntry {
+  width: 93%;
+  height: 55px;
+  /* border: 1px solid white; */
+  list-style-type: none;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: row;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 15px;
+}
+
+.InfoList #active {
+  /* background-color: rgb(81, 208, 81); */
+  background-color: rgb(207, 253, 207);
+}
+
+.InfoEntry #key {
+  flex: 30%;
+  display: grid;
+  place-items: center;
+}
+
+.InfoEntry #val {
+  flex: 70%;
+  font-size: medium;
+  font-family: 'Lucida Grande', 'sLucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
