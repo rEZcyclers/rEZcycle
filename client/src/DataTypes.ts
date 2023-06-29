@@ -3,6 +3,8 @@ export type UserProfile = {
   user_id: number;
   user_name: string;
   email: string;
+  contact: number;
+  region: string;
 }
 
 export type RecyclableItem = {
