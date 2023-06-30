@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl";
 import {
   DonatableItem,
@@ -37,6 +37,8 @@ interface Props {
   spoiltEWaste: EWasteItem[]; // Selected EWaste in spoilt condition
   goodEWasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good EWaste
   repairEWasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable EWaste
+
+  category: number;
 }
 
 const MAPBOX_TOKEN =
@@ -74,28 +76,21 @@ const Locations = (props: Props) => {
         }
       )
     );
-  // const goodDonatablesLocationInfoList: LocationInfo[] =
-  //   props.goodDonatablesResults.flatMap(
-  //     (itemRes: DonateOrganisationLocations[]) => {
-  //       return itemRes.flatMap((entry: DonateOrganisationLocations) => {
-  //         const org: DonateOrganisation = entry["donateOrg"];
-  //         const locations: DonateLocation[] = entry["donateLocations"];
-  //         return locations.flatMap((loc: DonateLocation) => {
-  //           const locInfo: LocationInfo = {
-  //             address: loc["address"],
-  //             organisationName: org["organisation_name"],
-  //             contact: loc["contact"],
-  //             coords: { latitude: 1.36, longitude: 103.803 },
-  //           };
-  //           return locInfo;
-  //         });
-  //       });
-  //     }
-  //   );
+  const sampleLocInfo: LocationInfo[] = [
+    {
+      address: "1 North Bridge Road, Singapore 179094",
+      organisationName: "The Food Bank Singapore",
+      contact: "12345678",
+      coords: { latitude: 1.36, longitude: 103.803 },
+    },
+    {
+      address: "111 Compassvale Bow, Singapore 544998",
+      organisationName: "111 Compassvale Bow, Singapore 544998",
+      contact: "12345678",
+      coords: { latitude: 1.382, longitude: 103.891 },
+    },
+  ];
 
-  // const [locationCoordList, setLocationCoordList] = useState<
-  //   LocationCoordinates[]
-  // >([]);
   const [activeMarker, setActiveMarker] = useState<number>(-1);
 
   const handleMarkerClick = (marker: number) => {
@@ -105,6 +100,13 @@ const Locations = (props: Props) => {
   const handlePopupClose = () => {
     setActiveMarker(-1);
   };
+
+  // call handleDonatablesButtonClick whenever the category changes
+  useEffect(() => {
+    if (props.category == 1) {
+      handleGoodDonatablesButtonClick();
+    }
+  }, [props.category]);
 
   const handleGoodDonatablesButtonClick = () => {
     const promises = goodDonatablesLocationInfoList.map(
@@ -145,19 +147,20 @@ const Locations = (props: Props) => {
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        {goodDonatablesLocationInfoList.map((location, index) => (
-          <Marker
-            longitude={location.coords.longitude}
-            latitude={location.coords.latitude}
-            color="black"
-            onClick={() => handleMarkerClick(index)}
-          >
-            {/* <button
+        {props.category == 1 &&
+          goodDonatablesLocationInfoList.map((location, index) => (
+            <Marker
+              longitude={location.coords.longitude}
+              latitude={location.coords.latitude}
+              color="black"
+              onClick={() => handleMarkerClick(index)}
+            >
+              {/* <button
               className="marker-button"
               onClick={() => handleMarkerClick(marker)}
             ></button> */}
-          </Marker>
-        ))}
+            </Marker>
+          ))}
 
         {activeMarker != -1 && (
           <Popup
@@ -197,13 +200,13 @@ const Locations = (props: Props) => {
           </Popup>
         )}
       </Map>
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={handleGoodDonatablesButtonClick}
       >
         Good Donatables
-      </Button>
+      </Button> */}
     </>
   );
 };

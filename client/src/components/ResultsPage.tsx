@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   DonatableItem,
@@ -172,6 +172,8 @@ function ResultsPage({
     });
   }
 
+  const[category, setCategory] = useState(-1);
+
   const handleBackClick = () => {
     setStage(2);
   };
@@ -181,6 +183,13 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setCategory(1)}
+      >
+        Good Donatables
+      </Button>
       <Locations
         goodDonatables={goodDonatables}
         repairDonatables={repairDonatables}
@@ -192,6 +201,7 @@ function ResultsPage({
         spoiltEWaste={spoiltEWaste}
         goodEWasteResults={goodEWasteResults}
         repairEWasteResults={repairEWasteResults}
+        category={category}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
