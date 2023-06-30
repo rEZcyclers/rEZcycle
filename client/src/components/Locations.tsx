@@ -17,6 +17,7 @@ interface LocationInfo {
   address: string;
   organisationName: string;
   contact: string;
+  coords: LocationCoordinates;
 }
 
 type DonateOrganisationLocations = {
@@ -53,32 +54,48 @@ const geocodeAddress = async (address: string) => {
 
 // const Locations = ({ locations }: { locations: Location[] }) => {
 const Locations = (props: Props) => {
-  // const addresses: string[] = [
-  //   "136 Joo Seng Road, #01-01",
-  //   "710A Ang Mo Kio Avenue 8, #01-2625",
-  //   "133 New Bridge Road, Chinatown Point #B1-07",
-  //   "135 Jurong Gateway Road, #01-315",
-  // ];
-  const locationInfoList: LocationInfo[] = props.goodDonatablesResults.flatMap(
-    (itemRes: DonateOrganisationLocations[]) => {
-      return itemRes.flatMap((entry: DonateOrganisationLocations) => {
-        const org: DonateOrganisation = entry["donateOrg"];
-        const locations: DonateLocation[] = entry["donateLocations"];
-        return locations.flatMap((loc: DonateLocation) => {
-          const locInfo: LocationInfo = {
-            address: loc["address"],
-            organisationName: org["organisation_name"],
-            contact: loc["contact"],
-          };
-          return locInfo;
-        });
-      });
-    }
-  );
+  const [goodDonatablesLocationInfoList, setGoodDonatablesLocationInfoList] =
+    useState<LocationInfo[]>(
+      props.goodDonatablesResults.flatMap(
+        (itemRes: DonateOrganisationLocations[]) => {
+          return itemRes.flatMap((entry: DonateOrganisationLocations) => {
+            const org: DonateOrganisation = entry["donateOrg"];
+            const locations: DonateLocation[] = entry["donateLocations"];
+            return locations.flatMap((loc: DonateLocation) => {
+              const locInfo: LocationInfo = {
+                address: loc["address"],
+                organisationName: org["organisation_name"],
+                contact: loc["contact"],
+                coords: { latitude: 1.36, longitude: 103.803 },
+              };
+              return locInfo;
+            });
+          });
+        }
+      )
+    );
+  // const goodDonatablesLocationInfoList: LocationInfo[] =
+  //   props.goodDonatablesResults.flatMap(
+  //     (itemRes: DonateOrganisationLocations[]) => {
+  //       return itemRes.flatMap((entry: DonateOrganisationLocations) => {
+  //         const org: DonateOrganisation = entry["donateOrg"];
+  //         const locations: DonateLocation[] = entry["donateLocations"];
+  //         return locations.flatMap((loc: DonateLocation) => {
+  //           const locInfo: LocationInfo = {
+  //             address: loc["address"],
+  //             organisationName: org["organisation_name"],
+  //             contact: loc["contact"],
+  //             coords: { latitude: 1.36, longitude: 103.803 },
+  //           };
+  //           return locInfo;
+  //         });
+  //       });
+  //     }
+  //   );
 
-  const [locationCoordList, setLocationCoordList] = useState<
-    LocationCoordinates[]
-  >([]);
+  // const [locationCoordList, setLocationCoordList] = useState<
+  //   LocationCoordinates[]
+  // >([]);
   const [activeMarker, setActiveMarker] = useState<number>(-1);
 
   const handleMarkerClick = (marker: number) => {
@@ -89,19 +106,27 @@ const Locations = (props: Props) => {
     setActiveMarker(-1);
   };
 
-  const handleButtonClick = () => {
-    const promises = locationInfoList.map((locInfo: LocationInfo) =>
-      geocodeAddress(locInfo["address"])
+  const handleGoodDonatablesButtonClick = () => {
+    const promises = goodDonatablesLocationInfoList.map(
+      (locInfo: LocationInfo) => geocodeAddress(locInfo["address"])
     );
 
     Promise.all(promises)
       .then((results) => {
-        const newLocations = results.map((data) => ({
-          latitude: data.center[1],
-          longitude: data.center[0],
-        }));
-        setLocationCoordList(newLocations);
-        console.log(newLocations);
+        for (let i = 0; i < results.length; i++) {
+          const newLocInfo = goodDonatablesLocationInfoList[i];
+          newLocInfo["coords"] = {
+            latitude: results[i].center[1],
+            longitude: results[i].center[0],
+          };
+          setGoodDonatablesLocationInfoList([
+            ...goodDonatablesLocationInfoList.slice(0, i),
+            newLocInfo,
+            ...goodDonatablesLocationInfoList.slice(i, i + 1),
+          ]);
+          // goodDonatablesLocationInfoList[i] = newLocInfo;
+        }
+        console.log(goodDonatablesLocationInfoList);
       })
       .catch((error) => {
         console.error("Geocoding request failed:", error);
@@ -120,10 +145,10 @@ const Locations = (props: Props) => {
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        {locationCoordList.map((coord, index) => (
+        {goodDonatablesLocationInfoList.map((location, index) => (
           <Marker
-            longitude={coord.longitude}
-            latitude={coord.latitude}
+            longitude={location.coords.longitude}
+            latitude={location.coords.latitude}
             color="black"
             onClick={() => handleMarkerClick(index)}
           >
@@ -136,25 +161,48 @@ const Locations = (props: Props) => {
 
         {activeMarker != -1 && (
           <Popup
-            longitude={locationCoordList[activeMarker].longitude}
-            latitude={locationCoordList[activeMarker].latitude}
+            longitude={
+              goodDonatablesLocationInfoList[activeMarker].coords.longitude
+            }
+            latitude={
+              goodDonatablesLocationInfoList[activeMarker].coords.latitude
+            }
             onClose={handlePopupClose}
             closeButton={true}
             closeOnClick={false}
             anchor="top"
           >
             <div>
-              <h3>{locationInfoList[activeMarker]["organisationName"]}</h3>
-              <p>{locationInfoList[activeMarker]["address"]}</p>
-              <p>Contact: {locationInfoList[activeMarker]["contact"]}</p>
-              <p>Latitude: {locationCoordList[activeMarker].latitude}</p>
-              <p>Longitude: {locationCoordList[activeMarker].longitude}</p>
+              <h3>
+                {
+                  goodDonatablesLocationInfoList[activeMarker][
+                    "organisationName"
+                  ]
+                }
+              </h3>
+              <p>{goodDonatablesLocationInfoList[activeMarker]["address"]}</p>
+              <p>
+                Contact:{" "}
+                {goodDonatablesLocationInfoList[activeMarker]["contact"]}
+              </p>
+              <p>
+                Latitude:{" "}
+                {goodDonatablesLocationInfoList[activeMarker].coords.latitude}
+              </p>
+              <p>
+                Longitude:{" "}
+                {goodDonatablesLocationInfoList[activeMarker].coords.longitude}
+              </p>
             </div>
           </Popup>
         )}
       </Map>
-      <Button variant="contained" color="primary" onClick={handleButtonClick}>
-        Geocode
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleGoodDonatablesButtonClick}
+      >
+        Good Donatables
       </Button>
     </>
   );
