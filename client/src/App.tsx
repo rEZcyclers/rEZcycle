@@ -117,8 +117,10 @@ function App() {
     if (session == null) return;
     fetch(`${serverAPI}/userProfile?id=${session["user"]["id"]}`)
       .then((res) => res.json())
-      .then((data) => setUserProfile(data))
-      .then(() => console.log("userProfile fetched"))
+      .then((data) => {
+        setUserProfile(data[0]);
+      })
+      .then(() => console.log("UserProfile fetched"))
       .catch((err) => console.log(err));
   }
   useEffect(() => fetchBackendData(), []);
@@ -127,6 +129,7 @@ function App() {
     // Make userSession & backend data globally available to all pages via backendContext object
     <backendContext.Provider
       value={{
+        serverAPI,
         userSession,
         userProfile,
         recyclablesData,
