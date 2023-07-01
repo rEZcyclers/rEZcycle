@@ -1,9 +1,9 @@
 // Custom Data Types based on our Database Schema
 export type UserProfile = {
   user_id: number;
-  user_name: string;
   email: string;
-  contact: number;
+  name: string;
+  phone: string;
   region: string;
 }
 
