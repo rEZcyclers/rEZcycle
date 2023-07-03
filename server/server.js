@@ -3,7 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 
 const app = express();
+app.use(express.json()); // Impt for req.body to be read properly so it won't be undefined
 app.use(cors());
+
 const PORT = process.env.PORT || 8000;
 
 const SUPABASE_URL = "https://rtgficcuqderxusnmkkh.supabase.co";
@@ -27,6 +29,34 @@ app.get("/userProfile", async (req, res) => {
     console.log(error);
   }
 });
+
+app.put("/userProfile", async (req, res) => {
+  const id = req.query.id;
+  const { data, error } = await supabase
+    .from("UserProfiles")
+    .update(req.body)
+    .eq("user_id", id)
+    .select();
+  if (data) {
+    res.json(data);
+  } else {
+    console.log(error);
+  }
+});
+
+// app.put("/userProfile/img", async (req, res) => {
+//   const id = req.query.id;
+//   console.log(req.body);
+//   const { data, error } = await supabase.storage
+//     .from("Images")
+//     .upload(id + "/" + uuidv4(), req.body);
+
+//   if (data) {
+//     res.send(data);
+//   } else {
+//     console.log(error);
+//   }
+// });
 
 app.get("/recyclables", async (req, res) => {
   const { data, error } = await supabase.from("Recyclables").select();

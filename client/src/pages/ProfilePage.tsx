@@ -1,11 +1,11 @@
 import Base from "../components/Base";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { backendContext } from "../App";
-import ProfileCard from "./ProfileCard";
+import ProfileCard from "../components/ProfileCard";
 
 function ProfilePage() {
-  const { userSession, userProfile } = useContext(backendContext);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  const { serverAPI, userSession, userProfile } = useContext(backendContext);
+  // const [editMode, setEditMode] = useState<boolean>(false);
   // TODO: Set edit modes for every info entry, which will be
   // set to edit mode by an 'edit button'. Once that entry is
   // in edit mode, it will render a separate component, which
@@ -27,12 +27,7 @@ function ProfilePage() {
             <h1>Loading...</h1>
           ) : (
             <>
-              <h1>Welcome back, {userSession["user"]["email"]!}</h1>
-              {editMode ? (
-                <h1>Edit Mode</h1>
-              ) : (
-                <ProfileCard userProfile={userProfile} />
-              )}
+              <ProfileCard server={serverAPI} userProfile={userProfile} />
             </>
           )}
         </>
