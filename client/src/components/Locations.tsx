@@ -148,7 +148,11 @@ const Locations = (props: Props) => {
         setAllLocationInfo([
           allLocationInfo[0],
           [
-            [newLocInfoList, ...allLocationInfo[1][0].slice(1)],
+            [
+              ...allLocationInfo[1][0].slice(0, index),
+              newLocInfoList,
+              ...allLocationInfo[1][0].slice(index + 1),
+            ],
             allLocationInfo[1][1],
             allLocationInfo[1][2],
           ],
