@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   DonatableItem,
@@ -11,6 +11,7 @@ import {
   DRLoc,
   EDOrg,
   ERLoc,
+  item,
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
@@ -172,6 +173,17 @@ function ResultsPage({
     });
   }
 
+  // Identify an item with a list of 3 numbers
+  // The first number identifies the category of the item, the second number identifies the condition of the item and the third number identifies the item index
+  // The first number is 0 for recyclables, 1 for donatables and 2 for eWaste
+  // The second number is 0 for good, 1 for repairable and 2 for spoilt
+  // The third number is the index of the item in the respective data array
+  const [selectedItem, setSelectedItem] = useState<item>({
+    category: -1,
+    condition: -1,
+    index: -1,
+  });
+
   const handleBackClick = () => {
     setStage(2);
   };
@@ -181,6 +193,20 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setSelectedItem({ category: 1, condition: 0, index: 0 })}
+      >
+        Show First Item
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setSelectedItem({ category: 1, condition: 0, index: 1 })}
+      >
+        Show Second Item
+      </Button>
       <Locations
         goodDonatables={goodDonatables}
         repairDonatables={repairDonatables}
@@ -192,6 +218,7 @@ function ResultsPage({
         spoiltEWaste={spoiltEWaste}
         goodEWasteResults={goodEWasteResults}
         repairEWasteResults={repairEWasteResults}
+        selectedItem={selectedItem}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}

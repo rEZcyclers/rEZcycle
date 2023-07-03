@@ -71,3 +71,9 @@ export type ERLoc = {
   eWaste_id: number;
   repair_id: number;
 };
+
+export type item = {
+  category: number;
+  condition: number;
+  index: number;
+}
