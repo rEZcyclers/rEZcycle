@@ -44,21 +44,6 @@ interface Props {
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiaWFuNDQ0NCIsImEiOiJjbGhpeTVrMjcwY253M2RwNThlY2wzMWJ6In0.f3cyuNBJ5dmOBt-JTI6iCw"; // Set your mapbox token here
 
-// const sampleLocInfo: LocationInfo[] = [
-//   {
-//     address: "1 North Bridge Road, Singapore 179094",
-//     organisationName: "The Food Bank Singapore",
-//     contact: "12345678",
-//     coords: { latitude: 1.36, longitude: 103.803 },
-//   },
-//   {
-//     address: "111 Compassvale Bow, Singapore 544998",
-//     organisationName: "111 Compassvale Bow, Singapore 544998",
-//     contact: "12345678",
-//     coords: { latitude: 1.382, longitude: 103.891 },
-//   },
-// ];
-
 const DEFAULT_COORDINATES = {
   latitude: 1.2,
   longitude: 103.803,
@@ -148,7 +133,11 @@ const Locations = (props: Props) => {
         setAllLocationInfo([
           allLocationInfo[0],
           [
-            [newLocInfoList, ...allLocationInfo[1][0].slice(1)],
+            [
+              ...allLocationInfo[1][0].slice(0, index),
+              newLocInfoList,
+              ...allLocationInfo[1][0].slice(index + 1),
+            ],
             allLocationInfo[1][1],
             allLocationInfo[1][2],
           ],
