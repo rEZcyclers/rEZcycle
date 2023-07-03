@@ -75,7 +75,8 @@ const geocodeAddress = async (address: string) => {
 };
 
 const Locations = (props: Props) => {
-  //
+  // make shortforms
+  const { category, condition, index } = props.selectedItem;
 
   // From this array, get any Location Info you want about any selected item
   // How do you get the location that you want? Use allLocationInfo[category][condition][itemIndex][locationIndex]
@@ -157,6 +158,7 @@ const Locations = (props: Props) => {
       .catch((error) => {
         console.error("Geocoding request failed:", error);
       });
+    console.log("geocode ran");
   };
 
   // // Make a list of LocationInfo for every selected donatable item that is in repairable condition
@@ -189,14 +191,10 @@ const Locations = (props: Props) => {
     setActiveMarker(-1);
   };
 
-  // Whenever the selected item changes, geocode the LocationInfo list of the selected category
+  // Whenever the selected item changes, geocode the LocationInfo list of the selected item
   useEffect(() => {
-    if (props.selectedItem.category != -1) {
-      geocodeLocationInfoList(
-        allLocationInfo[props.selectedItem.category][
-          props.selectedItem.condition
-        ][props.selectedItem.index]
-      );
+    if (category != -1) {
+      geocodeLocationInfoList(allLocationInfo[category][condition][index]);
     }
   }, [props.selectedItem]);
 
@@ -215,14 +213,10 @@ const Locations = (props: Props) => {
         {/* Only show markers if 
               (1) there is a selected item i.e. props.selectedItem.category != -1
               (2) if the selected item's addresses have been geocoded i.e. The coordinates are not default */}
-        {props.selectedItem.category != -1 &&
-          allLocationInfo[props.selectedItem.category][
-            props.selectedItem.condition
-          ][props.selectedItem.index][0].coords.latitude !=
+        {category != -1 &&
+          allLocationInfo[category][condition][index][0].coords.latitude !=
             DEFAULT_COORDINATES.latitude &&
-          allLocationInfo[props.selectedItem.category][
-            props.selectedItem.condition
-          ][props.selectedItem.index].map((location, index) => (
+          allLocationInfo[category][condition][index].map((location, index) => (
             <Marker
               latitude={location.coords.latitude}
               longitude={location.coords.longitude}
@@ -234,14 +228,12 @@ const Locations = (props: Props) => {
         {activeMarker != -1 && (
           <Popup
             longitude={
-              allLocationInfo[props.selectedItem.category][
-                props.selectedItem.condition
-              ][props.selectedItem.index][activeMarker].coords.longitude
+              allLocationInfo[category][condition][index][activeMarker].coords
+                .longitude
             }
             latitude={
-              allLocationInfo[props.selectedItem.category][
-                props.selectedItem.condition
-              ][props.selectedItem.index][activeMarker].coords.latitude
+              allLocationInfo[category][condition][index][activeMarker].coords
+                .latitude
             }
             onClose={handlePopupClose}
             closeButton={true}
@@ -251,40 +243,39 @@ const Locations = (props: Props) => {
             <div>
               <h3>
                 {
-                  allLocationInfo[props.selectedItem.category][
-                    props.selectedItem.condition
-                  ][props.selectedItem.index][activeMarker]["organisationName"]
+                  allLocationInfo[category][condition][index][activeMarker][
+                    "organisationName"
+                  ]
                 }
               </h3>
               <p>
                 {
-                  allLocationInfo[props.selectedItem.category][
-                    props.selectedItem.condition
-                  ][props.selectedItem.index][activeMarker]["address"]
+                  allLocationInfo[category][condition][index][activeMarker][
+                    "address"
+                  ]
                 }
               </p>
               <p>
                 Contact:{" "}
                 {
-                  allLocationInfo[props.selectedItem.category][
-                    props.selectedItem.condition
-                  ][props.selectedItem.index][activeMarker]["contact"]
+                  allLocationInfo[category][condition][index][activeMarker][
+                    "contact"
+                  ]
                 }
               </p>
               <p>
                 Latitude:{" "}
                 {
-                  allLocationInfo[props.selectedItem.category][
-                    props.selectedItem.condition
-                  ][props.selectedItem.index][activeMarker].coords.latitude
+                  allLocationInfo[category][condition][index][activeMarker]
+                    .coords.latitude
                 }
               </p>
               <p>
                 Longitude:{" "}
                 {
-                  allLocationInfo[props.selectedItem.category][
-                    props.selectedItem.condition
-                  ][props.selectedItem.index][activeMarker].coords.longitude
+                  allLocationInfo[props.selectedItem.category][condition][
+                    index
+                  ][activeMarker].coords.longitude
                 }
               </p>
             </div>
