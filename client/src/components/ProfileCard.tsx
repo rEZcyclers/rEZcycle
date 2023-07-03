@@ -197,6 +197,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                   <IconButton
                     onClick={() => {
                       setEditName(false);
+                      setNameError(false);
                       setName(userProfile["name"]);
                     }}
                   >
@@ -269,6 +270,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                       <IconButton
                         onClick={() => {
                           setEditEmail(false);
+                          setEmailError(false);
                           setEmail(userProfile["email"]);
                         }}
                       >
@@ -333,6 +335,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                       <IconButton
                         onClick={() => {
                           setEditPhone(false);
+                          setPhoneError(false);
                           setPhone(userProfile["phone"]);
                         }}
                       >
