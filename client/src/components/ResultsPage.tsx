@@ -11,6 +11,7 @@ import {
   DRLoc,
   EDOrg,
   ERLoc,
+  item,
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
@@ -172,7 +173,12 @@ function ResultsPage({
     });
   }
 
-  const[category, setCategory] = useState(-1);
+  // Identify an item with a list of 3 numbers
+  // The first number identifies the category of the item, the second number identifies the condition of the item and the third number identifies the item index
+  // The first number is 0 for recyclables, 1 for donatables and 2 for eWaste
+  // The second number is 0 for good, 1 for repairable and 2 for spoilt
+  // The third number is the index of the item in the respective data array
+  const [selectedItem, setSelectedItem] = useState<item>({category: -1, condition: -1, index: -1});
 
   const handleBackClick = () => {
     setStage(2);
@@ -186,9 +192,9 @@ function ResultsPage({
       <Button
         variant="contained"
         color="primary"
-        onClick={() => setCategory(1)}
+        onClick={() => setSelectedItem({ category: 1, condition: 0, index: 0 })}
       >
-        Good Donatables
+        Geocode and show on map
       </Button>
       <Locations
         goodDonatables={goodDonatables}
@@ -201,7 +207,7 @@ function ResultsPage({
         spoiltEWaste={spoiltEWaste}
         goodEWasteResults={goodEWasteResults}
         repairEWasteResults={repairEWasteResults}
-        category={category}
+        selectedItem={selectedItem}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
