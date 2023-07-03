@@ -178,7 +178,11 @@ function ResultsPage({
   // The first number is 0 for recyclables, 1 for donatables and 2 for eWaste
   // The second number is 0 for good, 1 for repairable and 2 for spoilt
   // The third number is the index of the item in the respective data array
-  const [selectedItem, setSelectedItem] = useState<item>({category: -1, condition: -1, index: -1});
+  const [selectedItem, setSelectedItem] = useState<item>({
+    category: -1,
+    condition: -1,
+    index: -1,
+  });
 
   const handleBackClick = () => {
     setStage(2);
@@ -194,7 +198,14 @@ function ResultsPage({
         color="primary"
         onClick={() => setSelectedItem({ category: 1, condition: 0, index: 0 })}
       >
-        Geocode and show on map
+        Show First Item
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setSelectedItem({ category: 1, condition: 0, index: 1 })}
+      >
+        Show Second Item
       </Button>
       <Locations
         goodDonatables={goodDonatables}
