@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./ProfileCard.css";
+import validator from "validator";
 import {
   Box,
   FormControl,
@@ -30,8 +31,16 @@ export default function ProfileCard({ server, userProfile }: Props) {
   const [email, setEmail] = useState<string>(userProfile["email"]);
   const [phone, setPhone] = useState<string>(userProfile["phone"]);
   const [region, setRegion] = useState<string>(userProfile["region"]);
+  const [emailError, setEmailError] = useState<boolean>(false);
+  const [phoneError, setPhoneError] = useState<boolean>(false);
+  const [nameError, setNameError] = useState<boolean>(false);
 
   const updateName = () => {
+    if (name.length == 0) {
+      setNameError(true);
+      return;
+    }
+    setNameError(false);
     fetch(`${server}/userProfile?id=${userProfile["user_id"]}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -46,6 +55,11 @@ export default function ProfileCard({ server, userProfile }: Props) {
   };
 
   const updateEmail = () => {
+    if (!validator.isEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
     fetch(`${server}/userProfile?id=${userProfile["user_id"]}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -60,6 +74,15 @@ export default function ProfileCard({ server, userProfile }: Props) {
   };
 
   const updatePhone = () => {
+    if (
+      !validator.isMobilePhone(phone) ||
+      phone.length != 8 ||
+      parseInt(phone[0]) < 6
+    ) {
+      setPhoneError(true);
+      return;
+    }
+    setPhoneError(false);
     fetch(`${server}/userProfile?id=${userProfile["user_id"]}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -149,36 +172,49 @@ export default function ProfileCard({ server, userProfile }: Props) {
         </FormControl> */}
           <div style={{ margin: "5%" }}>
             {editName ? (
-              <form
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
+              <>
+                <form
                   style={{
-                    fontFamily: "Lucida Grande",
-                    fontSize: "medium",
-                    width: "50%",
-                  }}
-                />
-                <IconButton onClick={updateName}>
-                  <CheckIcon></CheckIcon>
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    setEditName(false);
-                    setName(userProfile["name"]);
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
                   }}
                 >
-                  <CloseIcon></CloseIcon>
-                </IconButton>
-              </form>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    style={{
+                      fontFamily: "Lucida Grande",
+                      fontSize: "medium",
+                      width: "50%",
+                    }}
+                  />
+                  <IconButton onClick={updateName}>
+                    <CheckIcon></CheckIcon>
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      setEditName(false);
+                      setName(userProfile["name"]);
+                    }}
+                  >
+                    <CloseIcon></CloseIcon>
+                  </IconButton>
+                </form>
+                {nameError && (
+                  <span
+                    style={{
+                      color: "red",
+                      fontSize: "small",
+                      fontFamily: "Lucida Grande",
+                    }}
+                  >
+                    Please enter a non-empty username
+                  </span>
+                )}
+              </>
             ) : (
               <div
                 style={{
@@ -239,6 +275,13 @@ export default function ProfileCard({ server, userProfile }: Props) {
                         <CloseIcon></CloseIcon>
                       </IconButton>
                     </form>
+                    {emailError && (
+                      <span
+                        style={{ color: "red", fontFamily: "Lucida Grande" }}
+                      >
+                        Please enter a valid email
+                      </span>
+                    )}
                   </>
                 ) : (
                   <div
@@ -296,6 +339,13 @@ export default function ProfileCard({ server, userProfile }: Props) {
                         <CloseIcon></CloseIcon>
                       </IconButton>
                     </form>
+                    {phoneError && (
+                      <span
+                        style={{ color: "red", fontFamily: "Lucida Grande" }}
+                      >
+                        Please enter a valid phone number
+                      </span>
+                    )}
                   </>
                 ) : (
                   <div
