@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { createRef, useRef, useState } from "react";
 import "./ProfileCard.css";
 import validator from "validator";
 import {
@@ -10,6 +10,7 @@ import {
   Select,
   Stack,
   Typography,
+  colors,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -17,12 +18,18 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { UserProfile } from "../DataTypes";
 
+// import axios from "axios";
+
 interface Props {
   server: string;
   userProfile: UserProfile;
 }
 
 export default function ProfileCard({ server, userProfile }: Props) {
+  const initialDp = userProfile["dp_url"]
+    ? userProfile["dp_url"]
+    : "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp";
+  const [imgURL, setImgURL] = useState<string>(initialDp);
   const [editName, setEditName] = useState<boolean>(false);
   const [editEmail, setEditEmail] = useState<boolean>(false);
   const [editPhone, setEditPhone] = useState<boolean>(false);
@@ -34,6 +41,39 @@ export default function ProfileCard({ server, userProfile }: Props) {
   const [emailError, setEmailError] = useState<boolean>(false);
   const [phoneError, setPhoneError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
+
+  const [fileText, setFileText] = useState<string>("Upload profile pic");
+  // const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // const clickInput = () => {
+  //   fileInputRef.current?.click();
+  // };
+
+  console.log(imgURL);
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files == null) return;
+    updatePhoto(e.target.files[0]);
+  };
+
+  const updatePhoto = (photo: File) => {
+    console.log("updatePhoto called");
+    console.log(photo);
+    setFileText("Uploading...");
+    const data = new FormData();
+    data.append("image", photo);
+    fetch(`${server}/userProfile/photo?id=${userProfile["user_id"]}`, {
+      method: "PUT",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setImgURL(data["url"]);
+        userProfile["dp_url"] = data["url"];
+        setFileText("Upload profile pic");
+      })
+      .then(() => console.log("Uploaded Photo"))
+      .catch((err) => console.log(err));
+  };
 
   const updateName = () => {
     if (name.length == 0) {
@@ -110,18 +150,6 @@ export default function ProfileCard({ server, userProfile }: Props) {
       .catch((err) => console.log(err));
   };
 
-  // const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   console.log("Uploading Image...");
-  //   let file = e.target.files ? e.target.files[0] : null;
-  //   //
-  //   fetch(`${server}/userProfile/img?id=${userProfile["user_id"]}`, {
-  //     method: "PUT",
-  //     body: file,
-  //   })
-  //     .then((res) => res.json())
-  //     .then(() => console.log("Uploaded Image"));
-  // };
-
   return (
     <>
       <h1>
@@ -131,6 +159,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
         direction={{ xs: "column", sm: "row" }}
         maxWidth={800}
         sx={{
+          display: "flex",
           flexWrap: "wrap",
           border: "1px solid",
           boxShadow: "10px 5px 20px #83F33A",
@@ -151,26 +180,28 @@ export default function ProfileCard({ server, userProfile }: Props) {
             borderBottomLeftRadius: ".5rem",
           }}
         >
-          <img
-            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-            alt="ProfilePicture"
-            width="35%"
-            style={{ marginTop: "10%" }}
+          <Box
+            sx={{
+              height: "150px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              marginTop: "20px",
+            }}
+          >
+            <img src={imgURL} className="ProfilePic" alt="ProfilePicture" />
+          </Box>
+
+          <button className="UploadPic">
+            <label htmlFor="fileInput">{fileText}</label>
+          </button>
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: "none" }}
+            accept="image/png, image/jpeg"
+            onChange={handlePhotoUpload}
           />
-          {/* <p>Upload a new image</p>
-        <FormControl>
-          <FormGroup style={{ maxWidth: "150px" }}>
-            <Button variant="contained">
-              <Input
-                type="file"
-                inputProps={{ accept: "image/png, image/jpeg" }}
-                sx={{}}
-                //onChange={(e) => uploadImage(e)}
-              />
-            </Button>
-          </FormGroup>
-        </FormControl> */}
-          <div style={{ margin: "5%" }}>
+          <div style={{ margin: "2%" }}>
             {editName ? (
               <>
                 <form
@@ -224,7 +255,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                   alignItems: "center",
                 }}
               >
-                <Typography sx={{ color: "white", margin: "5%" }}>
+                <Typography sx={{ fontFamily: "Lucida Grande" }}>
                   {name}
                 </Typography>
                 <IconButton
