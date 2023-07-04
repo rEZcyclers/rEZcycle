@@ -1,4 +1,4 @@
-import { createRef, useRef, useState } from "react";
+import { useState } from "react";
 import "./ProfileCard.css";
 import validator from "validator";
 import {
@@ -10,7 +10,6 @@ import {
   Select,
   Stack,
   Typography,
-  colors,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
