@@ -131,17 +131,17 @@ const Locations = (props: Props) => {
         }
         // Update allLocationInfo with a new list of LocationInfo to trigger a re-render of the map markers
         setAllLocationInfo([
-          allLocationInfo[0],
+          ...allLocationInfo.slice(0, category),
           [
+            ...allLocationInfo[category].slice(0, condition),
             [
               ...allLocationInfo[1][0].slice(0, index),
               newLocInfoList,
               ...allLocationInfo[1][0].slice(index + 1),
             ],
-            allLocationInfo[1][1],
-            allLocationInfo[1][2],
+            ...allLocationInfo[category].slice(condition + 1),
           ],
-          allLocationInfo[2],
+          ...allLocationInfo.slice(category + 1),
         ]);
       })
       .catch((error) => {
