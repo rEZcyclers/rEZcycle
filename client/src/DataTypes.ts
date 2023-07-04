@@ -5,6 +5,7 @@ export type UserProfile = {
   name: string;
   phone: string;
   region: string;
+  dp_url: string;
 }
 
 export type RecyclableItem = {

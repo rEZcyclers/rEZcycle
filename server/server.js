@@ -1,10 +1,24 @@
 import express from "express";
 import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
+import multer from "multer";
 
 const app = express();
-app.use(express.json()); // Impt for req.body to be read properly so it won't be undefined
+app.use(express.json()); // Impt for req.body JSON files to be read properly so it won't be undefined
 app.use(cors());
+
+// Multer configuration with memory storage
+const storage = multer.memoryStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Set the destination folder for uploaded files
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original filename
+  },
+});
+
+const upload = multer({ storage });
+// Impt for req.body image files to be read properly so it won't be {}
 
 const PORT = process.env.PORT || 8000;
 
@@ -44,19 +58,67 @@ app.put("/userProfile", async (req, res) => {
   }
 });
 
-// app.put("/userProfile/img", async (req, res) => {
-//   const id = req.query.id;
-//   console.log(req.body);
-//   const { data, error } = await supabase.storage
-//     .from("Images")
-//     .upload(id + "/" + uuidv4(), req.body);
+app.put("/userProfile/photo", upload.single("image"), async (req, res) => {
+  const id = req.query.id;
+  console.log(id);
+  console.log(req.file);
+  if (!req.file) {
+    res.send("Invalid file");
+    return;
+  }
+  const photoBuffer = req.file.buffer;
+  const photoName = req.file.originalname;
+  let contentType;
+  const photoExtension = photoName
+    .substr(photoName.lastIndexOf(".") + 1)
+    .toLowerCase();
 
-//   if (data) {
-//     res.send(data);
-//   } else {
-//     console.log(error);
-//   }
-// });
+  if (photoExtension === "jpg" || photoExtension === "jpeg") {
+    contentType = "image/jpeg";
+  } else if (photoExtension === "png") {
+    contentType = "image/png";
+  } else if (photoExtension === "gif") {
+    contentType = "image/gif";
+  } else {
+    // Set a default content type if the file extension is not recognized
+    contentType = "application/octet-stream";
+  }
+  const pathName = id + "/profilePic." + photoExtension;
+
+  const { data, error } = await supabase.storage
+    .from("profiles")
+    .upload(pathName, photoBuffer, {
+      contentType,
+      cacheControl: "3600",
+      upsert: true,
+    });
+  if (data) {
+    const { data } = await supabase.storage
+      .from("profiles")
+      .getPublicUrl(pathName);
+    if (data) {
+      // NOTE: Since every user's profile picture is always hosted
+      // on the same URL, React will assume that the same image URL
+      // will always have the same image content in order to optimise
+      // rendering, which is a bug because users will always see the
+      // first profile picture even after they uploaded a new one.
+      // Hence, to force React to fetch a new image from the same URL,
+      // randomString is added as a redundant query parameter for
+      // imgURL, tricking React into thinking the URL has changed,
+      // hence fetching a new image.
+      const randomString = Math.random().toString(10).substring(5);
+      const imgURL = data["publicUrl"] + "?" + randomString;
+      const { error } = await supabase
+        .from("UserProfiles")
+        .update({ dp_url: imgURL })
+        .eq("user_id", id);
+      res.send({ url: imgURL });
+    }
+  } else {
+    console.log(error);
+    res.error;
+  }
+});
 
 app.get("/recyclables", async (req, res) => {
   const { data, error } = await supabase.from("Recyclables").select();
