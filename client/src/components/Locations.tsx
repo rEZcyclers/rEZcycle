@@ -45,8 +45,8 @@ const MAPBOX_TOKEN =
   "pk.eyJ1IjoiaWFuNDQ0NCIsImEiOiJjbGhpeTVrMjcwY253M2RwNThlY2wzMWJ6In0.f3cyuNBJ5dmOBt-JTI6iCw"; // Set your mapbox token here
 
 const DEFAULT_COORDINATES = {
-  latitude: 1.2,
-  longitude: 103.803,
+  latitude: 1.7436446564238546,
+  longitude: 103.89657957314985,
 };
 
 const geocodeAddress = async (address: string) => {
@@ -182,8 +182,13 @@ const Locations = (props: Props) => {
 
   // Whenever the selected item changes, geocode the LocationInfo list of the selected item
   useEffect(() => {
-    if (category != -1) {
+    if (
+      category != -1 &&
+      allLocationInfo[category][condition][index][0].coords.latitude ==
+        DEFAULT_COORDINATES.latitude
+    ) {
       geocodeLocationInfoList(allLocationInfo[category][condition][index]);
+      console.log("geocode ran");
     }
   }, [props.selectedItem]);
 
