@@ -15,7 +15,7 @@ interface LocationCoordinates {
 }
 interface LocationInfo {
   address: string;
-  organisationName: string;
+  name: string;
   contact: string;
   coords: LocationCoordinates;
 }
@@ -60,7 +60,7 @@ const geocodeAddress = async (address: string) => {
 };
 
 const Locations = (props: Props) => {
-  // make shortforms
+  // destructure object
   const { category, condition, index } = props.selectedItem;
 
   // From this array, get any Location Info you want about any selected item
@@ -91,7 +91,7 @@ const Locations = (props: Props) => {
                 // For each location of an organisation, transform it to a LocationInfo
                 const locationInfo: LocationInfo = {
                   address: location["address"],
-                  organisationName: org["organisation_name"],
+                  name: org["organisation_name"],
                   contact: location["contact"],
                   coords: {
                     latitude: DEFAULT_COORDINATES.latitude,
@@ -100,6 +100,25 @@ const Locations = (props: Props) => {
                 };
                 return locationInfo;
               });
+            });
+          }
+        ),
+        props.repairDonatablesResults.map(
+          // For each selected repairable donatable item, create a list of LocationInfo
+          (item: RepairLocation[]) => {
+            // For each repair location that accepts the selected repairable donatable item, transform it to data of type LocationInfo
+            return item.map((location: RepairLocation) => {
+              const locationInfo: LocationInfo = {
+                address:
+                  location["center_name"] + " " + location["stall_number"],
+                name: "HDB block",
+                contact: "No contact available",
+                coords: {
+                  latitude: DEFAULT_COORDINATES.latitude,
+                  longitude: DEFAULT_COORDINATES.longitude,
+                },
+              };
+              return locationInfo;
             });
           }
         ),
@@ -135,9 +154,9 @@ const Locations = (props: Props) => {
           [
             ...allLocationInfo[category].slice(0, condition),
             [
-              ...allLocationInfo[1][0].slice(0, index),
+              ...allLocationInfo[category][condition].slice(0, index),
               newLocInfoList,
-              ...allLocationInfo[1][0].slice(index + 1),
+              ...allLocationInfo[category][condition].slice(index + 1),
             ],
             ...allLocationInfo[category].slice(condition + 1),
           ],
@@ -160,7 +179,7 @@ const Locations = (props: Props) => {
   //       return locationList.flatMap((location: RepairLocation) => {
   //         const locInfo: LocationInfo = {
   //           address: location["center_name"],
-  //           organisationName: location["center_name"],
+  //           name: location["center_name"],
   //           contact: "Not Applicable",
   //           coords: { latitude: 1.36, longitude: 103.803 },
   //         };
@@ -238,7 +257,7 @@ const Locations = (props: Props) => {
               <h3>
                 {
                   allLocationInfo[category][condition][index][activeMarker][
-                    "organisationName"
+                    "name"
                   ]
                 }
               </h3>
