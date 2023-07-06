@@ -122,3 +122,11 @@ export type DonateOrganisationLocations = {
   donateOrg: DonateOrganisation;
   donateLocations: DonateLocation[];
 };
+
+// Wrapper object to store an ebin object & its corresponding list of locations
+export type EbinLocations = {
+  ebin: Ebin;
+  ebinLocations: EbinLocation[];
+};
+
+
