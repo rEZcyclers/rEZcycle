@@ -27,10 +27,12 @@ const SUPABASE_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2ZpY2N1cWRlcnh1c25ta2toIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwNzI0NjcsImV4cCI6MjAwMDY0ODQ2N30.2L7pCi3tu8PRoDRFeCFvS6KPEIqxLi9OqVcVVv-ZtFk";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// Root
 app.get("/", (req, res) => {
   res.json([{ testKey: "server is running!" }]);
 });
 
+// Get user profile
 app.get("/userProfile", async (req, res) => {
   const id = req.query.id;
   const { data, error } = await supabase
@@ -44,6 +46,7 @@ app.get("/userProfile", async (req, res) => {
   }
 });
 
+// Handle updates to user profile info
 app.put("/userProfile", async (req, res) => {
   const id = req.query.id;
   const { data, error } = await supabase
@@ -58,6 +61,7 @@ app.put("/userProfile", async (req, res) => {
   }
 });
 
+// Handle updates to user profile photo
 app.put("/userProfile/photo", upload.single("image"), async (req, res) => {
   const id = req.query.id;
   console.log(id);
@@ -120,6 +124,7 @@ app.put("/userProfile/photo", upload.single("image"), async (req, res) => {
   }
 });
 
+// Get items (recyclables, donatables, ewaste)
 app.get("/recyclables", async (req, res) => {
   const { data, error } = await supabase.from("Recyclables").select();
   res.json(data);
@@ -130,11 +135,12 @@ app.get("/donatables", async (req, res) => {
   res.json(data);
 });
 
-app.get("/eWaste", async (req, res) => {
-  const { data, error } = await supabase.from("EWaste").select();
+app.get("/ewaste", async (req, res) => {
+  const { data, error } = await supabase.from("Ewaste").select();
   res.json(data);
 });
 
+// Get locations for items (donateOrgs + donateLocs, repairLocs, ebins + ebinLocs)
 app.get("/donateOrganisations", async (req, res) => {
   const { data, error } = await supabase.from("DonateOrganisations").select();
   res.json(data);
@@ -150,6 +156,17 @@ app.get("/repairLocations", async (req, res) => {
   res.json(data);
 });
 
+app.get("/ebins", async (req, res) => {
+  const { data, error } = await supabase.from("Ebins").select();
+  res.json(data);
+});
+
+app.get("/ebinLocations", async (req, res) => {
+  const { data, error } = await supabase.from("EbinLocations").select();
+  res.json(data);
+});
+
+// Get junction tables (DD, DR, ED, ER, EE)
 app.get("/donatablesDonateOrganisations", async (req, res) => {
   const { data, error } = await supabase
     .from("DonatablesDonateOrganisations")
@@ -164,18 +181,24 @@ app.get("/donatablesRepairLocations", async (req, res) => {
   res.json(data);
 });
 
-app.get("/eWasteDonateOrganisations", async (req, res) => {
+app.get("/ewasteDonateOrganisations", async (req, res) => {
   const { data, error } = await supabase
-    .from("EWasteDonateOrganisations")
+    .from("EwasteDonateOrganisations")
     .select();
   res.json(data);
 });
 
-app.get("/eWasteRepairLocations", async (req, res) => {
-  const { data, error } = await supabase.from("EWasteRepairLocations").select();
+app.get("/ewasteRepairLocations", async (req, res) => {
+  const { data, error } = await supabase.from("EwasteRepairLocations").select();
   res.json(data);
 });
 
+app.get("/ewasteEbins", async (req, res) => {
+  const { data, error } = await supabase.from("EwasteEbins").select();
+  res.json(data);
+});
+
+// Run the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
