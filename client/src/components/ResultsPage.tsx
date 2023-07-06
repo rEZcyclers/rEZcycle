@@ -2,25 +2,27 @@ import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   DonatableItem,
-  EWasteItem,
+  EwasteItem,
   RecyclableItem,
   DonateOrganisation,
   DonateLocation,
   RepairLocation,
+  Ebin,
+  EbinLocation,
   DDOrg,
   DRLoc,
   EDOrg,
   ERLoc,
-  item,
+  EE,
+  SelectedResultItem,
+  DonateOrganisationLocations,
+  EbinLocations,
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
-type DonateOrganisationLocations = {
-  donateOrg: DonateOrganisation;
-  donateLocations: DonateLocation[];
-};
+
 interface Props {
   stage: number;
   setStage: (num: number) => void;
@@ -29,29 +31,32 @@ interface Props {
   setRecyclableConditions: (newArray: boolean[]) => void;
   donatableConditions: Condition[];
   setDonatableConditions: (newArray: Condition[]) => void;
-  eWasteConditions: Condition[];
-  setEWasteConditions: (newArray: Condition[]) => void;
+  ewasteConditions: Condition[];
+  setEwasteConditions: (newArray: Condition[]) => void;
 }
 
 function ResultsPage({
   selectedItems,
   recyclableConditions,
   donatableConditions,
-  eWasteConditions,
+  ewasteConditions,
   setStage,
 }: Props) {
   // Retrieve raw data first
   const {
     recyclablesData,
     donatablesData,
-    eWasteData,
+    ewasteData,
     donateOrgData,
     donateLocData,
     repairLocData,
+    ebinData,
+    ebinLocData,
     DDOrgData,
     DRLocData,
     EDOrgData,
     ERLocData,
+    EEData,
   } = useContext(backendContext);
 
   let recyclablesResults: RecyclableItem[] = []; // Selected recyclables which can be disposed in blue bins
@@ -63,11 +68,13 @@ function ResultsPage({
   let goodDonatablesResults: DonateOrganisationLocations[][] = []; // List of donateOrganisations & their locations for every selected good donatable
   let repairDonatablesResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable donatable
 
-  let goodEWaste: EWasteItem[] = []; // Selected EWaste in good condition
-  let repairEWaste: EWasteItem[] = []; // Selected EWaste in repairable condition
-  let spoiltEWaste: EWasteItem[] = []; // Selected EWaste in spoilt condition
-  let goodEWasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good EWaste
-  let repairEWasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable EWaste
+  let goodEwaste: EwasteItem[] = []; // Selected Ewaste in good condition
+  let repairEwaste: EwasteItem[] = []; // Selected Ewaste in repairable condition
+  let spoiltEwaste: EwasteItem[] = []; // Selected Ewaste in spoilt condition
+  let goodEwasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good Ewaste
+  let repairEwasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable Ewaste
+  let allEwaste: EwasteItem[] = []; // All selected Ewaste regardless of condition
+  let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
     recyclablesResults = selectedItems[0]
@@ -98,15 +105,15 @@ function ResultsPage({
       .map((i) => recyclablesData[i]);
 
     goodDonatables = donatableConditions
-      .map((cond, i) => (cond === "Good" ? i : -1))
+      .map((cond, i) => (selectedItems[1][i] && cond === "Good" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     repairDonatables = donatableConditions
-      .map((cond, i) => (cond === "Repairable" ? i : -1))
+      .map((cond, i) => (selectedItems[1][i] && cond === "Repairable" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     spoiltDonatables = donatableConditions
-      .map((cond, i) => (cond === "Spoilt" ? i : -1))
+      .map((cond, i) => (selectedItems[1][i] && cond === "Spoilt" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     goodDonatablesResults = goodDonatables.map((item: DonatableItem) => {
@@ -135,21 +142,21 @@ function ResultsPage({
       });
     });
 
-    goodEWaste = eWasteConditions
-      .map((cond, i) => (cond === "Good" ? i : -1))
+    goodEwaste = ewasteConditions
+      .map((cond, i) => (selectedItems[2][i] && cond === "Good" ? i : -1))
       .filter((i) => i != -1)
-      .map((i) => eWasteData[i]);
-    repairEWaste = eWasteConditions
-      .map((cond, i) => (cond === "Repairable" ? i : -1))
+      .map((i) => ewasteData[i]);
+    repairEwaste = ewasteConditions
+      .map((cond, i) => (selectedItems[2][i] && cond === "Repairable" ? i : -1))
       .filter((i) => i != -1)
-      .map((i) => eWasteData[i]);
-    spoiltEWaste = eWasteConditions
-      .map((cond, i) => (cond === "Spoilt" ? i : -1))
+      .map((i) => ewasteData[i]);
+    spoiltEwaste = ewasteConditions
+      .map((cond, i) => (selectedItems[2][i] && cond === "Spoilt" ? i : -1))
       .filter((i) => i != -1)
-      .map((i) => eWasteData[i]);
-    goodEWasteResults = goodEWaste.map((item: EWasteItem) => {
+      .map((i) => ewasteData[i]);
+    goodEwasteResults = goodEwaste.map((item: EwasteItem) => {
       return EDOrgData.filter(
-        (entry: EDOrg) => entry["eWaste_id"] === item["eWaste_id"]
+        (entry: EDOrg) => entry["ewaste_id"] === item["ewaste_id"]
       )
         .map((entry: EDOrg) => {
           return donateOrgData[entry["donateOrg_id"] - 1];
@@ -164,25 +171,47 @@ function ResultsPage({
           };
         });
     });
-    repairEWasteResults = repairEWaste.map((item: EWasteItem) => {
+    repairEwasteResults = repairEwaste.map((item: EwasteItem) => {
       return ERLocData.filter(
-        (entry: ERLoc) => entry["eWaste_id"] === item["eWaste_id"]
+        (entry: ERLoc) => entry["ewaste_id"] === item["ewaste_id"]
       ).map((entry: ERLoc) => {
         return repairLocData[entry["repair_id"] - 1];
       });
     });
+    allEwaste = selectedItems[2]
+      .map((sel, i) => (sel ? i : -1))
+      .filter((i) => i != -1)
+      .map((i) => ewasteData[i]);
+    ewasteEbinResults = allEwaste.map((item: EwasteItem) => {
+      return EEData.filter(
+        (entry: EE) => entry["ewaste_id"] == item["ewaste_id"]
+      )
+        .map((entry: EE) => {
+          return ebinData[entry["ebin_id"] - 1];
+        })
+        .map((bin: Ebin) => {
+          const locations = ebinLocData.filter(
+            (loc: EbinLocation) => loc["ebin_id"] === bin["ebin_id"]
+          );
+          return {
+            ebin: bin,
+            ebinLocations: locations,
+          };
+        });
+    });
   }
 
-  // Identify an item with a list of 3 numbers
+  // Identify the selected result item with a list of 3 numbers
   // The first number identifies the category of the item, the second number identifies the condition of the item and the third number identifies the item index
-  // The first number is 0 for recyclables, 1 for donatables and 2 for eWaste
+  // The first number is 0 for recyclables, 1 for donatables and 2 for ewaste
   // The second number is 0 for good, 1 for repairable and 2 for spoilt
   // The third number is the index of the item in the respective data array
-  const [selectedItem, setSelectedItem] = useState<item>({
-    category: -1,
-    condition: -1,
-    index: -1,
-  });
+  const [selectedResultItem, setSelectedResultItem] =
+    useState<SelectedResultItem>({
+      category: -1,
+      condition: -1,
+      index: -1,
+    });
 
   const handleBackClick = () => {
     setStage(2);
@@ -200,8 +229,8 @@ function ResultsPage({
   const [isHighlighted, setIsHighlighted] = useState<boolean[][]>([
     Array<boolean>(goodDonatables.length),
     Array<boolean>(repairDonatables.length),
-    Array<boolean>(goodEWaste.length),
-    Array<boolean>(repairEWaste.length),
+    Array<boolean>(goodEwaste.length),
+    Array<boolean>(repairEwaste.length),
   ]);
 
   // Create a state that indicates which "Show on Map" button is currently highlighted
@@ -237,12 +266,13 @@ function ResultsPage({
         spoiltDonatables={spoiltDonatables}
         goodDonatablesResults={goodDonatablesResults}
         repairDonatablesResults={repairDonatablesResults}
-        goodEWaste={goodEWaste}
-        repairEWaste={repairEWaste}
-        spoiltEWaste={spoiltEWaste}
-        goodEWasteResults={goodEWasteResults}
-        repairEWasteResults={repairEWasteResults}
-        selectedItem={selectedItem}
+        goodEwaste={goodEwaste}
+        repairEwaste={repairEwaste}
+        spoiltEwaste={spoiltEwaste}
+        goodEwasteResults={goodEwasteResults}
+        repairEwasteResults={repairEwasteResults}
+        ewasteEbinResults={ewasteEbinResults}
+        selectedResultItem={selectedResultItem}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
@@ -282,7 +312,7 @@ function ResultsPage({
                         color="primary"
                         sx={{ mt: 1 }}
                         onClick={() => {
-                          setSelectedItem({
+                          setSelectedResultItem({
                             category: 1,
                             condition: 0,
                             index: index,
@@ -301,17 +331,17 @@ function ResultsPage({
                           {goodDonatablesResults[index].map(
                             (entry: DonateOrganisationLocations) => {
                               const org = entry["donateOrg"];
-                              const locations = entry["donateLocations"];
+                              // const locations = entry["donateLocations"];
                               return (
                                 <li key={org["donateOrg_id"]}>
                                   <Typography>
                                     {org["organisation_name"]}
                                   </Typography>
-                                  <ul>
+                                  {/* <ul>
                                     {locations.map((loc: DonateLocation) => {
                                       return <li>{loc["address"]}</li>;
                                     })}
-                                  </ul>
+                                  </ul> */}
                                 </li>
                               );
                             }
@@ -339,7 +369,7 @@ function ResultsPage({
                         color="primary"
                         sx={{ mt: 1 }}
                         onClick={() => {
-                          setSelectedItem({
+                          setSelectedResultItem({
                             category: 1,
                             condition: 1,
                             index: index,
@@ -376,18 +406,35 @@ function ResultsPage({
             )}
           </Box>
         )}
-        {(goodEWaste.length != 0 || repairEWaste.length != 0) && (
+        {allEwaste.length != 0 && (
           <>
             <Box flex={1}>
-              <h2>EWaste</h2>
-              {goodEWaste.length != 0 && (
+              <h2>Ewaste</h2>
+              <h4>
+                These Ewaste items can be disposed of at the following ebins:
+              </h4>
+              {allEwaste.map((item: EwasteItem, index: number) => {
+                return (
+                  <div>
+                    <Typography variant="body1">
+                      {item["ewaste_type"] + ": "}
+                    </Typography>
+                    <ul>
+                      {ewasteEbinResults[index].map((res: EbinLocations) => {
+                        return <li>{res["ebin"]["ebin_name"]}</li>;
+                      })}
+                    </ul>
+                  </div>
+                );
+              })}
+              {goodEwaste.length != 0 && (
                 <>
-                  <h4>These EWaste items can be donated:</h4>
-                  {goodEWaste.map((item: EWasteItem, index: number) => {
+                  <h4>These Ewaste items can be donated:</h4>
+                  {goodEwaste.map((item: EwasteItem, index: number) => {
                     return (
                       <div>
                         <Typography variant="body1">
-                          {item["eWaste_type"] + ": "}
+                          {item["ewaste_type"] + ": "}
                         </Typography>
                         <Button
                           variant={
@@ -396,7 +443,7 @@ function ResultsPage({
                           color="primary"
                           sx={{ mt: 1 }}
                           onClick={() => {
-                            setSelectedItem({
+                            setSelectedResultItem({
                               category: 2,
                               condition: 0,
                               index: index,
@@ -406,26 +453,26 @@ function ResultsPage({
                         >
                           Show On Map
                         </Button>
-                        {goodEWasteResults[index].length === 0 ? (
+                        {goodEwasteResults[index].length === 0 ? (
                           <p>
-                            Oops, no locations found for {item["eWaste_type"]}
+                            Oops, no locations found for {item["ewaste_type"]}
                           </p>
                         ) : (
                           <ul>
-                            {goodEWasteResults[index].map(
+                            {goodEwasteResults[index].map(
                               (entry: DonateOrganisationLocations) => {
                                 const org = entry["donateOrg"];
-                                const locations = entry["donateLocations"];
+                                // const locations = entry["donateLocations"];
                                 return (
                                   <li key={org["donateOrg_id"]}>
                                     <Typography>
                                       {org["organisation_name"]}
                                     </Typography>
-                                    <ul>
+                                    {/* <ul>
                                       {locations.map((loc: DonateLocation) => {
                                         return <li>{loc["address"]}</li>;
                                       })}
-                                    </ul>
+                                    </ul> */}
                                   </li>
                                 );
                               }
@@ -437,14 +484,14 @@ function ResultsPage({
                   })}
                 </>
               )}
-              {repairEWaste.length != 0 && (
+              {repairEwaste.length != 0 && (
                 <>
-                  <h4>These EWaste items can be repaired:</h4>
-                  {repairEWaste.map((item: EWasteItem, index: number) => {
+                  <h4>These Ewaste items can be repaired:</h4>
+                  {repairEwaste.map((item: EwasteItem, index: number) => {
                     return (
                       <div>
                         <Typography variant="body1">
-                          {item["eWaste_type"] + ": "}
+                          {item["ewaste_type"] + ": "}
                         </Typography>
                         <Button
                           variant={
@@ -453,7 +500,7 @@ function ResultsPage({
                           color="primary"
                           sx={{ mt: 1 }}
                           onClick={() => {
-                            setSelectedItem({
+                            setSelectedResultItem({
                               category: 2,
                               condition: 1,
                               index: index,
@@ -463,13 +510,13 @@ function ResultsPage({
                         >
                           Show On Map
                         </Button>
-                        {repairEWasteResults[index].length === 0 ? (
+                        {repairEwasteResults[index].length === 0 ? (
                           <p>
-                            Oops, no locations found for {item["eWaste_type"]}
+                            Oops, no locations found for {item["ewaste_type"]}
                           </p>
                         ) : (
                           <ul>
-                            {repairEWasteResults[index].map(
+                            {repairEwasteResults[index].map(
                               (location: RepairLocation) => {
                                 return (
                                   <li key={location["repair_id"]}>
@@ -494,7 +541,7 @@ function ResultsPage({
       </Stack>
       {(unrecyclablesResults.length != 0 ||
         spoiltDonatables.length != 0 ||
-        spoiltEWaste.length != 0) && (
+        spoiltEwaste.length != 0) && (
         <>
           <h2>These items need to be disposed as general waste:</h2>
           <Stack>
@@ -518,18 +565,6 @@ function ResultsPage({
                   return (
                     <Typography variant="body1">
                       {item["donatable_type"]}
-                    </Typography>
-                  );
-                })}
-              </>
-            )}
-            {spoiltEWaste.length != 0 && (
-              <>
-                <h3>(Spoilt EWaste)</h3>
-                {spoiltEWaste.map((item: EWasteItem) => {
-                  return (
-                    <Typography variant="body1">
-                      {item["eWaste_type"]}
                     </Typography>
                   );
                 })}

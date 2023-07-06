@@ -2,15 +2,15 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { useContext, useState } from "react";
 import { backendContext } from "../../App";
-import { EWasteItem } from "../../DataTypes";
+import { EwasteItem } from "../../DataTypes";
 
 interface Props {
   selectedItems: boolean[][];
   setSelectedItems: (newArray: boolean[][]) => void;
 }
 
-function EWaste(props: Props) {
-  const { eWasteData } = useContext(backendContext);
+function Ewaste(props: Props) {
+  const { ewasteData } = useContext(backendContext);
 
   // Chip selection logic
   type Fill = "outlined" | "filled";
@@ -37,18 +37,18 @@ function EWaste(props: Props) {
   // Display chips
   return (
     <>
-      {eWasteData.length === 0 ? (
+      {ewasteData.length === 0 ? (
         <h3>Loading...</h3>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
-          {eWasteData.map((item: EWasteItem) => {
+          {ewasteData.map((item: EwasteItem) => {
             return (
               <Chip
-                key={item["eWaste_id"]}
-                label={item["eWaste_type"]}
+                key={item["ewaste_id"]}
+                label={item["ewaste_type"]}
                 color="secondary"
-                variant={selectedChips[item["eWaste_id"] - 1]}
-                onClick={() => toggleChipSelect(item["eWaste_id"] - 1)}
+                variant={selectedChips[item["ewaste_id"] - 1]}
+                onClick={() => toggleChipSelect(item["ewaste_id"] - 1)}
                 size="medium"
                 sx={{ mr: 1, mb: 1, fontSize: "0.9em" }}
               />
@@ -60,4 +60,4 @@ function EWaste(props: Props) {
   );
 }
 
-export default EWaste;
+export default Ewaste;

@@ -4,25 +4,23 @@ import {
   DonatableItem,
   DonateLocation,
   DonateOrganisation,
-  EWasteItem,
+  EwasteItem,
   RepairLocation,
-  item,
+  SelectedResultItem,
+  DonateOrganisationLocations,
+  EbinLocations,
 } from "../DataTypes";
 
-interface LocationCoordinates {
+type LocationCoordinates = {
   latitude: number;
   longitude: number;
-}
-interface LocationInfo {
+};
+
+type LocationInfo = {
   address: string;
   name: string;
   contact: string;
   coords: LocationCoordinates;
-}
-
-type DonateOrganisationLocations = {
-  donateOrg: DonateOrganisation;
-  donateLocations: DonateLocation[];
 };
 
 interface Props {
@@ -32,13 +30,14 @@ interface Props {
   goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
   repairDonatablesResults: RepairLocation[][]; // List of repairLocations for every selected repairable donatable
 
-  goodEWaste: EWasteItem[]; // Selected EWaste in good condition
-  repairEWaste: EWasteItem[]; // Selected EWaste in repairable condition
-  spoiltEWaste: EWasteItem[]; // Selected EWaste in spoilt condition
-  goodEWasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good EWaste
-  repairEWasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable EWaste
+  goodEwaste: EwasteItem[]; // Selected Ewaste in good condition
+  repairEwaste: EwasteItem[]; // Selected Ewaste in repairable condition
+  spoiltEwaste: EwasteItem[]; // Selected Ewaste in spoilt condition
+  goodEwasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good Ewaste
+  repairEwasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable Ewaste
+  ewasteEbinResults: EbinLocations[][]; // List of ebinLocations for every selected Ewaste item
 
-  selectedItem: item;
+  selectedResultItem: SelectedResultItem;
 }
 
 const MAPBOX_TOKEN =
@@ -61,17 +60,17 @@ const geocodeAddress = async (address: string) => {
 
 const Locations = (props: Props) => {
   // destructure object
-  const { category, condition, index } = props.selectedItem;
+  const { category, condition, index } = props.selectedResultItem;
 
-  // From this array, get any Location Info you want about any selected item
+  // From this array, get any Location Info you want for any result item
   // How do you get the location that you want? Use allLocationInfo[category][condition][itemIndex][locationIndex]
-  //   category: 0 for recyclables, 1 for donatables, 2 for ewaste
+  //   category: 0 for recyclables, 1 for donatables, 2 for Ewaste
   //   condition: 0 for good, 1 for repairable, 2 for spoilt (exception: for recyclables, use 0 to access all recyclable locations)
   // For example, use allLocationInfo[1][0][0][0] to get the first location(0) of the first item(0) in the good condition(0) of the donatables(1) category
   const [allLocationInfo, setAllLocationInfo] = useState<LocationInfo[][][][]>([
-    [[]],
-    [[], [], []],
-    [[], [], []],
+    [[]], // bluebin locations for recyclables
+    [[], []], // donate, repair locations for donatables
+    [[], []], // donate, repair locations for ewaste
   ]);
 
   // Make a list of LocationInfo for every selected good donatable item
@@ -125,7 +124,7 @@ const Locations = (props: Props) => {
         allLocationInfo[1][2],
       ],
       [
-        props.goodEWasteResults.map(
+        props.goodEwasteResults.map(
           // For each selected good donatable item, create a list of LocationInfo
           (item: DonateOrganisationLocations[]) => {
             // For each organisation that accepts the selected good donatable item, transform it to a flat list of LocationInfo
@@ -149,7 +148,7 @@ const Locations = (props: Props) => {
             });
           }
         ),
-        props.repairEWasteResults.map(
+        props.repairEwasteResults.map(
           // For each selected repairable donatable item, create a list of LocationInfo
           (item: RepairLocation[]) => {
             // For each repair location that accepts the selected repairable donatable item, transform it to data of type LocationInfo
@@ -182,7 +181,7 @@ const Locations = (props: Props) => {
     // Process all responses
     Promise.all(promises)
       .then((results) => {
-        // create new LocatioInfo list with coordinates
+        // create new LocationInfo list with coordinates
         const newLocInfoList: LocationInfo[] = new Array(locInfoList.length);
         for (let i = 0; i < results.length; i++) {
           const newLocInfo = locInfoList[i];
@@ -253,7 +252,7 @@ const Locations = (props: Props) => {
       geocodeLocationInfoList(allLocationInfo[category][condition][index]);
       console.log("geocode ran");
     }
-  }, [props.selectedItem]);
+  }, [props.selectedResultItem]);
 
   return (
     <>
@@ -268,7 +267,7 @@ const Locations = (props: Props) => {
         mapboxAccessToken={MAPBOX_TOKEN}
       >
         {/* Only show markers if 
-              (1) there is a selected item i.e. props.selectedItem.category != -1
+              (1) there is a selected item i.e. props.selectedResultItem.category != -1
               (2) if the selected item's addresses have been geocoded i.e. The coordinates are not default */}
         {category != -1 &&
           allLocationInfo[category][condition][index][0].coords.latitude !=
@@ -330,7 +329,7 @@ const Locations = (props: Props) => {
               <p>
                 Longitude:{" "}
                 {
-                  allLocationInfo[props.selectedItem.category][condition][
+                  allLocationInfo[props.selectedResultItem.category][condition][
                     index
                   ][activeMarker].coords.longitude
                 }

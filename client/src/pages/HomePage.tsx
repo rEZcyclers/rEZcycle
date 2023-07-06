@@ -24,7 +24,7 @@ function HomePage() {
     selectedItems[1].map(() => "")
   );
 
-  const [eWasteConditions, setEWasteConditions] = useState<Condition[]>(
+  const [ewasteConditions, setEwasteConditions] = useState<Condition[]>(
     selectedItems[2].map(() => "")
   );
 
@@ -46,8 +46,8 @@ function HomePage() {
           setRecyclableConditions={setRecyclableConditions}
           donatableConditions={donatableConditions}
           setDonatableConditions={setDonatableConditions}
-          eWasteConditions={eWasteConditions}
-          setEWasteConditions={setEWasteConditions}
+          ewasteConditions={ewasteConditions}
+          setEwasteConditions={setEwasteConditions}
         />
       ) : (
         <ResultsPage
@@ -58,8 +58,8 @@ function HomePage() {
           setRecyclableConditions={setRecyclableConditions}
           donatableConditions={donatableConditions}
           setDonatableConditions={setDonatableConditions}
-          eWasteConditions={eWasteConditions}
-          setEWasteConditions={setEWasteConditions}
+          ewasteConditions={ewasteConditions}
+          setEwasteConditions={setEwasteConditions}
         />
       )}
     </Base>

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Recyclables from "./QueryFormComponents/Recyclables";
 import Donatables from "./QueryFormComponents/Donatables";
-import EWaste from "./QueryFormComponents/EWaste";
+import Ewaste from "./QueryFormComponents/Ewaste";
 import { Button } from "@mui/material";
 
 interface Props {
@@ -40,7 +40,7 @@ function QueryForm(props: Props) {
         </Box>
         <Box flex={1}>
           <h2>E-waste</h2>
-          <EWaste
+          <Ewaste
             selectedItems={props.selectedItems}
             setSelectedItems={props.setSelectedItems}
           />
