@@ -15,7 +15,6 @@ import {
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
-import { GoTrueClient } from "@supabase/supabase-js";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 type DonateOrganisationLocations = {
@@ -281,6 +280,7 @@ function ResultsPage({
                           isHighlighted[0][index] ? "contained" : "outlined"
                         }
                         color="primary"
+                        sx={{ mt: 1 }}
                         onClick={() => {
                           setSelectedItem({
                             category: 1,
@@ -337,6 +337,7 @@ function ResultsPage({
                           isHighlighted[1][index] ? "contained" : "outlined"
                         }
                         color="primary"
+                        sx={{ mt: 1 }}
                         onClick={() => {
                           setSelectedItem({
                             category: 1,
