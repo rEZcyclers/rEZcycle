@@ -389,6 +389,23 @@ function ResultsPage({
                         <Typography variant="body1">
                           {item["eWaste_type"] + ": "}
                         </Typography>
+                        <Button
+                          variant={
+                            isHighlighted[2][index] ? "contained" : "outlined"
+                          }
+                          color="primary"
+                          sx={{ mt: 1 }}
+                          onClick={() => {
+                            setSelectedItem({
+                              category: 2,
+                              condition: 0,
+                              index: index,
+                            });
+                            handleHighlight(2, index);
+                          }}
+                        >
+                          Show On Map
+                        </Button>
                         {goodEWasteResults[index].length === 0 ? (
                           <p>
                             Oops, no locations found for {item["eWaste_type"]}
@@ -429,6 +446,23 @@ function ResultsPage({
                         <Typography variant="body1">
                           {item["eWaste_type"] + ": "}
                         </Typography>
+                        <Button
+                          variant={
+                            isHighlighted[3][index] ? "contained" : "outlined"
+                          }
+                          color="primary"
+                          sx={{ mt: 1 }}
+                          onClick={() => {
+                            setSelectedItem({
+                              category: 2,
+                              condition: 1,
+                              index: index,
+                            });
+                            handleHighlight(3, index);
+                          }}
+                        >
+                          Show On Map
+                        </Button>
                         {repairEWasteResults[index].length === 0 ? (
                           <p>
                             Oops, no locations found for {item["eWaste_type"]}
