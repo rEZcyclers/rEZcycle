@@ -122,10 +122,54 @@ const Locations = (props: Props) => {
             });
           }
         ),
-        allLocationInfo[1][1],
         allLocationInfo[1][2],
       ],
-      allLocationInfo[2],
+      [
+        props.goodEWasteResults.map(
+          // For each selected good donatable item, create a list of LocationInfo
+          (item: DonateOrganisationLocations[]) => {
+            // For each organisation that accepts the selected good donatable item, transform it to a flat list of LocationInfo
+            return item.flatMap((organisation: DonateOrganisationLocations) => {
+              const org: DonateOrganisation = organisation["donateOrg"];
+              const locations: DonateLocation[] =
+                organisation["donateLocations"];
+              return locations.map((location: DonateLocation) => {
+                // For each location of an organisation, transform it to a LocationInfo
+                const locationInfo: LocationInfo = {
+                  address: location["address"],
+                  name: org["organisation_name"],
+                  contact: location["contact"],
+                  coords: {
+                    latitude: DEFAULT_COORDINATES.latitude,
+                    longitude: DEFAULT_COORDINATES.longitude,
+                  },
+                };
+                return locationInfo;
+              });
+            });
+          }
+        ),
+        props.repairEWasteResults.map(
+          // For each selected repairable donatable item, create a list of LocationInfo
+          (item: RepairLocation[]) => {
+            // For each repair location that accepts the selected repairable donatable item, transform it to data of type LocationInfo
+            return item.map((location: RepairLocation) => {
+              const locationInfo: LocationInfo = {
+                address:
+                  location["center_name"] + " " + location["stall_number"],
+                name: "HDB block",
+                contact: "No contact available",
+                coords: {
+                  latitude: DEFAULT_COORDINATES.latitude,
+                  longitude: DEFAULT_COORDINATES.longitude,
+                },
+              };
+              return locationInfo;
+            });
+          }
+        ),
+        allLocationInfo[1][2],
+      ],
     ]);
   }, []);
 
