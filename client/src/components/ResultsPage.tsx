@@ -462,7 +462,7 @@ function ResultsPage({
                             {goodEwasteResults[index].map(
                               (entry: DonateOrganisationLocations) => {
                                 const org = entry["donateOrg"];
-                                const locations = entry["donateLocations"];
+                                // const locations = entry["donateLocations"];
                                 return (
                                   <li key={org["donateOrg_id"]}>
                                     <Typography>
