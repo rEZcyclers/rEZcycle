@@ -10,35 +10,49 @@ import {
   UserProfile,
   RecyclableItem,
   DonatableItem,
-  EWasteItem,
+  EwasteItem,
   DonateOrganisation,
   DonateLocation,
   RepairLocation,
+  Ebin,
+  EbinLocation,
   DDOrg,
   DRLoc,
   EDOrg,
   ERLoc,
+  EE,
 } from "./DataTypes";
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
-const serverAPI = "https://rezcycle-server.onrender.com";
+const serverAPI = "http://localhost:8000";
+// https://rezcycle-server.onrender.com
 
 function App() {
+  // User Profile Data
   const [userSession, setUserSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+
+  // Item Data
   const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
   const [donatablesData, setDonatablesData] = useState<DonatableItem[]>([]);
-  const [eWasteData, setEWasteData] = useState<EWasteItem[]>([]);
+  const [ewasteData, setEwasteData] = useState<EwasteItem[]>([]);
+
+  // Location Data
   const [donateOrgData, setDonateOrgData] = useState<DonateOrganisation[]>([]);
   const [donateLocData, setDonateLocData] = useState<DonateLocation[]>([]);
   const [repairLocData, setRepairLocData] = useState<RepairLocation[]>([]);
+  const [ebinData, setEbinData] = useState<Ebin[]>([]);
+  const [ebinLocData, setEbinLocData] = useState<EbinLocation[]>([]);
+
+  // Junction Table Data
   const [DDOrgData, setDDOrgData] = useState<DDOrg[]>([]);
   const [DRLocData, setDRLocData] = useState<DRLoc[]>([]);
   const [EDOrgData, setEDOrgData] = useState<EDOrg[]>([]);
   const [ERLocData, setERLocData] = useState<ERLoc[]>([]);
+  const [EEData, setEEData] = useState<EE[]>([]);
 
-  // useEffect to keep track of userSession changes using supabase auth feature
+  // useEffect to handle userSession changes using Supabase Auth API
   useEffect(() => {
     const subscription = supabase.auth.onAuthStateChange((event, session) => {
       setUserSession(session);
@@ -50,7 +64,7 @@ function App() {
   }, []); // Note: infinite useEffect() call occurs when userSession != null if
   // userSession is included in dependency
 
-  // useEffect to fetch all backend data from backend server
+  // useEffect to fetch all backend data related to the main feature from server
   function fetchBackendData() {
     fetch(`${serverAPI}/recyclables`)
       .then((res) => res.json())
@@ -64,10 +78,10 @@ function App() {
       .then(() => console.log("donatablesData fetched"))
       .catch((err) => console.log(err));
 
-    fetch(`${serverAPI}/eWaste`)
+    fetch(`${serverAPI}/ewaste`)
       .then((res) => res.json())
-      .then((data) => setEWasteData(data))
-      .then(() => console.log("eWasteData fetched"))
+      .then((data) => setEwasteData(data))
+      .then(() => console.log("ewasteData fetched"))
       .catch((err) => console.log(err));
 
     fetch(`${serverAPI}/donateOrganisations`)
@@ -88,6 +102,18 @@ function App() {
       .then(() => console.log("repairLocationsData fetched"))
       .catch((err) => console.log(err));
 
+    fetch(`${serverAPI}/ebins`)
+      .then((res) => res.json())
+      .then((data) => setEbinData(data))
+      .then(() => console.log("ebinData fetched"))
+      .catch((err) => console.log(err));
+
+    fetch(`${serverAPI}/ebinLocations`)
+      .then((res) => res.json())
+      .then((data) => setEbinLocData(data))
+      .then(() => console.log("ebinLocationsData fetched"))
+      .catch((err) => console.log(err));
+
     fetch(`${serverAPI}/donatablesDonateOrganisations`)
       .then((res) => res.json())
       .then((data) => setDDOrgData(data))
@@ -100,16 +126,22 @@ function App() {
       .then(() => console.log("donatablesRepairLocationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch(`${serverAPI}/eWasteDonateOrganisations`)
+    fetch(`${serverAPI}/ewasteDonateOrganisations`)
       .then((res) => res.json())
       .then((data) => setEDOrgData(data))
-      .then(() => console.log("eWasteDonateOrganisationsData fetched"))
+      .then(() => console.log("ewasteDonateOrganisationsData fetched"))
       .catch((err) => console.log(err));
 
-    fetch(`${serverAPI}/eWasteRepairLocations`)
+    fetch(`${serverAPI}/ewasteRepairLocations`)
       .then((res) => res.json())
       .then((data) => setERLocData(data))
-      .then(() => console.log("eWasteRepairLocationsData fetched"))
+      .then(() => console.log("ewasteRepairLocationsData fetched"))
+      .catch((err) => console.log(err));
+
+    fetch(`${serverAPI}/ewasteEbins`)
+      .then((res) => res.json())
+      .then((data) => setEEData(data))
+      .then(() => console.log("ebinEwasteData fetched"))
       .catch((err) => console.log(err));
   }
 
@@ -134,14 +166,17 @@ function App() {
         userProfile,
         recyclablesData,
         donatablesData,
-        eWasteData,
+        ewasteData,
         donateOrgData,
         donateLocData,
         repairLocData,
+        ebinData,
+        ebinLocData,
         DDOrgData,
         DRLocData,
         EDOrgData,
         ERLocData,
+        EEData,
       }}
     >
       <RouterProvider router={AppRouter} />
