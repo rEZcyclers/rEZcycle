@@ -24,8 +24,8 @@ interface Props {
   setRecyclableConditions: (newArray: boolean[]) => void;
   donatableConditions: Condition[];
   setDonatableConditions: (newArray: Condition[]) => void;
-  eWasteConditions: Condition[];
-  setEWasteConditions: (newArray: Condition[]) => void;
+  ewasteConditions: Condition[];
+  setEwasteConditions: (newArray: Condition[]) => void;
 }
 
 function ChecklistForm({
@@ -35,11 +35,11 @@ function ChecklistForm({
   setRecyclableConditions,
   donatableConditions,
   setDonatableConditions,
-  eWasteConditions,
-  setEWasteConditions,
+  ewasteConditions,
+  setEwasteConditions,
 }: Props) {
   // Retrieves raw data to get checklist info
-  const { recyclablesData, donatablesData, eWasteData } =
+  const { recyclablesData, donatablesData, ewasteData } =
     useContext(backendContext);
 
   // Keeps track of conditions of selected recyclables
@@ -60,12 +60,12 @@ function ChecklistForm({
     ]);
   };
 
-  // Keeps track of conditions of selected E-Waste
-  const handleEWasteChange = (event: SelectChangeEvent, i: number) => {
-    setEWasteConditions([
-      ...eWasteConditions.slice(0, i),
+  // Keeps track of conditions of selected E-waste
+  const handleEwasteChange = (event: SelectChangeEvent, i: number) => {
+    setEwasteConditions([
+      ...ewasteConditions.slice(0, i),
       event.target.value as Condition,
-      ...eWasteConditions.slice(i + 1),
+      ...ewasteConditions.slice(i + 1),
     ]);
   };
 
@@ -133,7 +133,7 @@ function ChecklistForm({
       </Stack>
     ));
 
-  const eWasteChecklist = selectedItems[2]
+  const ewasteChecklist = selectedItems[2]
     .map((selected, index) => (selected ? index : -1))
     .filter((index) => index != -1)
     .map((index) => (
@@ -143,9 +143,9 @@ function ChecklistForm({
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={eWasteConditions[index]}
+            value={ewasteConditions[index]}
             label="Condition"
-            onChange={(event) => handleEWasteChange(event, index)}
+            onChange={(event) => handleEwasteChange(event, index)}
           >
             <MenuItem value={"Good"}>Good</MenuItem>
             <MenuItem value={"Repairable"}>Repairable</MenuItem>
@@ -153,7 +153,7 @@ function ChecklistForm({
           </Select>
         </FormControl>
         <Typography variant="body1" sx={{ flex: 3 }}>
-          {eWasteData[index]["eWaste_type"]}
+          {ewasteData[index]["ewaste_type"]}
         </Typography>
       </Stack>
     ));
@@ -192,11 +192,11 @@ function ChecklistForm({
             <Stack spacing={1}>{donatablesChecklist}</Stack>
           </Box>
         )}
-        {eWasteChecklist.length !== 0 && (
+        {ewasteChecklist.length !== 0 && (
           <Box flex={1}>
             <h2>E-waste</h2>
-            <h4>How is the condition of your E-Waste?</h4>
-            <Stack spacing={1}>{eWasteChecklist}</Stack>
+            <h4>How is the condition of your E-waste?</h4>
+            <Stack spacing={1}>{ewasteChecklist}</Stack>
           </Box>
         )}
       </Stack>
@@ -209,10 +209,18 @@ function ChecklistForm({
           flexDirection: "row",
         }}
       >
-        <Button variant="outlined" onClick={handleBackClick} sx={{ mr: 10 }}>
+        <Button
+          variant="outlined"
+          onClick={handleBackClick}
+          sx={{ mr: 10, mb: 10 }}
+        >
           Back
         </Button>
-        <Button variant="outlined" onClick={handleNextClick} sx={{ mr: 10 }}>
+        <Button
+          variant="outlined"
+          onClick={handleNextClick}
+          sx={{ mr: 10, mb: 10 }}
+        >
           Next
         </Button>
       </Box>
