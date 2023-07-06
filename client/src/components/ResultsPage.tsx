@@ -15,6 +15,7 @@ import {
 } from "../DataTypes";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Locations from "./Locations";
+import { GoTrueClient } from "@supabase/supabase-js";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 type DonateOrganisationLocations = {
@@ -190,23 +191,47 @@ function ResultsPage({
 
   getResults();
 
+  /* Create a state that indicates which "Show on Map" buttons are highlighted
+  It consists of 4 arrays, each array represents a category of items
+  Array 1 represents goodDonatables
+  Array 2 represents repairDonatables
+  Array 3 represents goodEwaste
+  Array 4 represents repairEwaste
+  */
+  const [isHighlighted, setIsHighlighted] = useState<boolean[][]>([
+    Array<boolean>(goodDonatables.length),
+    Array<boolean>(repairDonatables.length),
+    Array<boolean>(goodEWaste.length),
+    Array<boolean>(repairEWaste.length),
+  ]);
+
+  // Create a state that indicates which "Show on Map" button is currently highlighted
+  // It consists of 2 numbers, the first number represents the category of the item button
+  //   and the second number represents the index of the item button
+  const [currentHighlightedButton, setCurrentHighlightedButton] = useState<
+    number[]
+  >([-1, -1]);
+
+  const handleHighlight = (buttonCategory: number, buttonIndex: number) => {
+    // create new isHighlighted array to replace old array
+    let newIsHighlighted = isHighlighted;
+    // unhighlight the previously highlighted button
+    if (currentHighlightedButton[0] != -1) {
+      newIsHighlighted[currentHighlightedButton[0]][
+        currentHighlightedButton[1]
+      ] = false;
+    }
+    // highlight the new button
+    newIsHighlighted[buttonCategory][buttonIndex] = true;
+    // update state
+    setIsHighlighted(newIsHighlighted);
+    // update currentHighlightedButton
+    setCurrentHighlightedButton([buttonCategory, buttonIndex]);
+  };
+
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setSelectedItem({ category: 1, condition: 0, index: 0 })}
-      >
-        Show First Item
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setSelectedItem({ category: 1, condition: 0, index: 1 })}
-      >
-        Show Second Item
-      </Button>
       <Locations
         goodDonatables={goodDonatables}
         repairDonatables={repairDonatables}
@@ -251,6 +276,22 @@ function ResultsPage({
                       <Typography variant="body1">
                         {item["donatable_type"] + ": "}
                       </Typography>
+                      <Button
+                        variant={
+                          isHighlighted[0][index] ? "contained" : "outlined"
+                        }
+                        color="primary"
+                        onClick={() => {
+                          setSelectedItem({
+                            category: 1,
+                            condition: 0,
+                            index: index,
+                          });
+                          handleHighlight(0, index);
+                        }}
+                      >
+                        Show On Map
+                      </Button>
                       {goodDonatablesResults[index].length === 0 ? (
                         <p>
                           Oops, no locations found for {item["donatable_type"]}
@@ -291,6 +332,22 @@ function ResultsPage({
                       <Typography variant="body1">
                         {item["donatable_type"] + ": "}
                       </Typography>
+                      <Button
+                        variant={
+                          isHighlighted[1][index] ? "contained" : "outlined"
+                        }
+                        color="primary"
+                        onClick={() => {
+                          setSelectedItem({
+                            category: 1,
+                            condition: 1,
+                            index: index,
+                          });
+                          handleHighlight(1, index);
+                        }}
+                      >
+                        Show On Map
+                      </Button>
                       {repairDonatablesResults[index].length === 0 ? (
                         <p>
                           Oops, no locations found for {item["donatable_type"]}
