@@ -17,9 +17,10 @@ import {
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 interface Props {
-  stage: number;
   setStage: (num: number) => void;
-  selectedItems: boolean[][];
+  selectedRecyclables: boolean[];
+  selectedDonatables: boolean[];
+  selectedEwaste: boolean[];
   recyclableConditions: boolean[];
   setRecyclableConditions: (newArray: boolean[]) => void;
   donatableConditions: Condition[];
@@ -30,7 +31,9 @@ interface Props {
 
 function ChecklistForm({
   setStage,
-  selectedItems,
+  selectedRecyclables,
+  selectedDonatables,
+  selectedEwaste,
   recyclableConditions,
   setRecyclableConditions,
   donatableConditions,
@@ -77,7 +80,7 @@ function ChecklistForm({
     setStage(1);
   };
 
-  const recyclablesChecklist = selectedItems[0]
+  const recyclablesChecklist = selectedRecyclables
     .map((selected, index) => (selected ? index : -1))
     .filter(
       (index) =>
@@ -95,20 +98,25 @@ function ChecklistForm({
           />
         }
         label={
-          recyclablesData[index]["name"] +
-          ": " +
-          recyclablesData[index]["checklist"]
+          <>
+            <p style={{ margin: 0, padding: 0 }}>
+              {recyclablesData[index]["name"]}:
+            </p>
+            <p style={{ margin: 0, padding: 0, color: "purple" }}>
+              {recyclablesData[index]["checklist"]}
+            </p>
+          </>
         }
         sx={{ alignItems: "flex-start" }}
       />
     ));
 
-  const unrecyclables = selectedItems[0]
+  const unrecyclables = selectedRecyclables
     .map((sel, i) => (sel ? i : -1))
     .filter((i) => i != -1 && recyclablesData[i]["bluebin_eligibility"] === 0)
     .map((index) => <li>{recyclablesData[index]["name"]}</li>);
 
-  const donatablesChecklist = selectedItems[1]
+  const donatablesChecklist = selectedDonatables
     .map((selected, index) => (selected ? index : -1))
     .filter((index) => index != -1)
     .map((index) => (
@@ -133,7 +141,7 @@ function ChecklistForm({
       </Stack>
     ));
 
-  const ewasteChecklist = selectedItems[2]
+  const ewasteChecklist = selectedEwaste
     .map((selected, index) => (selected ? index : -1))
     .filter((index) => index != -1)
     .map((index) => (
