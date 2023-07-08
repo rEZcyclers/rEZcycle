@@ -18,8 +18,20 @@ import {
   DonateOrganisationLocations,
   EbinLocations,
 } from "../DataTypes";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Locations from "./Locations";
+import NestedList from "./NestedList";
+import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -219,6 +231,57 @@ function ResultsPage({
 
   getResults();
 
+  const [showGDResults, setShowGDResults] = useState<boolean[]>(
+    Array<boolean>(goodDonatables.length)
+  );
+  const [showRDResults, setShowRDResults] = useState<boolean[]>(
+    Array<boolean>(repairDonatables.length)
+  );
+  const [showEwasteResults, setShowEwasteResults] = useState<boolean[]>(
+    Array<boolean>(allEwaste.length)
+  );
+  const [showGEResults, setShowGEResults] = useState<boolean[]>(
+    Array<boolean>(goodEwaste.length)
+  );
+  const [showREResults, setShowREResults] = useState<boolean[]>(
+    Array<boolean>(repairDonatables.length)
+  );
+  const handleShowGDResults = (index: number) => {
+    setShowGDResults([
+      ...showGDResults.slice(0, index),
+      !showGDResults[index],
+      ...showGDResults.slice(index + 1),
+    ]);
+  };
+  const handleShowRDResults = (index: number) => {
+    setShowRDResults([
+      ...showRDResults.slice(0, index),
+      !showRDResults[index],
+      ...showRDResults.slice(index + 1),
+    ]);
+  };
+  const handleShowEwasteResults = (index: number) => {
+    setShowEwasteResults([
+      ...showEwasteResults.slice(0, index),
+      !showEwasteResults[index],
+      ...showEwasteResults.slice(index + 1),
+    ]);
+  };
+  const handleShowGEResults = (index: number) => {
+    setShowGEResults([
+      ...showGEResults.slice(0, index),
+      !showGEResults[index],
+      ...showGEResults.slice(index + 1),
+    ]);
+  };
+  const handleShowREResults = (index: number) => {
+    setShowREResults([
+      ...showREResults.slice(0, index),
+      !showREResults[index],
+      ...showREResults.slice(index + 1),
+    ]);
+  };
+
   /* Create a state that indicates which "Show on Map" buttons are highlighted
   It consists of 4 arrays, each array represents a category of items
   Array 1 represents goodDonatables
@@ -260,7 +323,7 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      <Locations
+      {/* <Locations
         goodDonatables={goodDonatables}
         repairDonatables={repairDonatables}
         spoiltDonatables={spoiltDonatables}
@@ -273,7 +336,7 @@ function ResultsPage({
         repairEwasteResults={repairEwasteResults}
         ewasteEbinResults={ewasteEbinResults}
         selectedResultItem={selectedResultItem}
-      />
+      /> */}
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -298,19 +361,74 @@ function ResultsPage({
             <h2>Donatables</h2>
             {goodDonatables.length != 0 && (
               <>
-                <h4>These donatables can be donated:</h4>
+                <h4>
+                  These donatables can be donated at the following
+                  organisations:
+                </h4>
                 {goodDonatables.map((item: DonatableItem, index: number) => {
                   return (
-                    <div>
-                      <Typography variant="body1">
-                        {item["donatable_type"] + ": "}
-                      </Typography>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <List
+                        sx={{
+                          width: "70%",
+                          maxWidth: 360,
+                          bgcolor: "background.paper",
+                        }}
+                      >
+                        <ListItemButton
+                          onClick={() => handleShowGDResults(index)}
+                        >
+                          <ListItemIcon>
+                            {showGDResults[index] ? (
+                              <ExpandLess />
+                            ) : (
+                              <ExpandMore />
+                            )}
+                          </ListItemIcon>
+                          <ListItemText primary={item["donatable_type"]} />
+                        </ListItemButton>
+                        <Collapse
+                          in={showGDResults[index]}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          {goodDonatablesResults[index].length === 0 ? (
+                            <p>
+                              Oops, no locations found for{" "}
+                              {item["donatable_type"]}
+                            </p>
+                          ) : (
+                            <>
+                              <List component="div" disablePadding>
+                                {goodDonatablesResults[index].map(
+                                  (entry: DonateOrganisationLocations) => {
+                                    const org = entry["donateOrg"];
+                                    // const locations = entry["donateLocations"];
+                                    return (
+                                      <ListItemButton
+                                        sx={{ padding: 0, pl: 4 }}
+                                      >
+                                        <ListItemIcon>
+                                          <StarBorder />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                          primary={org["organisation_name"]}
+                                        />
+                                      </ListItemButton>
+                                    );
+                                  }
+                                )}
+                              </List>
+                            </>
+                          )}
+                        </Collapse>
+                      </List>
                       <Button
                         variant={
                           isHighlighted[0][index] ? "contained" : "outlined"
                         }
                         color="primary"
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, height: 50 }}
                         onClick={() => {
                           setSelectedResultItem({
                             category: 1,
@@ -322,32 +440,6 @@ function ResultsPage({
                       >
                         Show On Map
                       </Button>
-                      {goodDonatablesResults[index].length === 0 ? (
-                        <p>
-                          Oops, no locations found for {item["donatable_type"]}
-                        </p>
-                      ) : (
-                        <ul>
-                          {goodDonatablesResults[index].map(
-                            (entry: DonateOrganisationLocations) => {
-                              const org = entry["donateOrg"];
-                              // const locations = entry["donateLocations"];
-                              return (
-                                <li key={org["donateOrg_id"]}>
-                                  <Typography>
-                                    {org["organisation_name"]}
-                                  </Typography>
-                                  {/* <ul>
-                                    {locations.map((loc: DonateLocation) => {
-                                      return <li>{loc["address"]}</li>;
-                                    })}
-                                  </ul> */}
-                                </li>
-                              );
-                            }
-                          )}
-                        </ul>
-                      )}
                     </div>
                   );
                 })}
@@ -358,16 +450,60 @@ function ResultsPage({
                 <h4>These donatables can be repaired:</h4>
                 {repairDonatables.map((item: DonatableItem, index: number) => {
                   return (
-                    <div>
-                      <Typography variant="body1">
-                        {item["donatable_type"] + ": "}
-                      </Typography>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <List
+                        sx={{
+                          width: "70%",
+                          maxWidth: 360,
+                          bgcolor: "background.paper",
+                        }}
+                      >
+                        <ListItemButton
+                          onClick={() => handleShowRDResults(index)}
+                        >
+                          <ListItemIcon>
+                            {showRDResults[index] ? (
+                              <ExpandLess />
+                            ) : (
+                              <ExpandMore />
+                            )}
+                          </ListItemIcon>
+                          <ListItemText primary={item["donatable_type"]} />
+                        </ListItemButton>
+                        <Collapse
+                          in={showRDResults[index]}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          {repairDonatablesResults[index].length === 0 ? (
+                            <p>
+                              Oops, no locations found for{" "}
+                              {item["donatable_type"]}
+                            </p>
+                          ) : (
+                            <ul>
+                              {repairDonatablesResults[index].map(
+                                (location: RepairLocation) => {
+                                  return (
+                                    <li key={location["repair_id"]}>
+                                      <Typography>
+                                        {location["center_name"]}, stall number{" "}
+                                        {location["stall_number"]}
+                                      </Typography>
+                                    </li>
+                                  );
+                                }
+                              )}
+                            </ul>
+                          )}
+                        </Collapse>
+                      </List>
                       <Button
                         variant={
                           isHighlighted[1][index] ? "contained" : "outlined"
                         }
                         color="primary"
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, height: 50 }}
                         onClick={() => {
                           setSelectedResultItem({
                             category: 1,
@@ -379,26 +515,6 @@ function ResultsPage({
                       >
                         Show On Map
                       </Button>
-                      {repairDonatablesResults[index].length === 0 ? (
-                        <p>
-                          Oops, no locations found for {item["donatable_type"]}
-                        </p>
-                      ) : (
-                        <ul>
-                          {repairDonatablesResults[index].map(
-                            (location: RepairLocation) => {
-                              return (
-                                <li key={location["repair_id"]}>
-                                  <Typography>
-                                    {location["center_name"]}, stall number{" "}
-                                    {location["stall_number"]}
-                                  </Typography>
-                                </li>
-                              );
-                            }
-                          )}
-                        </ul>
-                      )}
                     </div>
                   );
                 })}
@@ -411,37 +527,145 @@ function ResultsPage({
             <Box flex={1}>
               <h2>Ewaste</h2>
               <h4>
-                These Ewaste items can be disposed of at the following ebins:
+                For any non-bulky Ewaste, they may be disposed of at the
+                following Ebins:
               </h4>
               {allEwaste.map((item: EwasteItem, index: number) => {
                 return (
                   <div>
-                    <Typography variant="body1">
-                      {item["ewaste_type"] + ": "}
-                    </Typography>
-                    <ul>
-                      {ewasteEbinResults[index].map((res: EbinLocations) => {
-                        return <li>{res["ebin"]["ebin_name"]}</li>;
-                      })}
-                    </ul>
+                    <List
+                      sx={{
+                        width: "70%",
+                        maxWidth: 360,
+                        bgcolor: "background.paper",
+                      }}
+                    >
+                      <ListItemButton
+                        onClick={() => handleShowEwasteResults(index)}
+                      >
+                        <ListItemIcon>
+                          {showEwasteResults[index] ? (
+                            <ExpandLess />
+                          ) : (
+                            <ExpandMore />
+                          )}
+                        </ListItemIcon>
+                        <ListItemText primary={item["ewaste_type"]} />
+                      </ListItemButton>
+                      <Collapse
+                        in={showEwasteResults[index]}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        {ewasteEbinResults[index].length === 0 ? (
+                          <p>
+                            For {item["ewaste_type"]}, refer to collection drive
+                            info below
+                          </p>
+                        ) : (
+                          <List component="div" disablePadding>
+                            {ewasteEbinResults[index].map(
+                              (binInfo: EbinLocations) => {
+                                const bin = binInfo["ebin"];
+                                // const locations = entry["donateLocations"];
+                                return (
+                                  <ListItemButton sx={{ padding: 0, pl: 4 }}>
+                                    <ListItemIcon>
+                                      <StarBorder />
+                                    </ListItemIcon>
+                                    <ListItemText primary={bin["ebin_name"]} />
+                                  </ListItemButton>
+                                );
+                              }
+                            )}
+                          </List>
+                          // <ul>
+                          //   {ewasteEbinResults[index].map(
+                          //     (binInfo: EbinLocations) => {
+                          //       return (
+                          //         <li key={binInfo["ebin"]["ebin_id"]}>
+                          //           {binInfo["ebin"]["ebin_name"]}
+                          //         </li>
+                          //       );
+                          //     }
+                          //   )}
+                          // </ul>
+                        )}
+                      </Collapse>
+                    </List>
                   </div>
                 );
               })}
               {goodEwaste.length != 0 && (
                 <>
-                  <h4>These Ewaste items can be donated:</h4>
+                  <h4>
+                    Alternatively, Ewaste in good condition may be donated
+                    instead:
+                  </h4>
                   {goodEwaste.map((item: EwasteItem, index: number) => {
                     return (
-                      <div>
-                        <Typography variant="body1">
-                          {item["ewaste_type"] + ": "}
-                        </Typography>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <List
+                          sx={{
+                            width: "70%",
+                            maxWidth: 360,
+                            bgcolor: "background.paper",
+                          }}
+                        >
+                          <ListItemButton
+                            onClick={() => handleShowGEResults(index)}
+                          >
+                            <ListItemIcon>
+                              {showGEResults[index] ? (
+                                <ExpandLess />
+                              ) : (
+                                <ExpandMore />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText primary={item["ewaste_type"]} />
+                          </ListItemButton>
+                          <Collapse
+                            in={showGEResults[index]}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            {goodEwasteResults[index].length === 0 ? (
+                              <p>
+                                Oops, no locations found for{" "}
+                                {item["ewaste_type"]}
+                              </p>
+                            ) : (
+                              <>
+                                <List component="div" disablePadding>
+                                  {goodEwasteResults[index].map(
+                                    (entry: DonateOrganisationLocations) => {
+                                      const org = entry["donateOrg"];
+                                      // const locations = entry["donateLocations"];
+                                      return (
+                                        <ListItemButton
+                                          sx={{ padding: 0, pl: 4 }}
+                                        >
+                                          <ListItemIcon>
+                                            <StarBorder />
+                                          </ListItemIcon>
+                                          <ListItemText
+                                            primary={org["organisation_name"]}
+                                          />
+                                        </ListItemButton>
+                                      );
+                                    }
+                                  )}
+                                </List>
+                              </>
+                            )}
+                          </Collapse>
+                        </List>
                         <Button
                           variant={
                             isHighlighted[2][index] ? "contained" : "outlined"
                           }
                           color="primary"
-                          sx={{ mt: 1 }}
+                          sx={{ mt: 1, height: 50 }}
                           onClick={() => {
                             setSelectedResultItem({
                               category: 2,
@@ -453,32 +677,6 @@ function ResultsPage({
                         >
                           Show On Map
                         </Button>
-                        {goodEwasteResults[index].length === 0 ? (
-                          <p>
-                            Oops, no locations found for {item["ewaste_type"]}
-                          </p>
-                        ) : (
-                          <ul>
-                            {goodEwasteResults[index].map(
-                              (entry: DonateOrganisationLocations) => {
-                                const org = entry["donateOrg"];
-                                // const locations = entry["donateLocations"];
-                                return (
-                                  <li key={org["donateOrg_id"]}>
-                                    <Typography>
-                                      {org["organisation_name"]}
-                                    </Typography>
-                                    {/* <ul>
-                                      {locations.map((loc: DonateLocation) => {
-                                        return <li>{loc["address"]}</li>;
-                                      })}
-                                    </ul> */}
-                                  </li>
-                                );
-                              }
-                            )}
-                          </ul>
-                        )}
                       </div>
                     );
                   })}
@@ -486,51 +684,80 @@ function ResultsPage({
               )}
               {repairEwaste.length != 0 && (
                 <>
-                  <h4>These Ewaste items can be repaired:</h4>
+                  <h4>
+                    Alternatively, damaged but not spoilt Ewaste can be
+                    repaired:
+                  </h4>
                   {repairEwaste.map((item: EwasteItem, index: number) => {
                     return (
-                      <div>
-                        <Typography variant="body1">
-                          {item["ewaste_type"] + ": "}
-                        </Typography>
-                        <Button
-                          variant={
-                            isHighlighted[3][index] ? "contained" : "outlined"
-                          }
-                          color="primary"
-                          sx={{ mt: 1 }}
-                          onClick={() => {
-                            setSelectedResultItem({
-                              category: 2,
-                              condition: 1,
-                              index: index,
-                            });
-                            handleHighlight(3, index);
-                          }}
-                        >
-                          Show On Map
-                        </Button>
-                        {repairEwasteResults[index].length === 0 ? (
-                          <p>
-                            Oops, no locations found for {item["ewaste_type"]}
-                          </p>
-                        ) : (
-                          <ul>
-                            {repairEwasteResults[index].map(
-                              (location: RepairLocation) => {
-                                return (
-                                  <li key={location["repair_id"]}>
-                                    <Typography>
-                                      {location["center_name"]}, stall number{" "}
-                                      {location["stall_number"]}
-                                    </Typography>
-                                  </li>
-                                );
-                              }
-                            )}
-                          </ul>
-                        )}
-                      </div>
+                      <>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <List
+                            sx={{
+                              width: "70%",
+                              maxWidth: 360,
+                              bgcolor: "background.paper",
+                            }}
+                          >
+                            <ListItemButton
+                              onClick={() => handleShowRDResults(index)}
+                            >
+                              <ListItemIcon>
+                                {showRDResults[index] ? (
+                                  <ExpandLess />
+                                ) : (
+                                  <ExpandMore />
+                                )}
+                              </ListItemIcon>
+                              <ListItemText primary={item["ewaste_type"]} />
+                            </ListItemButton>
+                            <Collapse
+                              in={showRDResults[index]}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              {repairEwasteResults[index].length === 0 ? (
+                                <p>
+                                  Oops, no locations found for{" "}
+                                  {item["ewaste_type"]}
+                                </p>
+                              ) : (
+                                <ul>
+                                  {repairEwasteResults[index].map(
+                                    (location: RepairLocation) => {
+                                      return (
+                                        <li key={location["repair_id"]}>
+                                          <Typography>
+                                            {location["center_name"]}, stall
+                                            number {location["stall_number"]}
+                                          </Typography>
+                                        </li>
+                                      );
+                                    }
+                                  )}
+                                </ul>
+                              )}
+                            </Collapse>
+                          </List>
+                          <Button
+                            variant={
+                              isHighlighted[3][index] ? "contained" : "outlined"
+                            }
+                            color="primary"
+                            sx={{ mt: 1, height: 50 }}
+                            onClick={() => {
+                              setSelectedResultItem({
+                                category: 2,
+                                condition: 1,
+                                index: index,
+                              });
+                              handleHighlight(3, index);
+                            }}
+                          >
+                            Show On Map
+                          </Button>
+                        </div>
+                      </>
                     );
                   })}
                 </>
@@ -539,9 +766,7 @@ function ResultsPage({
           </>
         )}
       </Stack>
-      {(unrecyclablesResults.length != 0 ||
-        spoiltDonatables.length != 0 ||
-        spoiltEwaste.length != 0) && (
+      {(unrecyclablesResults.length != 0 || spoiltDonatables.length != 0) && (
         <>
           <h2>These items need to be disposed as general waste:</h2>
           <Stack>
