@@ -362,15 +362,22 @@ function ResultsPage({
             <h2>Donatables</h2>
             {goodDonatables.length != 0 && (
               <>
-                <h4>
+                <h4 style={{ margin: 0 }}>
                   These donatables can be donated at the following
                   organisations:
                 </h4>
                 {goodDonatables.map((item: DonatableItem, index: number) => {
                   return (
-                    <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div
+                      style={{
+                        margin: 0,
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
                       <List
                         sx={{
+                          margin: 0,
                           width: "70%",
                           maxWidth: 360,
                           bgcolor: "background.paper",
@@ -429,7 +436,7 @@ function ResultsPage({
                           isHighlighted[0][index] ? "contained" : "outlined"
                         }
                         color="primary"
-                        sx={{ mt: 1, height: 50 }}
+                        sx={{ mt: 1, height: 50, fontSize: "small" }}
                         onClick={() => {
                           setSelectedResultItem({
                             category: 1,
@@ -448,12 +455,13 @@ function ResultsPage({
             )}
             {repairDonatables.length != 0 && (
               <>
-                <h4>These donatables can be repaired:</h4>
+                <h4 style={{ margin: 0 }}>These donatables can be repaired:</h4>
                 {repairDonatables.map((item: DonatableItem, index: number) => {
                   return (
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <List
                         sx={{
+                          margin: 0,
                           width: "70%",
                           maxWidth: 360,
                           bgcolor: "background.paper",
@@ -504,7 +512,7 @@ function ResultsPage({
                           isHighlighted[1][index] ? "contained" : "outlined"
                         }
                         color="primary"
-                        sx={{ mt: 1, height: 50 }}
+                        sx={{ mt: 1, height: 50, fontSize: "small" }}
                         onClick={() => {
                           setSelectedResultItem({
                             category: 1,
@@ -527,7 +535,7 @@ function ResultsPage({
           <>
             <Box flex={1}>
               <h2>Ewaste</h2>
-              <h4>
+              <h4 style={{ margin: 0 }}>
                 For any non-bulky Ewaste, they may be disposed of at the
                 following Ebins:
               </h4>
@@ -536,6 +544,7 @@ function ResultsPage({
                   <div>
                     <List
                       sx={{
+                        margin: 0,
                         width: "70%",
                         maxWidth: 360,
                         bgcolor: "background.paper",
@@ -599,7 +608,7 @@ function ResultsPage({
               })}
               {goodEwaste.length != 0 && (
                 <>
-                  <h4>
+                  <h4 style={{ margin: 0 }}>
                     Alternatively, Ewaste in good condition may be donated
                     instead:
                   </h4>
@@ -608,6 +617,7 @@ function ResultsPage({
                       <div style={{ display: "flex", flexDirection: "row" }}>
                         <List
                           sx={{
+                            margin: 0,
                             width: "70%",
                             maxWidth: 360,
                             bgcolor: "background.paper",
@@ -666,7 +676,7 @@ function ResultsPage({
                             isHighlighted[2][index] ? "contained" : "outlined"
                           }
                           color="primary"
-                          sx={{ mt: 1, height: 50 }}
+                          sx={{ mt: 1, height: 50, fontSize: "small" }}
                           onClick={() => {
                             setSelectedResultItem({
                               category: 2,
@@ -685,7 +695,7 @@ function ResultsPage({
               )}
               {repairEwaste.length != 0 && (
                 <>
-                  <h4>
+                  <h4 style={{ margin: 0 }}>
                     Alternatively, damaged but not spoilt Ewaste can be
                     repaired:
                   </h4>
@@ -695,6 +705,7 @@ function ResultsPage({
                         <div style={{ display: "flex", flexDirection: "row" }}>
                           <List
                             sx={{
+                              margin: 0,
                               width: "70%",
                               maxWidth: 360,
                               bgcolor: "background.paper",
@@ -745,7 +756,7 @@ function ResultsPage({
                               isHighlighted[3][index] ? "contained" : "outlined"
                             }
                             color="primary"
-                            sx={{ mt: 1, height: 50 }}
+                            sx={{ mt: 1, height: 50, fontSize: "small" }}
                             onClick={() => {
                               setSelectedResultItem({
                                 category: 2,
