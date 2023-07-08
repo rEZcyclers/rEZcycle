@@ -30,7 +30,6 @@ import {
   Typography,
 } from "@mui/material";
 import Locations from "./Locations";
-import NestedList from "./NestedList";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
@@ -323,7 +322,7 @@ function ResultsPage({
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      {/* <Locations
+      <Locations
         goodDonatables={goodDonatables}
         repairDonatables={repairDonatables}
         spoiltDonatables={spoiltDonatables}
@@ -336,7 +335,7 @@ function ResultsPage({
         repairEwasteResults={repairEwasteResults}
         ewasteEbinResults={ewasteEbinResults}
         selectedResultItem={selectedResultItem}
-      /> */}
+      />
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -700,10 +699,10 @@ function ResultsPage({
                             }}
                           >
                             <ListItemButton
-                              onClick={() => handleShowRDResults(index)}
+                              onClick={() => handleShowREResults(index)}
                             >
                               <ListItemIcon>
-                                {showRDResults[index] ? (
+                                {showREResults[index] ? (
                                   <ExpandLess />
                                 ) : (
                                   <ExpandMore />
@@ -712,7 +711,7 @@ function ResultsPage({
                               <ListItemText primary={item["ewaste_type"]} />
                             </ListItemButton>
                             <Collapse
-                              in={showRDResults[index]}
+                              in={showREResults[index]}
                               timeout="auto"
                               unmountOnExit
                             >
