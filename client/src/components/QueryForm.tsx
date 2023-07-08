@@ -6,16 +6,24 @@ import Ewaste from "./QueryFormComponents/Ewaste";
 import { Button } from "@mui/material";
 
 interface Props {
-  stage: number;
   setStage: (num: number) => void;
-  selectedItems: boolean[][];
-  setSelectedItems: (newArray: boolean[][]) => void;
+  selectedRecyclables: boolean[];
+  selectedDonatables: boolean[];
+  selectedEwaste: boolean[];
+  setSelectedRecyclables: (newArray: boolean[]) => void;
+  setSelectedDonatables: (newArray: boolean[]) => void;
+  setSelectedEwaste: (newArray: boolean[]) => void;
 }
 
-function QueryForm(props: Props) {
-  const handleClick = () => {
-    props.setStage(2);
-  };
+function QueryForm({
+  setStage,
+  selectedRecyclables,
+  selectedDonatables,
+  selectedEwaste,
+  setSelectedRecyclables,
+  setSelectedDonatables,
+  setSelectedEwaste,
+}: Props) {
   return (
     <>
       <h1>What would you like to recycle today?</h1>
@@ -27,27 +35,27 @@ function QueryForm(props: Props) {
         <Box flex={1}>
           <h2>Recyclables</h2>
           <Recyclables
-            selectedItems={props.selectedItems}
-            setSelectedItems={props.setSelectedItems}
+            selectedRecyclables={selectedRecyclables}
+            setSelectedRecyclables={setSelectedRecyclables}
           />
         </Box>
         <Box flex={1}>
           <h2>Donatables</h2>
           <Donatables
-            selectedItems={props.selectedItems}
-            setSelectedItems={props.setSelectedItems}
+            selectedDonatables={selectedDonatables}
+            setSelectedDonatables={setSelectedDonatables}
           />
         </Box>
         <Box flex={1}>
           <h2>E-waste</h2>
           <Ewaste
-            selectedItems={props.selectedItems}
-            setSelectedItems={props.setSelectedItems}
+            selectedEwaste={selectedEwaste}
+            setSelectedEwaste={setSelectedEwaste}
           />
         </Box>
       </Stack>
       <Box display="flex" justifyContent="right" sx={{ mt: 4 }}>
-        <Button variant="outlined" onClick={handleClick} sx={{ mr: 10 }}>
+        <Button variant="outlined" onClick={() => setStage(2)} sx={{ mr: 10 }}>
           Next
         </Button>
       </Box>

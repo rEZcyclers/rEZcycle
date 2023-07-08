@@ -35,23 +35,23 @@ import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
 interface Props {
-  stage: number;
   setStage: (num: number) => void;
-  selectedItems: boolean[][];
+  selectedRecyclables: boolean[];
+  selectedDonatables: boolean[];
+  selectedEwaste: boolean[];
   recyclableConditions: boolean[];
-  setRecyclableConditions: (newArray: boolean[]) => void;
   donatableConditions: Condition[];
-  setDonatableConditions: (newArray: Condition[]) => void;
   ewasteConditions: Condition[];
-  setEwasteConditions: (newArray: Condition[]) => void;
 }
 
 function ResultsPage({
-  selectedItems,
+  setStage,
+  selectedRecyclables,
+  selectedDonatables,
+  selectedEwaste,
   recyclableConditions,
   donatableConditions,
   ewasteConditions,
-  setStage,
 }: Props) {
   // Retrieve raw data first
   const {
@@ -88,7 +88,7 @@ function ResultsPage({
   let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
-    recyclablesResults = selectedItems[0]
+    recyclablesResults = selectedRecyclables
       .map((sel, i) => (sel ? i : -1))
       .filter(
         (i) =>
@@ -105,7 +105,7 @@ function ResultsPage({
     //       item["bluebin_eligibility"] != 0;
     //   }
     // );
-    unrecyclablesResults = selectedItems[0]
+    unrecyclablesResults = selectedRecyclables
       .map((sel, i) => (sel ? i : -1))
       .filter(
         (i) =>
@@ -116,15 +116,17 @@ function ResultsPage({
       .map((i) => recyclablesData[i]);
 
     goodDonatables = donatableConditions
-      .map((cond, i) => (selectedItems[1][i] && cond === "Good" ? i : -1))
+      .map((cond, i) => (selectedDonatables[i] && cond === "Good" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     repairDonatables = donatableConditions
-      .map((cond, i) => (selectedItems[1][i] && cond === "Repairable" ? i : -1))
+      .map((cond, i) =>
+        selectedDonatables[i] && cond === "Repairable" ? i : -1
+      )
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     spoiltDonatables = donatableConditions
-      .map((cond, i) => (selectedItems[1][i] && cond === "Spoilt" ? i : -1))
+      .map((cond, i) => (selectedDonatables[i] && cond === "Spoilt" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => donatablesData[i]);
     goodDonatablesResults = goodDonatables.map((item: DonatableItem) => {
@@ -154,15 +156,15 @@ function ResultsPage({
     });
 
     goodEwaste = ewasteConditions
-      .map((cond, i) => (selectedItems[2][i] && cond === "Good" ? i : -1))
+      .map((cond, i) => (selectedEwaste[i] && cond === "Good" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);
     repairEwaste = ewasteConditions
-      .map((cond, i) => (selectedItems[2][i] && cond === "Repairable" ? i : -1))
+      .map((cond, i) => (selectedEwaste[i] && cond === "Repairable" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);
     spoiltEwaste = ewasteConditions
-      .map((cond, i) => (selectedItems[2][i] && cond === "Spoilt" ? i : -1))
+      .map((cond, i) => (selectedEwaste[i] && cond === "Spoilt" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);
     goodEwasteResults = goodEwaste.map((item: EwasteItem) => {
@@ -189,7 +191,7 @@ function ResultsPage({
         return repairLocData[entry["repair_id"] - 1];
       });
     });
-    allEwaste = selectedItems[2]
+    allEwaste = selectedEwaste
       .map((sel, i) => (sel ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);

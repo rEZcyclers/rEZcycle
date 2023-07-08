@@ -7,41 +7,51 @@ import ResultsPage from "../components/ResultsPage";
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
 function HomePage() {
-  // states required for finding results: selected items, their conditions, & which form we're at
-  const [selectedItems, setSelectedItems] = useState<boolean[][]>([
-    new Array<boolean>(62).fill(false),
-    new Array<boolean>(9).fill(false),
-    new Array<boolean>(6).fill(false),
-  ]);
+  ///// states required for finding results: (1) selected items, (2) their conditions, (3) which stage we're at /////
 
-  const [stage, setStage] = useState(1);
+  // (1) selected items
+  const [selectedRecyclables, setSelectedRecyclables] = useState<boolean[]>(
+    new Array<boolean>(62)
+  );
+  const [selectedDonatables, setSelectedDonatables] = useState<boolean[]>(
+    new Array<boolean>(9)
+  );
+  const [selectedEwaste, setSelectedEwaste] = useState<boolean[]>(
+    new Array<boolean>(6)
+  );
 
+  // (2) selected item conditions
   const [recyclableConditions, setRecyclableConditions] = useState(
-    selectedItems[0].map(() => false)
+    selectedRecyclables.map(() => false)
   );
-
   const [donatableConditions, setDonatableConditions] = useState<Condition[]>(
-    selectedItems[1].map(() => "")
+    selectedDonatables.map(() => "")
+  );
+  const [ewasteConditions, setEwasteConditions] = useState<Condition[]>(
+    selectedEwaste.map(() => "")
   );
 
-  const [ewasteConditions, setEwasteConditions] = useState<Condition[]>(
-    selectedItems[2].map(() => "")
-  );
+  // (3) which stage we're at
+  const [stage, setStage] = useState(1);
 
   return (
     <Base>
       {stage == 1 ? (
         <QueryForm
-          stage={stage}
           setStage={setStage}
-          selectedItems={selectedItems}
-          setSelectedItems={setSelectedItems}
+          selectedRecyclables={selectedRecyclables}
+          selectedDonatables={selectedDonatables}
+          selectedEwaste={selectedEwaste}
+          setSelectedRecyclables={setSelectedRecyclables}
+          setSelectedDonatables={setSelectedDonatables}
+          setSelectedEwaste={setSelectedEwaste}
         />
       ) : stage == 2 ? (
         <ChecklistForm
-          stage={stage}
           setStage={setStage}
-          selectedItems={selectedItems}
+          selectedRecyclables={selectedRecyclables}
+          selectedDonatables={selectedDonatables}
+          selectedEwaste={selectedEwaste}
           recyclableConditions={recyclableConditions}
           setRecyclableConditions={setRecyclableConditions}
           donatableConditions={donatableConditions}
@@ -51,15 +61,13 @@ function HomePage() {
         />
       ) : (
         <ResultsPage
-          stage={stage}
           setStage={setStage}
-          selectedItems={selectedItems}
+          selectedRecyclables={selectedRecyclables}
+          selectedDonatables={selectedDonatables}
+          selectedEwaste={selectedEwaste}
           recyclableConditions={recyclableConditions}
-          setRecyclableConditions={setRecyclableConditions}
           donatableConditions={donatableConditions}
-          setDonatableConditions={setDonatableConditions}
           ewasteConditions={ewasteConditions}
-          setEwasteConditions={setEwasteConditions}
         />
       )}
     </Base>

@@ -10,8 +10,8 @@ import { IconButton, Toolbar, styled } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
-  selectedItems: boolean[][];
-  setSelectedItems: (newArray: boolean[][]) => void;
+  selectedRecyclables: boolean[];
+  setSelectedRecyclables: (newArray: boolean[]) => void;
 }
 
 // CustomChip from https://github.com/mui/material-ui/issues/15185
@@ -27,8 +27,16 @@ const CustomChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
-function Recyclables(props: Props) {
+function Recyclables({ selectedRecyclables, setSelectedRecyclables }: Props) {
   const { recyclablesData } = useContext(backendContext);
+
+  const toggleRecyclableSelection = (index: number) => {
+    setSelectedRecyclables([
+      ...selectedRecyclables.slice(0, index),
+      !selectedRecyclables[index],
+      ...selectedRecyclables.slice(index + 1),
+    ]);
+  };
 
   // Modal popup logic
   const [activeModal, setActiveModal] = useState<number>(-1);
@@ -40,29 +48,6 @@ function Recyclables(props: Props) {
     setActiveModal(-1);
   };
 
-  // Chip selection logic
-  type Fill = "outlined" | "filled";
-  const [selectedChips, setSelectedChips] = useState<Fill[]>(
-    props.selectedItems[0].map((sel) => (sel ? "filled" : "outlined"))
-  );
-
-  const toggleChipSelect = (id: number) => {
-    setSelectedChips({
-      ...selectedChips,
-      [id]: selectedChips[id] == "outlined" ? "filled" : "outlined",
-    });
-    props.setSelectedItems([
-      [
-        ...props.selectedItems[0].slice(0, id),
-        !props.selectedItems[0][id],
-        ...props.selectedItems[0].slice(id + 1),
-      ],
-      props.selectedItems[1],
-      props.selectedItems[2],
-    ]);
-  };
-
-  // Display chips
   const categories = ["Paper", "Plastic", "Glass", "Metal"];
   const paperArr = recyclablesData.filter(
     (item: RecyclableItem) => item["material"] === "PAPER"
@@ -76,22 +61,23 @@ function Recyclables(props: Props) {
   const metalArr = recyclablesData.filter(
     (item: RecyclableItem) => item["material"] === "METAL"
   );
-  const recyclablesByMaterial = [paperArr, plasticArr, glassArr, metalArr];
+  const recyclableArraysByMaterial = [paperArr, plasticArr, glassArr, metalArr];
 
+  // Check number of selected recyclables within each material array
   const numberOfSelections = (materialArray: RecyclableItem[]) => {
     return materialArray.filter(
-      (item: RecyclableItem) =>
-        props.selectedItems[0][item["recyclable_id"] - 1]
+      (item: RecyclableItem) => selectedRecyclables[item["recyclable_id"] - 1]
     ).length;
   };
 
+  // Display chips
   return (
     <>
       {recyclablesData.length === 0 ? (
         <h3>Loading...</h3>
       ) : (
         <Box display="flex" sx={{ flexWrap: "wrap" }}>
-          {recyclablesByMaterial.map(
+          {recyclableArraysByMaterial.map(
             (material: RecyclableItem[], modalIndex: number) => {
               return (
                 <>
@@ -153,9 +139,15 @@ function Recyclables(props: Props) {
                               label={item["name"]}
                               color="secondary"
                               size="medium"
-                              variant={selectedChips[item["recyclable_id"] - 1]}
+                              variant={
+                                selectedRecyclables[item["recyclable_id"] - 1]
+                                  ? "filled"
+                                  : "outlined"
+                              }
                               onClick={() =>
-                                toggleChipSelect(item["recyclable_id"] - 1)
+                                toggleRecyclableSelection(
+                                  item["recyclable_id"] - 1
+                                )
                               }
                               sx={{
                                 mr: 1,
