@@ -141,7 +141,7 @@ function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
                 flexDirection={"row"}
                 sx={{
                   flexWrap: "nowrap",
-                  height: "70%",
+                  height: "85%",
                 }}
               >
                 <Box
@@ -149,6 +149,7 @@ function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
                   sx={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   <IconButton onClick={() => navigateLeft(activeModal)}>
@@ -164,6 +165,7 @@ function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
                   sx={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
                   <IconButton onClick={() => navigateRight(activeModal)}>

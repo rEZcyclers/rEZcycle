@@ -145,7 +145,7 @@ function Donatables({ selectedDonatables, setSelectedDonatables }: Props) {
                   flexDirection={"row"}
                   sx={{
                     flexWrap: "nowrap",
-                    height: "70%",
+                    height: "85%",
                   }}
                 >
                   <Box
@@ -153,6 +153,7 @@ function Donatables({ selectedDonatables, setSelectedDonatables }: Props) {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <IconButton onClick={() => navigateLeft(activeModal)}>
@@ -169,6 +170,7 @@ function Donatables({ selectedDonatables, setSelectedDonatables }: Props) {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     <IconButton onClick={() => navigateRight(activeModal)}>
