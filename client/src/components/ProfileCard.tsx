@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./ProfileCard.css";
 import validator from "validator";
 import {
+  Avatar,
   Box,
   FormControl,
   IconButton,
@@ -149,6 +150,22 @@ export default function ProfileCard({ server, userProfile }: Props) {
       .catch((err) => console.log(err));
   };
 
+  // TODO: Refactor code
+  // Eg
+  // const updateData = (dataName: string, data: string | number, setEditData: (editData: boolean) => void) => {
+  //   fetch(`${server}/userProfile?id=${userProfile[dataName]}`, {
+  //     method: "PUT",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ data }),
+  //   })
+  //     .then(() => {
+  //       userProfile[dataName] = data;
+  //       setEditData(false);
+  //       console.log(`User ${dataName} updated`);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+
   return (
     <>
       <h1>
@@ -179,7 +196,12 @@ export default function ProfileCard({ server, userProfile }: Props) {
             borderBottomLeftRadius: ".5rem",
           }}
         >
-          <Box
+          <Avatar
+            src={imgURL}
+            alt="ProfilePicture"
+            sx={{ marginTop: 2, width: 150, height: 150 }}
+          />
+          {/* <Box
             sx={{
               height: "150px",
               borderRadius: "50%",
@@ -188,7 +210,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
             }}
           >
             <img src={imgURL} className="ProfilePic" alt="ProfilePicture" />
-          </Box>
+          </Box> */}
 
           <button className="UploadPic">
             <label htmlFor="fileInput">{fileText}</label>

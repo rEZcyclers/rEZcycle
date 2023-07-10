@@ -39,12 +39,6 @@
   place-items: center;
 }
 
-.ProfilePic {
-  height: 150px;
-  object-fit: cover;
-}
-
-
 .UploadPic {
   margin: 10px 5px 0px 5px;
   border-radius: 5px;
