@@ -6,6 +6,8 @@ import { EwasteItem } from "../../DataTypes";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { IconButton, Modal, Stack, Toolbar, Typography } from "@mui/material";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
 interface Props {
   selectedEwaste: boolean[];
@@ -31,6 +33,14 @@ function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
   };
   const closeModal = () => {
     setActiveModal(-1);
+  };
+  const navigateLeft = (curModal: number) => {
+    const nextModal = curModal == 0 ? ewasteData.length - 1 : curModal - 1;
+    setActiveModal(nextModal);
+  };
+  const navigateRight = (curModal: number) => {
+    const nextModal = curModal == ewasteData.length - 1 ? 0 : curModal + 1;
+    setActiveModal(nextModal);
   };
 
   // Display Chips for Ewaste Selection
@@ -94,7 +104,7 @@ function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "50%",
+                width: "70%",
                 height: "70%",
                 bgcolor: "background.paper",
                 border: "2px solid #000",
@@ -127,13 +137,38 @@ function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
                   <CloseIcon></CloseIcon>
                 </IconButton>
               </Toolbar>
-              <Stack sx={{ paddingLeft: 5, paddingRight: 5 }}>
-                <Box>
-                  <p>
-                    {activeModal != -1 &&
-                      ewasteData[activeModal]["description"]}
-                  </p>
+              <Stack
+                flexDirection={"row"}
+                sx={{
+                  flexWrap: "nowrap",
+                  height: "70%",
+                }}
+              >
+                <Box
+                  flex={1}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <IconButton onClick={() => navigateLeft(activeModal)}>
+                    <ArrowBackIosNewIcon />
+                  </IconButton>
+                </Box>
+                <Box flex={10} sx={{ marginTop: 1, overflow: "auto" }}>
+                  {activeModal != -1 && ewasteData[activeModal]["description"]}
                   <p>Insert some images here</p>
+                </Box>
+                <Box
+                  flex={1}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <IconButton onClick={() => navigateRight(activeModal)}>
+                    <ArrowForwardIosIcon />
+                  </IconButton>
                 </Box>
               </Stack>
             </Box>
