@@ -14,7 +14,6 @@ import {
   EDOrg,
   ERLoc,
   EE,
-  SelectedResultItem,
   DonateOrganisationLocations,
   EbinLocations,
 } from "../DataTypes";
@@ -29,8 +28,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import Locations from "./Locations";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import MapLocations from "./MapLocations";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -53,7 +52,7 @@ function ResultsPage({
   donatableConditions,
   ewasteConditions,
 }: Props) {
-  // Retrieve raw data first
+  ////////// Processing of Results //////////
   const {
     recyclablesData,
     donatablesData,
@@ -81,13 +80,13 @@ function ResultsPage({
 
   let goodEwaste: EwasteItem[] = []; // Selected Ewaste in good condition
   let repairEwaste: EwasteItem[] = []; // Selected Ewaste in repairable condition
-  let spoiltEwaste: EwasteItem[] = []; // Selected Ewaste in spoilt condition
   let goodEwasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good Ewaste
   let repairEwasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable Ewaste
   let allEwaste: EwasteItem[] = []; // All selected Ewaste regardless of condition
   let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
+    console.log("getResults() called");
     recyclablesResults = selectedRecyclables
       .map((sel, i) => (sel ? i : -1))
       .filter(
@@ -163,10 +162,6 @@ function ResultsPage({
       .map((cond, i) => (selectedEwaste[i] && cond === "Repairable" ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);
-    spoiltEwaste = ewasteConditions
-      .map((cond, i) => (selectedEwaste[i] && cond === "Spoilt" ? i : -1))
-      .filter((i) => i != -1)
-      .map((i) => ewasteData[i]);
     goodEwasteResults = goodEwaste.map((item: EwasteItem) => {
       return EDOrgData.filter(
         (entry: EDOrg) => entry["ewaste_id"] === item["ewaste_id"]
@@ -214,24 +209,14 @@ function ResultsPage({
     });
   }
 
-  // Identify the selected result item with a list of 3 numbers
-  // The first number identifies the category of the item, the second number identifies the condition of the item and the third number identifies the item index
-  // The first number is 0 for recyclables, 1 for donatables and 2 for ewaste
-  // The second number is 0 for good, 1 for repairable and 2 for spoilt
-  // The third number is the index of the item in the respective data array
-  const [selectedResultItem, setSelectedResultItem] =
-    useState<SelectedResultItem>({
-      category: -1,
-      condition: -1,
-      index: -1,
-    });
+  getResults();
+  ////////// End of Results Processing //////////
 
   const handleBackClick = () => {
     setStage(2);
   };
 
-  getResults();
-
+  // State for deciding whether to show nested list for every result item or not
   const [showGDResults, setShowGDResults] = useState<boolean[]>(
     Array<boolean>(goodDonatables.length)
   );
@@ -283,60 +268,73 @@ function ResultsPage({
     ]);
   };
 
-  /* Create a state that indicates which "Show on Map" buttons are highlighted
-  It consists of 4 arrays, each array represents a category of items
-  Array 1 represents goodDonatables
-  Array 2 represents repairDonatables
-  Array 3 represents goodEwaste
-  Array 4 represents repairEwaste
-  */
-  const [isHighlighted, setIsHighlighted] = useState<boolean[][]>([
-    Array<boolean>(goodDonatables.length),
-    Array<boolean>(repairDonatables.length),
-    Array<boolean>(goodEwaste.length),
-    Array<boolean>(repairEwaste.length),
-  ]);
-
-  // Create a state that indicates which "Show on Map" button is currently highlighted
-  // It consists of 2 numbers, the first number represents the category of the item button
-  //   and the second number represents the index of the item button
-  const [currentHighlightedButton, setCurrentHighlightedButton] = useState<
-    number[]
-  >([-1, -1]);
-
-  const handleHighlight = (buttonCategory: number, buttonIndex: number) => {
-    // create new isHighlighted array to replace old array
-    let newIsHighlighted = isHighlighted;
-    // unhighlight the previously highlighted button
-    if (currentHighlightedButton[0] != -1) {
-      newIsHighlighted[currentHighlightedButton[0]][
-        currentHighlightedButton[1]
-      ] = false;
-    }
-    // highlight the new button
-    newIsHighlighted[buttonCategory][buttonIndex] = true;
-    // update state
-    setIsHighlighted(newIsHighlighted);
-    // update currentHighlightedButton
-    setCurrentHighlightedButton([buttonCategory, buttonIndex]);
+  // State for deciding whether to show map location pins for every result item or not
+  const [showGDPins, setShowGDPins] = useState<boolean[]>(
+    Array<boolean>(goodDonatables.length)
+  );
+  const [showRDPins, setShowRDPins] = useState<boolean[]>(
+    Array<boolean>(repairDonatables.length)
+  );
+  const [showEwastePins, setShowEwastePins] = useState<boolean[]>(
+    Array<boolean>(allEwaste.length)
+  );
+  const [showGEPins, setShowGEPins] = useState<boolean[]>(
+    Array<boolean>(goodEwaste.length)
+  );
+  const [showREPins, setShowREPins] = useState<boolean[]>(
+    Array<boolean>(repairDonatables.length)
+  );
+  const handleShowGDPins = (index: number) => {
+    setShowGDPins([
+      ...showGDPins.slice(0, index),
+      !showGDPins[index],
+      ...showGDPins.slice(index + 1),
+    ]);
+  };
+  const handleShowRDPins = (index: number) => {
+    setShowRDPins([
+      ...showRDPins.slice(0, index),
+      !showRDPins[index],
+      ...showRDPins.slice(index + 1),
+    ]);
+  };
+  const handleShowEwastePins = (index: number) => {
+    setShowEwastePins([
+      ...showEwastePins.slice(0, index),
+      !showEwastePins[index],
+      ...showEwastePins.slice(index + 1),
+    ]);
+  };
+  const handleShowGEPins = (index: number) => {
+    setShowGEPins([
+      ...showGEPins.slice(0, index),
+      !showGEPins[index],
+      ...showGEPins.slice(index + 1),
+    ]);
+  };
+  const handleShowREPins = (index: number) => {
+    setShowREPins([
+      ...showREPins.slice(0, index),
+      !showREPins[index],
+      ...showREPins.slice(index + 1),
+    ]);
   };
 
+  ////////// ResultsPage Component begins here //////////
   return (
     <>
       <h1>Here's where to recycle your items</h1>
-      <Locations
-        goodDonatables={goodDonatables}
-        repairDonatables={repairDonatables}
-        spoiltDonatables={spoiltDonatables}
+      <MapLocations
+        showGDPins={showGDPins}
+        showRDPins={showRDPins}
+        showGEPins={showGEPins}
+        showREPins={showREPins}
+        showEwastePins={showEwastePins}
         goodDonatablesResults={goodDonatablesResults}
         repairDonatablesResults={repairDonatablesResults}
-        goodEwaste={goodEwaste}
-        repairEwaste={repairEwaste}
-        spoiltEwaste={spoiltEwaste}
         goodEwasteResults={goodEwasteResults}
         repairEwasteResults={repairEwasteResults}
         ewasteEbinResults={ewasteEbinResults}
-        selectedResultItem={selectedResultItem}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
@@ -411,7 +409,6 @@ function ResultsPage({
                                 {goodDonatablesResults[index].map(
                                   (entry: DonateOrganisationLocations) => {
                                     const org = entry["donateOrg"];
-                                    // const locations = entry["donateLocations"];
                                     return (
                                       <ListItemButton
                                         sx={{ padding: 0, pl: 4 }}
@@ -432,18 +429,14 @@ function ResultsPage({
                         </Collapse>
                       </List>
                       <Button
-                        variant={
-                          isHighlighted[0][index] ? "contained" : "outlined"
-                        }
-                        color="primary"
-                        sx={{ mt: 1, height: 50, fontSize: "small" }}
+                        variant={showGDPins[index] ? "contained" : "outlined"}
+                        sx={{
+                          mt: 1,
+                          height: 50,
+                          fontSize: "small",
+                        }}
                         onClick={() => {
-                          setSelectedResultItem({
-                            category: 1,
-                            condition: 0,
-                            index: index,
-                          });
-                          handleHighlight(0, index);
+                          handleShowGDPins(index);
                         }}
                       >
                         Show On Map
@@ -508,18 +501,11 @@ function ResultsPage({
                         </Collapse>
                       </List>
                       <Button
-                        variant={
-                          isHighlighted[1][index] ? "contained" : "outlined"
-                        }
+                        variant={showRDPins[index] ? "contained" : "outlined"}
                         color="primary"
                         sx={{ mt: 1, height: 50, fontSize: "small" }}
                         onClick={() => {
-                          setSelectedResultItem({
-                            category: 1,
-                            condition: 1,
-                            index: index,
-                          });
-                          handleHighlight(1, index);
+                          handleShowRDPins(index);
                         }}
                       >
                         Show On Map
@@ -541,7 +527,7 @@ function ResultsPage({
               </h4>
               {allEwaste.map((item: EwasteItem, index: number) => {
                 return (
-                  <div>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
                     <List
                       sx={{
                         margin: 0,
@@ -589,20 +575,19 @@ function ResultsPage({
                               }
                             )}
                           </List>
-                          // <ul>
-                          //   {ewasteEbinResults[index].map(
-                          //     (binInfo: EbinLocations) => {
-                          //       return (
-                          //         <li key={binInfo["ebin"]["ebin_id"]}>
-                          //           {binInfo["ebin"]["ebin_name"]}
-                          //         </li>
-                          //       );
-                          //     }
-                          //   )}
-                          // </ul>
                         )}
                       </Collapse>
                     </List>
+                    <Button
+                      variant={showEwastePins[index] ? "contained" : "outlined"}
+                      color="primary"
+                      sx={{ mt: 1, height: 50, fontSize: "small" }}
+                      onClick={() => {
+                        handleShowEwastePins(index);
+                      }}
+                    >
+                      Show On Map
+                    </Button>
                   </div>
                 );
               })}
@@ -672,18 +657,11 @@ function ResultsPage({
                           </Collapse>
                         </List>
                         <Button
-                          variant={
-                            isHighlighted[2][index] ? "contained" : "outlined"
-                          }
+                          variant={showGEPins[index] ? "contained" : "outlined"}
                           color="primary"
                           sx={{ mt: 1, height: 50, fontSize: "small" }}
                           onClick={() => {
-                            setSelectedResultItem({
-                              category: 2,
-                              condition: 0,
-                              index: index,
-                            });
-                            handleHighlight(2, index);
+                            handleShowGEPins(index);
                           }}
                         >
                           Show On Map
@@ -753,17 +731,12 @@ function ResultsPage({
                           </List>
                           <Button
                             variant={
-                              isHighlighted[3][index] ? "contained" : "outlined"
+                              showREPins[index] ? "contained" : "outlined"
                             }
                             color="primary"
                             sx={{ mt: 1, height: 50, fontSize: "small" }}
                             onClick={() => {
-                              setSelectedResultItem({
-                                category: 2,
-                                condition: 1,
-                                index: index,
-                              });
-                              handleHighlight(3, index);
+                              handleShowREPins(index);
                             }}
                           >
                             Show On Map
