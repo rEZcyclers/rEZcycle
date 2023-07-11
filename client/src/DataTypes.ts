@@ -36,6 +36,14 @@ export type EwasteItem = {
 
 
 // All locations for the items to be recycled/donated/repaired
+
+export type Bluebin = {
+  bluebin_id: number;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
 export type DonateOrganisation = {
   donateOrg_id: number;
   organisation_name: string;
