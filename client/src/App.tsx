@@ -11,6 +11,7 @@ import {
   RecyclableItem,
   DonatableItem,
   EwasteItem,
+  Bluebin,
   DonateOrganisation,
   DonateLocation,
   RepairLocation,
@@ -26,6 +27,7 @@ import {
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
 const serverAPI = "https://rezcycle-server.onrender.com";
+// const serverAPI = "http://localhost:8000";
 
 function App() {
   // User Profile Data
@@ -38,6 +40,7 @@ function App() {
   const [ewasteData, setEwasteData] = useState<EwasteItem[]>([]);
 
   // Location Data
+  const [bluebinsData, setBluebinsData] = useState<Bluebin[]>([]);
   const [donateOrgData, setDonateOrgData] = useState<DonateOrganisation[]>([]);
   const [donateLocData, setDonateLocData] = useState<DonateLocation[]>([]);
   const [repairLocData, setRepairLocData] = useState<RepairLocation[]>([]);
@@ -81,6 +84,12 @@ function App() {
       .then((res) => res.json())
       .then((data) => setEwasteData(data))
       .then(() => console.log("ewasteData fetched"))
+      .catch((err) => console.log(err));
+
+    fetch(`${serverAPI}/bluebins`)
+      .then((res) => res.json())
+      .then((data) => setBluebinsData(data))
+      .then(() => console.log("bluebins fetched"))
       .catch((err) => console.log(err));
 
     fetch(`${serverAPI}/donateOrganisations`)
@@ -166,6 +175,7 @@ function App() {
         recyclablesData,
         donatablesData,
         ewasteData,
+        bluebinsData,
         donateOrgData,
         donateLocData,
         repairLocData,
