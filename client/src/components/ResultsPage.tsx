@@ -338,7 +338,7 @@ function ResultsPage({
         showGEPins={showGEPins}
         showREPins={showREPins}
         showEwastePins={showEwastePins}
-        bluebinsData={[...bluebinsData.slice(0, 10)]}
+        bluebinsData={bluebinsData}
         goodDonatablesResults={goodDonatablesResults}
         repairDonatablesResults={repairDonatablesResults}
         goodEwasteResults={goodEwasteResults}
