@@ -128,18 +128,13 @@ function MapLocations({
 
   const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
 
-  const [currentLocation, setCurrentLocation] = useState<number[]>([
-    1.3334437417296838, 103.81069629836223,
-  ]);
-
-  // to remove vercel alert.
-  setCurrentLocation([1.3334437417296838, 103.81069629836223]);
+  const userLocation: number[] = [1.3334437417296838, 103.81069629836223];
 
   function getLocations() {
-    // Find the bluebin that is closest to currentLocation and store it in nearestBluebinLocation
+    // Find the bluebin that is closest to userLocation and store it in nearestBluebinLocation
     let nearestBluebin: Bluebin = findClosestBluebin(
-      currentLocation[0],
-      currentLocation[1],
+      userLocation[0],
+      userLocation[1],
       bluebinsData
     );
 
