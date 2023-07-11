@@ -7,17 +7,20 @@ import {
   EbinLocations,
   EbinLocation,
   Ebin,
+  Bluebin,
 } from "../DataTypes";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
 
 interface Props {
+  showBluebin: boolean;
   showGDPins: boolean[];
   showRDPins: boolean[];
   showGEPins: boolean[];
   showREPins: boolean[];
   showEwastePins: boolean[];
 
+  bluebinsData: Bluebin[];
   goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
   repairDonatablesResults: RepairLocation[][]; // List of repairLocations for every selected repairable donatable
   goodEwasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good Ewaste
@@ -25,6 +28,7 @@ interface Props {
   ewasteEbinResults: EbinLocations[][];
 }
 
+const recyclableColor = "#00FF00";
 const donatableColor = "#FC2BA1";
 const ewasteColor = "#FFC300";
 
@@ -40,18 +44,82 @@ type LocationInfo = {
   lng: number;
 };
 
+// Function to calculate the distance between two coordinates using the Haversine formula
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const earthRadius = 6371; // Earth's radius in kilometers
+
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = earthRadius * c;
+  return distance;
+}
+
+// Helper function to convert degrees to radians
+function toRadians(degrees: number): number {
+  return degrees * (Math.PI / 180);
+}
+
+// Function to find the blue bin that is closest to the current location
+function findClosestBluebin(
+  currentLat: number,
+  currentLon: number,
+  bluebins: Bluebin[]
+): Bluebin {
+  let closestDistance = Infinity;
+  let closestBluebin: Bluebin = bluebins[0];
+
+  for (const bluebin of bluebins) {
+    const distance = calculateDistance(
+      currentLat,
+      currentLon,
+      bluebin.latitude,
+      bluebin.longitude
+    );
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestBluebin = bluebin;
+    }
+  }
+
+  return closestBluebin;
+}
+
 function MapLocations({
+  showBluebin,
   showGDPins,
   showRDPins,
   showGEPins,
   showREPins,
   showEwastePins,
+  bluebinsData,
   goodDonatablesResults,
   repairDonatablesResults,
   goodEwasteResults,
   repairEwasteResults,
   ewasteEbinResults,
 }: Props) {
+  let nearestBluebinLocation: LocationInfo = {
+    locationType: "dummy",
+    name: "dummy",
+    address: "dummy",
+    contact: "dummy",
+    lat: 1.33,
+    lng: 108,
+  };
   let GDLocations: LocationInfo[][] = [];
   let RDLocations: LocationInfo[][] = [];
   let GELocations: LocationInfo[][] = [];
@@ -60,7 +128,30 @@ function MapLocations({
 
   const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
 
+  const [currentLocation, setCurrentLocation] = useState<number[]>([
+    1.3334437417296838, 103.81069629836223,
+  ]);
+
+  // to remove vercel alert.
+  setCurrentLocation([1.3334437417296838, 103.81069629836223]);
+
   function getLocations() {
+    // Find the bluebin that is closest to currentLocation and store it in nearestBluebinLocation
+    let nearestBluebin: Bluebin = findClosestBluebin(
+      currentLocation[0],
+      currentLocation[1],
+      bluebinsData
+    );
+
+    nearestBluebinLocation = {
+      locationType: "recycle",
+      name: "Blue Bin",
+      address: nearestBluebin["address"],
+      contact: "Not Applicable",
+      lat: nearestBluebin["latitude"],
+      lng: nearestBluebin["longitude"],
+    };
+
     GDLocations = goodDonatablesResults.map(
       // For each selected good donatable item, create a list of LocationInfo
       (item: DonateOrganisationLocations[]) => {
@@ -138,7 +229,7 @@ function MapLocations({
     EELocations = ewasteEbinResults.map(
       // For each selected ewaste item, create a list of LocationInfo
       (item: EbinLocations[]) => {
-        // For each organisation that accepts the selected good donatable item, transform it to a flat list of LocationInfo
+        // For each ebin type that accepts the selected eWaste item, transform it to a flat list of LocationInfo
         return item.flatMap((ebinInfo: EbinLocations) => {
           const ebin: Ebin = ebinInfo["ebin"];
           const locations: EbinLocation[] = ebinInfo["ebinLocations"];
@@ -171,6 +262,14 @@ function MapLocations({
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
+      {showBluebin && nearestBluebinLocation != null && (
+        <Marker
+          latitude={nearestBluebinLocation.lat}
+          longitude={nearestBluebinLocation.lng}
+          color={recyclableColor}
+          onClick={() => setActiveMarker(nearestBluebinLocation)}
+        />
+      )}
       {showGDPins
         .map((sel, i) => (sel ? i : -1))
         .filter((i) => i != -1)

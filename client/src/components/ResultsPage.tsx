@@ -57,6 +57,7 @@ function ResultsPage({
     recyclablesData,
     donatablesData,
     ewasteData,
+    bluebinsData,
     donateOrgData,
     donateLocData,
     repairLocData,
@@ -86,6 +87,8 @@ function ResultsPage({
   let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
+    console.log(DDOrgData);
+    console.log(bluebinsData);
     console.log("getResults() called");
     recyclablesResults = selectedRecyclables
       .map((sel, i) => (sel ? i : -1))
@@ -269,6 +272,7 @@ function ResultsPage({
   };
 
   // State for deciding whether to show map location pins for every result item or not
+  const [showBluebin, setShowBluebin] = useState<boolean>(false);
   const [showGDPins, setShowGDPins] = useState<boolean[]>(
     Array<boolean>(goodDonatables.length)
   );
@@ -284,6 +288,9 @@ function ResultsPage({
   const [showREPins, setShowREPins] = useState<boolean[]>(
     Array<boolean>(repairDonatables.length)
   );
+  const handleShowBluebin = () => {
+    setShowBluebin(!showBluebin);
+  };
   const handleShowGDPins = (index: number) => {
     setShowGDPins([
       ...showGDPins.slice(0, index),
@@ -325,11 +332,13 @@ function ResultsPage({
     <>
       <h1>Here's where to recycle your items</h1>
       <MapLocations
+        showBluebin={showBluebin}
         showGDPins={showGDPins}
         showRDPins={showRDPins}
         showGEPins={showGEPins}
         showREPins={showREPins}
         showEwastePins={showEwastePins}
+        bluebinsData={bluebinsData}
         goodDonatablesResults={goodDonatablesResults}
         repairDonatablesResults={repairDonatablesResults}
         goodEwasteResults={goodEwasteResults}
@@ -344,6 +353,19 @@ function ResultsPage({
           <Box flex={1}>
             <h2>Recyclables</h2>
             <h4>These items can be recycled at the nearest blue bins:</h4>
+            <Button
+              variant={showBluebin ? "contained" : "outlined"}
+              sx={{
+                mt: 1,
+                height: 50,
+                fontSize: "small",
+              }}
+              onClick={() => {
+                handleShowBluebin();
+              }}
+            >
+              Show nearest Blue Bin
+            </Button>
             <ul>
               {recyclablesResults.map((item: RecyclableItem) => {
                 return (

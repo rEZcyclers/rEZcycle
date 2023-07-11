@@ -140,7 +140,12 @@ app.get("/ewaste", async (req, res) => {
   res.json(data);
 });
 
-// Get locations for items (donateOrgs + donateLocs, repairLocs, ebins + ebinLocs)
+// Get locations for items (bluebins, donateOrgs + donateLocs, repairLocs, ebins + ebinLocs)
+app.get("/bluebins", async (req, res) => {
+  const { data, error } = await supabase.from("Bluebins").select();
+  res.json(data);
+});
+
 app.get("/donateOrganisations", async (req, res) => {
   const { data, error } = await supabase.from("DonateOrganisations").select();
   res.json(data);
