@@ -132,6 +132,9 @@ function MapLocations({
     1.3334437417296838, 103.81069629836223,
   ]);
 
+  // to remove vercel alert.
+  setCurrentLocation([1.3334437417296838, 103.81069629836223]);
+
   function getLocations() {
     // Find the bluebin that is closest to currentLocation and store it in nearestBluebinLocation
     let nearestBluebin: Bluebin = findClosestBluebin(
