@@ -11,6 +11,7 @@ import {
 } from "../DataTypes";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
+import GeocoderControl from "./GeocoderControl";
 
 interface Props {
   showBluebin: boolean;
@@ -257,6 +258,7 @@ function MapLocations({
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
+      <GeocoderControl mapboxAccessToken={MAPBOX_TOKEN} position="top-left" />
       {showBluebin && nearestBluebinLocation != null && (
         <Marker
           latitude={nearestBluebinLocation.lat}
