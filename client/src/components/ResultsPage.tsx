@@ -239,7 +239,6 @@ function ResultsPage({
   const [showEEResults, setShowEEResults] = useState<boolean[]>(
     Array<boolean>(ebinEwaste.length)
   );
-  const [showRegEResults, setShowRegEResults] = useState<boolean>(false);
   const [showGEResults, setShowGEResults] = useState<boolean[]>(
     Array<boolean>(goodEwaste.length)
   );
