@@ -11,6 +11,7 @@ import {
 } from "../DataTypes";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
+import GeocoderControl from "./GeocoderControl";
 
 interface Props {
   showBluebin: boolean;
@@ -19,6 +20,8 @@ interface Props {
   showGEPins: boolean[];
   showREPins: boolean[];
   showEwastePins: boolean[];
+
+  setShowBluebin: (showBluebin: boolean) => void;
 
   bluebinsData: Bluebin[];
   goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
@@ -44,6 +47,7 @@ type LocationInfo = {
   lng: number;
 };
 
+// Header 1 start: Functions that identify locations that are nearest to the user
 // Function to calculate the distance between two coordinates using the Haversine formula
 function calculateDistance(
   lat1: number,
@@ -73,14 +77,14 @@ function toRadians(degrees: number): number {
   return degrees * (Math.PI / 180);
 }
 
-// Function to find the blue bin that is closest to the current location
-function findClosestBluebin(
+// Function to find the location of the blue bin that is closest to the current location
+function findNearestBluebinLocation(
   currentLat: number,
   currentLon: number,
   bluebins: Bluebin[]
-): Bluebin {
-  let closestDistance = Infinity;
-  let closestBluebin: Bluebin = bluebins[0];
+): LocationInfo {
+  let nearestDistance = Infinity;
+  let nearestBluebin: Bluebin = bluebins[0];
 
   for (const bluebin of bluebins) {
     const distance = calculateDistance(
@@ -89,14 +93,25 @@ function findClosestBluebin(
       bluebin.latitude,
       bluebin.longitude
     );
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      closestBluebin = bluebin;
+    if (distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestBluebin = bluebin;
     }
   }
 
-  return closestBluebin;
+  const nearestBluebinLocation: LocationInfo = {
+    locationType: "recycle",
+    name: "Blue Bin",
+    address: nearestBluebin["address"],
+    contact: "No contact available",
+    lat: nearestBluebin["latitude"],
+    lng: nearestBluebin["longitude"],
+  };
+
+  return nearestBluebinLocation;
 }
+
+// Header 1 end: End of set of functions that identify locations that are nearest to the user
 
 function MapLocations({
   showBluebin,
@@ -105,6 +120,7 @@ function MapLocations({
   showGEPins,
   showREPins,
   showEwastePins,
+  setShowBluebin,
   bluebinsData,
   goodDonatablesResults,
   repairDonatablesResults,
@@ -112,41 +128,13 @@ function MapLocations({
   repairEwasteResults,
   ewasteEbinResults,
 }: Props) {
-  let nearestBluebinLocation: LocationInfo = {
-    locationType: "dummy",
-    name: "dummy",
-    address: "dummy",
-    contact: "dummy",
-    lat: 1.33,
-    lng: 108,
-  };
   let GDLocations: LocationInfo[][] = [];
   let RDLocations: LocationInfo[][] = [];
   let GELocations: LocationInfo[][] = [];
   let RELocations: LocationInfo[][] = [];
   let EELocations: LocationInfo[][] = [];
 
-  const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
-
-  const userLocation: number[] = [1.3334437417296838, 103.81069629836223];
-
   function getLocations() {
-    // Find the bluebin that is closest to userLocation and store it in nearestBluebinLocation
-    let nearestBluebin: Bluebin = findClosestBluebin(
-      userLocation[0],
-      userLocation[1],
-      bluebinsData
-    );
-
-    nearestBluebinLocation = {
-      locationType: "recycle",
-      name: "Blue Bin",
-      address: nearestBluebin["address"],
-      contact: "Not Applicable",
-      lat: nearestBluebin["latitude"],
-      lng: nearestBluebin["longitude"],
-    };
-
     GDLocations = goodDonatablesResults.map(
       // For each selected good donatable item, create a list of LocationInfo
       (item: DonateOrganisationLocations[]) => {
@@ -246,6 +234,40 @@ function MapLocations({
 
   getLocations();
 
+  const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
+
+  const [userLocation, setUserLocation] = useState<number[]>([
+    1.3334437417296838, 103.81069629836223,
+  ]);
+
+  const [nearestBluebinLocation, setNearestBluebinLocation] =
+    useState<LocationInfo>();
+
+  /*
+  dummy locationinfo
+  {
+    locationType: "dummy",
+    name: "dummy",
+    address: "dummy",
+    contact: "dummy",
+    lat: 1.33,
+    lng: 108,
+  } */
+
+  // Update the user's location and the recycling locations nearest to the user
+  function updateNearestLocations(newUserLocation: number[]) {
+    setUserLocation(newUserLocation);
+    console.log("current userLocation: ", userLocation);
+    setNearestBluebinLocation(
+      findNearestBluebinLocation(
+        newUserLocation[0],
+        newUserLocation[1],
+        bluebinsData
+      )
+    );
+    setShowBluebin(true);
+  }
+
   return (
     <Map
       initialViewState={{
@@ -257,6 +279,11 @@ function MapLocations({
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
+      <GeocoderControl
+        mapboxAccessToken={MAPBOX_TOKEN}
+        position="top-left"
+        updateNearestLocations={updateNearestLocations}
+      />
       {showBluebin && nearestBluebinLocation != null && (
         <Marker
           latitude={nearestBluebinLocation.lat}
