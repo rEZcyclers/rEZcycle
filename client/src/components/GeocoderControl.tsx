@@ -9,7 +9,6 @@ type GeocoderControlProps = Omit<
   "accessToken" | "mapboxgl" | "marker"
 > & {
   mapboxAccessToken: string;
-  //   marker?: boolean | (Omit<MarkerProps, "longitude" | "latitude"> & object);
   marker?: boolean | Omit<MarkerProps, "longitude" | "latitude">;
 
   position: ControlPosition;
@@ -18,6 +17,8 @@ type GeocoderControlProps = Omit<
   onResults: (e: object) => void;
   onResult: (e: object) => void;
   onError: (e: object) => void;
+
+  setUserLocation: (userLocation: number[]) => void;
 };
 
 /* eslint-disable complexity,max-statements */
@@ -42,6 +43,7 @@ export default function GeocoderControl(props: GeocoderControlProps) {
           (result.center ||
             (result.geometry?.type === "Point" && result.geometry.coordinates));
         if (location && props.marker) {
+          props.setUserLocation([location[1], location[0]]);
           setMarker(
             <Marker
               //   {...props.marker}

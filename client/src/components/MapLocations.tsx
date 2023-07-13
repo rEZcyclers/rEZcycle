@@ -129,7 +129,9 @@ function MapLocations({
 
   const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
 
-  const userLocation: number[] = [1.3334437417296838, 103.81069629836223];
+  const [userLocation, setUserLocation] = useState<number[]>([
+    1.3334437417296838, 103.81069629836223,
+  ]);
 
   function getLocations() {
     // Find the bluebin that is closest to userLocation and store it in nearestBluebinLocation
@@ -258,7 +260,11 @@ function MapLocations({
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
-      <GeocoderControl mapboxAccessToken={MAPBOX_TOKEN} position="top-left" />
+      <GeocoderControl
+        mapboxAccessToken={MAPBOX_TOKEN}
+        position="top-left"
+        setUserLocation={setUserLocation}
+      />
       {showBluebin && nearestBluebinLocation != null && (
         <Marker
           latitude={nearestBluebinLocation.lat}
