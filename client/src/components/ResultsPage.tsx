@@ -81,16 +81,16 @@ function ResultsPage({
   let goodDonatablesResults: DonateOrganisationLocations[][] = []; // List of donateOrganisations & their locations for every selected good donatable
   let repairDonatablesResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable donatable
 
+  let allEwaste: EwasteItem[] = []; // All selected Ewaste
+  let ebinEwaste: EwasteItem[] = []; // Selected Ewaste eligible for ebins
+  let regulatedEwaste: EwasteItem[] = []; // Selected Ewaste eligible for collection drives
   let goodEwaste: EwasteItem[] = []; // Selected Ewaste in good condition
   let repairEwaste: EwasteItem[] = []; // Selected Ewaste in repairable condition
+  let ebinEwasteResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
   let goodEwasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good Ewaste
   let repairEwasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable Ewaste
-  let allEwaste: EwasteItem[] = []; // All selected Ewaste regardless of condition
-  let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
-    console.log(DDOrgData);
-    console.log(bluebinsData);
     console.log("getResults() called");
     recyclablesResults = selectedRecyclables
       .map((sel, i) => (sel ? i : -1))
@@ -159,14 +159,20 @@ function ResultsPage({
       });
     });
 
-    goodEwaste = ewasteConditions
-      .map((cond, i) => (selectedEwaste[i] && cond === "Good" ? i : -1))
+    allEwaste = selectedEwaste
+      .map((sel, i) => (sel ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);
-    repairEwaste = ewasteConditions
-      .map((cond, i) => (selectedEwaste[i] && cond === "Repairable" ? i : -1))
-      .filter((i) => i != -1)
-      .map((i) => ewasteData[i]);
+    ebinEwaste = allEwaste.filter(
+      (item) => item["ewaste_id"] != 4 && item["ewaste_id"] != 5
+    );
+    regulatedEwaste = allEwaste.filter((item) => item["is_regulated"]);
+    goodEwaste = allEwaste.filter(
+      (item) => ewasteConditions[item["ewaste_id"] - 1] === "Good"
+    );
+    repairEwaste = allEwaste.filter(
+      (item) => ewasteConditions[item["ewaste_id"] - 1] === "Repairable"
+    );
     goodEwasteResults = goodEwaste.map((item: EwasteItem) => {
       return EDOrgData.filter(
         (entry: EDOrg) => entry["ewaste_id"] === item["ewaste_id"]
@@ -191,11 +197,8 @@ function ResultsPage({
         return repairLocData[entry["repair_id"] - 1];
       });
     });
-    allEwaste = selectedEwaste
-      .map((sel, i) => (sel ? i : -1))
-      .filter((i) => i != -1)
-      .map((i) => ewasteData[i]);
-    ewasteEbinResults = allEwaste.map((item: EwasteItem) => {
+
+    ebinEwasteResults = ebinEwaste.map((item: EwasteItem) => {
       return EEData.filter(
         (entry: EE) => entry["ewaste_id"] == item["ewaste_id"]
       )
@@ -233,9 +236,10 @@ function ResultsPage({
   const [showRDResults, setShowRDResults] = useState<boolean[]>(
     Array<boolean>(repairDonatables.length)
   );
-  const [showEwasteResults, setShowEwasteResults] = useState<boolean[]>(
-    Array<boolean>(allEwaste.length)
+  const [showEEResults, setShowEEResults] = useState<boolean[]>(
+    Array<boolean>(ebinEwaste.length)
   );
+  const [showRegEResults, setShowRegEResults] = useState<boolean>(false);
   const [showGEResults, setShowGEResults] = useState<boolean[]>(
     Array<boolean>(goodEwaste.length)
   );
@@ -256,11 +260,11 @@ function ResultsPage({
       ...showRDResults.slice(index + 1),
     ]);
   };
-  const handleShowEwasteResults = (index: number) => {
-    setShowEwasteResults([
-      ...showEwasteResults.slice(0, index),
-      !showEwasteResults[index],
-      ...showEwasteResults.slice(index + 1),
+  const handleshowEEResults = (index: number) => {
+    setShowEEResults([
+      ...showEEResults.slice(0, index),
+      !showEEResults[index],
+      ...showEEResults.slice(index + 1),
     ]);
   };
   const handleShowGEResults = (index: number) => {
@@ -287,7 +291,7 @@ function ResultsPage({
     Array<boolean>(repairDonatables.length)
   );
   const [showEwastePins, setShowEwastePins] = useState<boolean[]>(
-    Array<boolean>(allEwaste.length)
+    Array<boolean>(ebinEwaste.length)
   );
   const [showGEPins, setShowGEPins] = useState<boolean[]>(
     Array<boolean>(goodEwaste.length)
@@ -337,7 +341,7 @@ function ResultsPage({
   ////////// ResultsPage Component begins here //////////
   return (
     <>
-      <h1>Here's where to recycle your items</h1>
+      <h1 style={{ margin: 0 }}>Here's where to recycle your items</h1>
       <MapLocations
         showBluebin={showBluebin}
         showGDPins={showGDPins}
@@ -350,7 +354,7 @@ function ResultsPage({
         repairDonatablesResults={repairDonatablesResults}
         goodEwasteResults={goodEwasteResults}
         repairEwasteResults={repairEwasteResults}
-        ewasteEbinResults={ewasteEbinResults}
+        ebinEwasteResults={ebinEwasteResults}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
@@ -554,7 +558,7 @@ function ResultsPage({
                 For any non-bulky Ewaste, they may be disposed of at the
                 following Ebins:
               </h4>
-              {allEwaste.map((item: EwasteItem, index: number) => {
+              {ebinEwaste.map((item: EwasteItem, index: number) => {
                 return (
                   <div style={{ display: "flex", flexDirection: "row" }}>
                     <List
@@ -566,10 +570,10 @@ function ResultsPage({
                       }}
                     >
                       <ListItemButton
-                        onClick={() => handleShowEwasteResults(index)}
+                        onClick={() => handleshowEEResults(index)}
                       >
                         <ListItemIcon>
-                          {showEwasteResults[index] ? (
+                          {showEEResults[index] ? (
                             <ExpandLess />
                           ) : (
                             <ExpandMore />
@@ -578,18 +582,18 @@ function ResultsPage({
                         <ListItemText primary={item["ewaste_type"]} />
                       </ListItemButton>
                       <Collapse
-                        in={showEwasteResults[index]}
+                        in={showEEResults[index]}
                         timeout="auto"
                         unmountOnExit
                       >
-                        {ewasteEbinResults[index].length === 0 ? (
+                        {ebinEwasteResults[index].length === 0 ? (
                           <p>
                             For {item["ewaste_type"]}, refer to collection drive
                             info below
                           </p>
                         ) : (
                           <List component="div" disablePadding>
-                            {ewasteEbinResults[index].map(
+                            {ebinEwasteResults[index].map(
                               (binInfo: EbinLocations) => {
                                 const bin = binInfo["ebin"];
                                 // const locations = entry["donateLocations"];
@@ -620,6 +624,26 @@ function ResultsPage({
                   </div>
                 );
               })}
+              {regulatedEwaste.length != 0 && (
+                <>
+                  <h4 style={{ marginBottom: 0 }}>
+                    Regulated Ewaste Items may be disposed at ALBA's quarterly
+                    Ewaste Collection Drives as well:{" "}
+                    <a
+                      href="https://alba-ewaste.sg/drop-off-at-collection-events/"
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      {"(More Info)"}
+                    </a>
+                  </h4>
+                  <ul style={{ marginTop: 0 }}>
+                    {regulatedEwaste.map((item: EwasteItem) => {
+                      return <li>{item["ewaste_type"]}</li>;
+                    })}
+                  </ul>
+                </>
+              )}
               {goodEwaste.length != 0 && (
                 <>
                   <h4 style={{ margin: 0 }}>

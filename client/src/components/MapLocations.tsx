@@ -25,7 +25,7 @@ interface Props {
   repairDonatablesResults: RepairLocation[][]; // List of repairLocations for every selected repairable donatable
   goodEwasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good Ewaste
   repairEwasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable Ewaste
-  ewasteEbinResults: EbinLocations[][];
+  ebinEwasteResults: EbinLocations[][];
 }
 
 const recyclableColor = "#00FF00";
@@ -110,7 +110,7 @@ function MapLocations({
   repairDonatablesResults,
   goodEwasteResults,
   repairEwasteResults,
-  ewasteEbinResults,
+  ebinEwasteResults,
 }: Props) {
   let nearestBluebinLocation: LocationInfo = {
     locationType: "dummy",
@@ -221,7 +221,7 @@ function MapLocations({
         });
       }
     );
-    EELocations = ewasteEbinResults.map(
+    EELocations = ebinEwasteResults.map(
       // For each selected ewaste item, create a list of LocationInfo
       (item: EbinLocations[]) => {
         // For each ebin type that accepts the selected eWaste item, transform it to a flat list of LocationInfo
