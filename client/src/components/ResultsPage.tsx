@@ -87,8 +87,6 @@ function ResultsPage({
   let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
-    console.log(DDOrgData);
-    console.log(bluebinsData);
     console.log("getResults() called");
     recyclablesResults = selectedRecyclables
       .map((sel, i) => (sel ? i : -1))
