@@ -338,6 +338,7 @@ function ResultsPage({
         showGEPins={showGEPins}
         showREPins={showREPins}
         showEwastePins={showEwastePins}
+        setShowBluebin={setShowBluebin}
         bluebinsData={bluebinsData}
         goodDonatablesResults={goodDonatablesResults}
         repairDonatablesResults={repairDonatablesResults}

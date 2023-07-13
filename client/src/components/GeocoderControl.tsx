@@ -18,7 +18,7 @@ type GeocoderControlProps = Omit<
   onResult: (e: object) => void;
   onError: (e: object) => void;
 
-  setUserLocation: (userLocation: number[]) => void;
+  updateNearestLocations: (userLocation: number[]) => void;
 };
 
 /* eslint-disable complexity,max-statements */
@@ -43,9 +43,10 @@ export default function GeocoderControl(props: GeocoderControlProps) {
           (result.center ||
             (result.geometry?.type === "Point" && result.geometry.coordinates));
         if (location && props.marker) {
-          props.setUserLocation([location[1], location[0]]);
+          props.updateNearestLocations([location[1], location[0]]);
           setMarker(
             <Marker
+              // Commented out the line below to avoid error
               //   {...props.marker}
               longitude={location[0]}
               latitude={location[1]}
