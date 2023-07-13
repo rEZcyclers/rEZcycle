@@ -36,6 +36,16 @@ function HomePage() {
 
   // extra state to be able to quickly decide appearance of 'clear' button UI
   const [numSelectedItems, setNumSelectedItems] = useState(0);
+  // function for clearing all form selections
+  const clearForm = () => {
+    setNumSelectedItems(0);
+    setSelectedRecyclables(new Array<boolean>(selectedRecyclables.length));
+    setSelectedDonatables(new Array<boolean>(selectedDonatables.length));
+    setSelectedEwaste(new Array<boolean>(selectedEwaste.length));
+    recyclableConditions.fill(false);
+    donatableConditions.fill("");
+    ewasteConditions.fill("");
+  };
 
   return (
     <Base>
@@ -50,6 +60,7 @@ function HomePage() {
           setSelectedEwaste={setSelectedEwaste}
           numSelectedItems={numSelectedItems}
           setNumSelectedItems={setNumSelectedItems}
+          clearForm={clearForm}
         />
       ) : stage == 2 ? (
         <ChecklistForm
@@ -73,6 +84,7 @@ function HomePage() {
           recyclableConditions={recyclableConditions}
           donatableConditions={donatableConditions}
           ewasteConditions={ewasteConditions}
+          clearForm={clearForm}
         />
       )}
     </Base>

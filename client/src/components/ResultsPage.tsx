@@ -41,6 +41,7 @@ interface Props {
   recyclableConditions: boolean[];
   donatableConditions: Condition[];
   ewasteConditions: Condition[];
+  clearForm: () => void;
 }
 
 function ResultsPage({
@@ -51,6 +52,7 @@ function ResultsPage({
   recyclableConditions,
   donatableConditions,
   ewasteConditions,
+  clearForm,
 }: Props) {
   ////////// Processing of Results //////////
   const {
@@ -217,6 +219,11 @@ function ResultsPage({
 
   const handleBackClick = () => {
     setStage(2);
+  };
+
+  const restartQuery = () => {
+    setStage(1);
+    clearForm();
   };
 
   // State for deciding whether to show nested list for every result item or not
@@ -813,6 +820,14 @@ function ResultsPage({
           sx={{ mr: 10, mb: 10 }}
         >
           Back
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={restartQuery}
+          sx={{ mr: 10, mb: 10 }}
+        >
+          Start new query
         </Button>
       </Box>
     </>

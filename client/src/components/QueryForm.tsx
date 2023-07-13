@@ -16,6 +16,7 @@ interface Props {
   setSelectedEwaste: (newArray: boolean[]) => void;
   numSelectedItems: number;
   setNumSelectedItems: (num: number) => void;
+  clearForm: () => void;
 }
 
 function QueryForm({
@@ -28,16 +29,10 @@ function QueryForm({
   setSelectedEwaste,
   numSelectedItems,
   setNumSelectedItems,
+  clearForm,
 }: Props) {
   // Handle invalid user input, i.e. pressing Next without any selected items
   const [showAlert, setShowAlert] = useState<boolean>(false);
-
-  const clearForm = () => {
-    setSelectedRecyclables(new Array<boolean>(selectedRecyclables.length));
-    setSelectedDonatables(new Array<boolean>(selectedDonatables.length));
-    setSelectedEwaste(selectedEwaste.fill(false));
-    setNumSelectedItems(0);
-  };
 
   // Initial method was to just call a atLeastOneSelected() method to loop through
   // all arrays, without having to use the extra numSelectedItems state.

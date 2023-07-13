@@ -172,24 +172,36 @@ function ChecklistForm({
     ));
 
   const ewasteChecklist = selectedEwaste
-    .map((selected, index) => (selected ? index : -1))
+    .map((selected, index) => {
+      if (!selected) return -1;
+      if (ewasteData[index]["ewaste_type"] === "Batteries") {
+        ewasteConditions[index] = "Spoilt";
+      }
+      return index;
+    })
     .filter((index) => index != -1)
     .map((index) => (
       <Stack direction="row" spacing={2} alignItems="center">
-        <FormControl fullWidth sx={{ flex: 2 }}>
-          <InputLabel id="demo-simple-select-label">Condition</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={ewasteConditions[index]}
-            label="Condition"
-            onChange={(event) => handleEwasteChange(event, index)}
-          >
-            <MenuItem value={"Good"}>Good</MenuItem>
-            <MenuItem value={"Repairable"}>Repairable</MenuItem>
-            <MenuItem value={"Spoilt"}>Spoilt</MenuItem>
-          </Select>
-        </FormControl>
+        {ewasteData[index]["ewaste_type"] === "Batteries" ? (
+          <Typography variant="body1" sx={{ flex: 2, maxWidth: 300 }}>
+            {"(Used batteries are considered spoilt by default)"}
+          </Typography>
+        ) : (
+          <FormControl fullWidth sx={{ flex: 2, maxWidth: 300 }}>
+            <InputLabel id="demo-simple-select-label">Condition</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={ewasteConditions[index]}
+              label="Condition"
+              onChange={(event) => handleEwasteChange(event, index)}
+            >
+              <MenuItem value={"Good"}>Good</MenuItem>
+              <MenuItem value={"Repairable"}>Repairable</MenuItem>
+              <MenuItem value={"Spoilt"}>Spoilt</MenuItem>
+            </Select>
+          </FormControl>
+        )}
         <Typography variant="body1" sx={{ flex: 3 }}>
           {ewasteData[index]["ewaste_type"]}
         </Typography>
