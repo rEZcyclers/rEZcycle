@@ -12,12 +12,22 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 interface Props {
   selectedEwaste: boolean[];
   setSelectedEwaste: (newArray: boolean[]) => void;
+  numSelectedItems: number;
+  setNumSelectedItems: (num: number) => void;
 }
 
-function Ewaste({ selectedEwaste, setSelectedEwaste }: Props) {
+function Ewaste({
+  selectedEwaste,
+  setSelectedEwaste,
+  numSelectedItems,
+  setNumSelectedItems,
+}: Props) {
   const { ewasteData } = useContext(backendContext);
 
   const toggleEwasteSelection = (index: number) => {
+    setNumSelectedItems(
+      selectedEwaste[index] ? numSelectedItems - 1 : numSelectedItems + 1
+    );
     setSelectedEwaste([
       ...selectedEwaste.slice(0, index),
       !selectedEwaste[index],

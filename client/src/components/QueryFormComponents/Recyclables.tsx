@@ -12,6 +12,8 @@ import CloseIcon from "@mui/icons-material/Close";
 interface Props {
   selectedRecyclables: boolean[];
   setSelectedRecyclables: (newArray: boolean[]) => void;
+  numSelectedItems: number;
+  setNumSelectedItems: (num: number) => void;
 }
 
 // CustomChip from https://github.com/mui/material-ui/issues/15185
@@ -27,10 +29,18 @@ const CustomChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
-function Recyclables({ selectedRecyclables, setSelectedRecyclables }: Props) {
+function Recyclables({
+  selectedRecyclables,
+  setSelectedRecyclables,
+  numSelectedItems,
+  setNumSelectedItems,
+}: Props) {
   const { recyclablesData } = useContext(backendContext);
 
   const toggleRecyclableSelection = (index: number) => {
+    setNumSelectedItems(
+      selectedRecyclables[index] ? numSelectedItems - 1 : numSelectedItems + 1
+    );
     setSelectedRecyclables([
       ...selectedRecyclables.slice(0, index),
       !selectedRecyclables[index],

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   Button,
@@ -13,6 +13,8 @@ import {
   Typography,
   Box,
   Stack,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
@@ -41,6 +43,9 @@ function ChecklistForm({
   ewasteConditions,
   setEwasteConditions,
 }: Props) {
+  // State to show an alert for invalid user actions, i.e. pressing Next without completing the checklist
+  const [showAlert, setShowAlert] = useState(false);
+
   // Retrieves raw data to get checklist info
   const { recyclablesData, donatablesData, ewasteData } =
     useContext(backendContext);
@@ -73,11 +78,33 @@ function ChecklistForm({
   };
 
   const handleNextClick = () => {
-    setStage(3);
+    if (isChecklistComplete()) setStage(3);
+    else setShowAlert(true);
+  };
+
+  const isChecklistComplete = () => {
+    for (let i = 0; i < selectedRecyclables.length; i++) {
+      if (selectedRecyclables[i] && !recyclableConditions[i]) return false;
+    }
+    for (let i = 0; i < selectedDonatables.length; i++) {
+      if (selectedDonatables[i] && !donatableConditions[i]) return false;
+    }
+    for (let i = 0; i < selectedEwaste.length; i++) {
+      if (selectedEwaste[i] && !ewasteConditions[i]) return false;
+    }
+    return true;
   };
 
   const handleBackClick = () => {
     setStage(1);
+  };
+
+  const closeAlert = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
+    setShowAlert(false);
   };
 
   const recyclablesChecklist = selectedRecyclables
@@ -232,6 +259,20 @@ function ChecklistForm({
           Next
         </Button>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={showAlert}
+        autoHideDuration={2500}
+        onClose={closeAlert}
+      >
+        <Alert
+          onClose={closeAlert}
+          severity="error"
+          sx={{ width: "100%", borderRadius: 7 }}
+        >
+          Please complete the checklist before proceeding.
+        </Alert>
+      </Snackbar>
     </>
   );
 }

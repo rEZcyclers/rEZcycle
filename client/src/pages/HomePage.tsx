@@ -34,6 +34,9 @@ function HomePage() {
   // (3) which stage we're at
   const [stage, setStage] = useState(1);
 
+  // extra state to be able to quickly decide appearance of 'clear' button UI
+  const [numSelectedItems, setNumSelectedItems] = useState(0);
+
   return (
     <Base>
       {stage == 1 ? (
@@ -45,6 +48,8 @@ function HomePage() {
           setSelectedRecyclables={setSelectedRecyclables}
           setSelectedDonatables={setSelectedDonatables}
           setSelectedEwaste={setSelectedEwaste}
+          numSelectedItems={numSelectedItems}
+          setNumSelectedItems={setNumSelectedItems}
         />
       ) : stage == 2 ? (
         <ChecklistForm
