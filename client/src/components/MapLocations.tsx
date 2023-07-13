@@ -78,37 +78,28 @@ function toRadians(degrees: number): number {
 }
 
 // Function to find the location of the blue bin that is closest to the current location
-function findNearestBluebinLocation(
+function findNearestLocation(
   currentLat: number,
   currentLon: number,
-  bluebins: Bluebin[]
+  locationList: LocationInfo[]
 ): LocationInfo {
   let nearestDistance = Infinity;
-  let nearestBluebin: Bluebin = bluebins[0];
+  let nearestLocation: LocationInfo = locationList[0];
 
-  for (const bluebin of bluebins) {
+  for (const location of locationList) {
     const distance = calculateDistance(
       currentLat,
       currentLon,
-      bluebin.latitude,
-      bluebin.longitude
+      location.lat,
+      location.lng
     );
     if (distance < nearestDistance) {
       nearestDistance = distance;
-      nearestBluebin = bluebin;
+      nearestLocation = location;
     }
   }
 
-  const nearestBluebinLocation: LocationInfo = {
-    locationType: "recycle",
-    name: "Blue Bin",
-    address: nearestBluebin["address"],
-    contact: "No contact available",
-    lat: nearestBluebin["latitude"],
-    lng: nearestBluebin["longitude"],
-  };
-
-  return nearestBluebinLocation;
+  return nearestLocation;
 }
 
 // Header 1 end: End of set of functions that identify locations that are nearest to the user
@@ -128,6 +119,7 @@ function MapLocations({
   repairEwasteResults,
   ewasteEbinResults,
 }: Props) {
+  let bluebinLocations: LocationInfo[] = [];
   let GDLocations: LocationInfo[][] = [];
   let RDLocations: LocationInfo[][] = [];
   let GELocations: LocationInfo[][] = [];
@@ -135,6 +127,17 @@ function MapLocations({
   let EELocations: LocationInfo[][] = [];
 
   function getLocations() {
+    bluebinLocations = bluebinsData.map((bluebin: Bluebin) => {
+      const locationInfo: LocationInfo = {
+        locationType: "recycle",
+        name: "Blue Bin",
+        address: bluebin["address"],
+        contact: "No contact available",
+        lat: bluebin["latitude"],
+        lng: bluebin["longitude"],
+      };
+      return locationInfo;
+    });
     GDLocations = goodDonatablesResults.map(
       // For each selected good donatable item, create a list of LocationInfo
       (item: DonateOrganisationLocations[]) => {
@@ -259,10 +262,10 @@ function MapLocations({
     setUserLocation(newUserLocation);
     console.log("current userLocation: ", userLocation);
     setNearestBluebinLocation(
-      findNearestBluebinLocation(
+      findNearestLocation(
         newUserLocation[0],
         newUserLocation[1],
-        bluebinsData
+        bluebinLocations
       )
     );
     setShowBluebin(true);
