@@ -257,6 +257,7 @@ function MapLocations({
   // Update the user's location and the recycling locations nearest to the user
   function updateNearestLocations(newUserLocation: number[]) {
     setUserLocation(newUserLocation);
+    console.log("current userLocation: ", userLocation);
     setNearestBluebinLocation(
       findNearestBluebinLocation(
         newUserLocation[0],
