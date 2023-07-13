@@ -55,7 +55,10 @@ function QueryForm({
     event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === "clickaway") return;
+    if (reason === "clickaway") {
+      console.log(event);
+      return;
+    }
     setShowAlert(false);
   };
 
