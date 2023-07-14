@@ -198,11 +198,7 @@ function ResultsPage({
         return repairLocData[entry["repair_id"] - 1];
       });
     });
-    allEwaste = selectedEwaste
-      .map((sel, i) => (sel ? i : -1))
-      .filter((i) => i != -1)
-      .map((i) => ewasteData[i]);
-    ebinEwasteResults = allEwaste.map((item: EwasteItem) => {
+    ebinEwasteResults = ebinEwaste.map((item: EwasteItem) => {
       return EEData.filter(
         (entry: EE) => entry["ewaste_id"] == item["ewaste_id"]
       )
