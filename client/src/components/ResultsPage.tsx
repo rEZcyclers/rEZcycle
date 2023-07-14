@@ -90,6 +90,7 @@ function ResultsPage({
   let goodEwasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good Ewaste
   let repairEwasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable Ewaste
 
+  let loaded = false;
   function getResults() {
     console.log("getResults() called");
     recyclablesResults = selectedRecyclables
@@ -215,9 +216,10 @@ function ResultsPage({
           };
         });
     });
+    loaded = true;
   }
 
-  getResults();
+  if (!loaded) getResults();
   ////////// End of Results Processing //////////
 
   const handleBackClick = () => {
@@ -554,81 +556,92 @@ function ResultsPage({
           <>
             <Box flex={1}>
               <h2>Ewaste</h2>
-              <h4 style={{ margin: 0 }}>
-                For any non-bulky Ewaste, they may be disposed of at the
-                following Ebins:
-              </h4>
-              {ebinEwaste.map((item: EwasteItem, index: number) => {
-                return (
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    <List
-                      sx={{
-                        margin: 0,
-                        width: "70%",
-                        maxWidth: 360,
-                        bgcolor: "background.paper",
-                      }}
-                    >
-                      <ListItemButton
-                        onClick={() => handleshowEEResults(index)}
-                      >
-                        <ListItemIcon>
-                          {showEEResults[index] ? (
-                            <ExpandLess />
-                          ) : (
-                            <ExpandMore />
-                          )}
-                        </ListItemIcon>
-                        <ListItemText primary={item["ewaste_type"]} />
-                      </ListItemButton>
-                      <Collapse
-                        in={showEEResults[index]}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        {ebinEwasteResults[index].length === 0 ? (
-                          <p>
-                            For {item["ewaste_type"]}, refer to collection drive
-                            info below
-                          </p>
-                        ) : (
-                          <List component="div" disablePadding>
-                            {ebinEwasteResults[index].map(
-                              (binInfo: EbinLocations) => {
-                                const bin = binInfo["ebin"];
-                                // const locations = entry["donateLocations"];
-                                return (
-                                  <ListItemButton sx={{ padding: 0, pl: 4 }}>
-                                    <ListItemIcon>
-                                      <StarBorder />
-                                    </ListItemIcon>
-                                    <ListItemText primary={bin["ebin_name"]} />
-                                  </ListItemButton>
-                                );
-                              }
+              {ebinEwaste.length != 0 && (
+                <>
+                  <h4 style={{ margin: 0 }}>
+                    For any non-bulky Ewaste, they may be disposed of at the
+                    following Ebins:
+                  </h4>
+                  {ebinEwaste.map((item: EwasteItem, index: number) => {
+                    return (
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <List
+                          sx={{
+                            margin: 0,
+                            width: "70%",
+                            maxWidth: 360,
+                            bgcolor: "background.paper",
+                          }}
+                        >
+                          <ListItemButton
+                            onClick={() => handleshowEEResults(index)}
+                          >
+                            <ListItemIcon>
+                              {showEEResults[index] ? (
+                                <ExpandLess />
+                              ) : (
+                                <ExpandMore />
+                              )}
+                            </ListItemIcon>
+                            <ListItemText primary={item["ewaste_type"]} />
+                          </ListItemButton>
+                          <Collapse
+                            in={showEEResults[index]}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            {ebinEwasteResults[index].length === 0 ? (
+                              <p>
+                                For {item["ewaste_type"]}, refer to collection
+                                drive info below
+                              </p>
+                            ) : (
+                              <List component="div" disablePadding>
+                                {ebinEwasteResults[index].map(
+                                  (binInfo: EbinLocations) => {
+                                    const bin = binInfo["ebin"];
+                                    // const locations = entry["donateLocations"];
+                                    return (
+                                      <ListItemButton
+                                        sx={{ padding: 0, pl: 4 }}
+                                      >
+                                        <ListItemIcon>
+                                          <StarBorder />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                          primary={bin["ebin_name"]}
+                                        />
+                                      </ListItemButton>
+                                    );
+                                  }
+                                )}
+                              </List>
                             )}
-                          </List>
-                        )}
-                      </Collapse>
-                    </List>
-                    <Button
-                      variant={showEwastePins[index] ? "contained" : "outlined"}
-                      color="primary"
-                      sx={{ mt: 1, height: 50, fontSize: "small" }}
-                      onClick={() => {
-                        handleShowEwastePins(index);
-                      }}
-                    >
-                      Show On Map
-                    </Button>
-                  </div>
-                );
-              })}
+                          </Collapse>
+                        </List>
+                        <Button
+                          variant={
+                            showEwastePins[index] ? "contained" : "outlined"
+                          }
+                          color="primary"
+                          sx={{ mt: 1, height: 50, fontSize: "small" }}
+                          onClick={() => {
+                            handleShowEwastePins(index);
+                          }}
+                        >
+                          Show On Map
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
               {regulatedEwaste.length != 0 && (
                 <>
                   <h4 style={{ marginBottom: 0 }}>
-                    Regulated Ewaste Items may be disposed at ALBA's quarterly
-                    Ewaste Collection Drives as well:{" "}
+                    {`Regulated Ewaste Items may be disposed at ALBA's quarterly Ewaste Collection Drives${
+                      ebinEwaste.length === 0 ? ": " : " as well: "
+                    }`}
                     <a
                       href="https://alba-ewaste.sg/drop-off-at-collection-events/"
                       target="_blank"
