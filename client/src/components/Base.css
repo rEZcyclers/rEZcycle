@@ -5,6 +5,7 @@
     display: flex;
     flex-wrap: nowrap;
     background-color: rgb(255, 255, 255);
+    position: relative; /* allows background image to take reference to this div */
 }
 
 .SideBar {
@@ -12,13 +13,15 @@
     width: 25vw;
     min-width: 120px;
     max-width: 200px;
-    /* background-color: rgb(41, 227, 134); */
     border-right: solid 1px rgb(216, 216, 216);
+    background-color: white;
+    z-index: 1; /* overlays background image */
 }
 
 .WebPage {
     width: 100vw;
     padding-left: 3%;
+    z-index: 1; /* overlays background image */
 }
 
 .SideBarList {
