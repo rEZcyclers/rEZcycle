@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Recyclables from "./QueryFormComponents/Recyclables";
+// import Recyclables from "./QueryFormComponents/Recyclables";
+import RecyclablesV2 from "./QueryFormComponents/RecyclablesV2";
 import Donatables from "./QueryFormComponents/Donatables";
 import Ewaste from "./QueryFormComponents/Ewaste";
 import { Alert, Button, Snackbar } from "@mui/material";
@@ -67,7 +68,7 @@ function QueryForm({
       >
         <Box flex={1}>
           <h2>Recyclables</h2>
-          <Recyclables
+          <RecyclablesV2
             selectedRecyclables={selectedRecyclables}
             setSelectedRecyclables={setSelectedRecyclables}
             numSelectedItems={numSelectedItems}
