@@ -276,7 +276,7 @@ function MapLocations({
   //   Array<LocationInfo>(repairEwasteResults.length)
   // );
   // const [nearestEELocations, setNearestEELocations] = useState<LocationInfo[]>(
-  //   Array<LocationInfo>(ewasteEbinResults.length)
+  //   Array<LocationInfo>(ebinEwasteResults.length)
   // );
 
   /*
@@ -390,7 +390,7 @@ function MapLocations({
       ]);
     }
     // Update nearest ebin Location for each ewaste item
-    for (let i = 0; i < ewasteEbinResults.length; i++) {
+    for (let i = 0; i < ebinEwasteResults.length; i++) {
       const nearestLocation = findNearestLocation(
         newUserLocation[0],
         newUserLocation[1],

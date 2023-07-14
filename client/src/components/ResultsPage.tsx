@@ -197,8 +197,11 @@ function ResultsPage({
         return repairLocData[entry["repair_id"] - 1];
       });
     });
-
-    ebinEwasteResults = ebinEwaste.map((item: EwasteItem) => {
+    allEwaste = selectedEwaste
+      .map((sel, i) => (sel ? i : -1))
+      .filter((i) => i != -1)
+      .map((i) => ewasteData[i]);
+    ebinEwasteResults = allEwaste.map((item: EwasteItem) => {
       return EEData.filter(
         (entry: EE) => entry["ewaste_id"] == item["ewaste_id"]
       )
@@ -314,7 +317,7 @@ function ResultsPage({
       .fill([])
       .map((_emptyArray, i) =>
         Array<boolean>(
-          ewasteEbinResults[i].reduce(
+          ebinEwasteResults[i].reduce(
             (numberOfLocations, ebinLocations) =>
               numberOfLocations + ebinLocations["ebinLocations"].length,
             0
@@ -329,7 +332,7 @@ function ResultsPage({
       .map((_emptyArray, i) =>
         Array<boolean>(
           goodEwasteResults[i].reduce(
-            (numberOfLocations, donateOrganisationLocations) =>
+            (numberOfLocations: number, donateOrganisationLocations) =>
               numberOfLocations +
               donateOrganisationLocations["donateLocations"].length,
             0
