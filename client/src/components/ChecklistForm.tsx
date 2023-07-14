@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../App";
 import {
   Button,
@@ -13,6 +13,8 @@ import {
   Typography,
   Box,
   Stack,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
@@ -41,6 +43,9 @@ function ChecklistForm({
   ewasteConditions,
   setEwasteConditions,
 }: Props) {
+  // State to show an alert for invalid user actions, i.e. pressing Next without completing the checklist
+  const [showAlert, setShowAlert] = useState(false);
+
   // Retrieves raw data to get checklist info
   const { recyclablesData, donatablesData, ewasteData } =
     useContext(backendContext);
@@ -73,11 +78,36 @@ function ChecklistForm({
   };
 
   const handleNextClick = () => {
-    setStage(3);
+    if (isChecklistComplete()) setStage(3);
+    else setShowAlert(true);
+  };
+
+  const isChecklistComplete = () => {
+    for (let i = 0; i < selectedRecyclables.length; i++) {
+      if (selectedRecyclables[i] && !recyclableConditions[i]) return false;
+    }
+    for (let i = 0; i < selectedDonatables.length; i++) {
+      if (selectedDonatables[i] && !donatableConditions[i]) return false;
+    }
+    for (let i = 0; i < selectedEwaste.length; i++) {
+      if (selectedEwaste[i] && !ewasteConditions[i]) return false;
+    }
+    return true;
   };
 
   const handleBackClick = () => {
     setStage(1);
+  };
+
+  const closeAlert = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      console.log(event);
+      return;
+    }
+    setShowAlert(false);
   };
 
   const recyclablesChecklist = selectedRecyclables
@@ -142,24 +172,36 @@ function ChecklistForm({
     ));
 
   const ewasteChecklist = selectedEwaste
-    .map((selected, index) => (selected ? index : -1))
+    .map((selected, index) => {
+      if (!selected) return -1;
+      if (ewasteData[index]["ewaste_type"] === "Batteries") {
+        ewasteConditions[index] = "Spoilt";
+      }
+      return index;
+    })
     .filter((index) => index != -1)
     .map((index) => (
       <Stack direction="row" spacing={2} alignItems="center">
-        <FormControl fullWidth sx={{ flex: 2 }}>
-          <InputLabel id="demo-simple-select-label">Condition</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={ewasteConditions[index]}
-            label="Condition"
-            onChange={(event) => handleEwasteChange(event, index)}
-          >
-            <MenuItem value={"Good"}>Good</MenuItem>
-            <MenuItem value={"Repairable"}>Repairable</MenuItem>
-            <MenuItem value={"Spoilt"}>Spoilt</MenuItem>
-          </Select>
-        </FormControl>
+        {ewasteData[index]["ewaste_type"] === "Batteries" ? (
+          <Typography variant="body1" sx={{ flex: 2, maxWidth: 300 }}>
+            {"(Used batteries are considered spoilt by default)"}
+          </Typography>
+        ) : (
+          <FormControl fullWidth sx={{ flex: 2, maxWidth: 300 }}>
+            <InputLabel id="demo-simple-select-label">Condition</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={ewasteConditions[index]}
+              label="Condition"
+              onChange={(event) => handleEwasteChange(event, index)}
+            >
+              <MenuItem value={"Good"}>Good</MenuItem>
+              <MenuItem value={"Repairable"}>Repairable</MenuItem>
+              <MenuItem value={"Spoilt"}>Spoilt</MenuItem>
+            </Select>
+          </FormControl>
+        )}
         <Typography variant="body1" sx={{ flex: 3 }}>
           {ewasteData[index]["ewaste_type"]}
         </Typography>
@@ -232,6 +274,20 @@ function ChecklistForm({
           Next
         </Button>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={showAlert}
+        autoHideDuration={2500}
+        onClose={closeAlert}
+      >
+        <Alert
+          onClose={closeAlert}
+          severity="error"
+          sx={{ width: "100%", borderRadius: 7 }}
+        >
+          Please complete the checklist before proceeding.
+        </Alert>
+      </Snackbar>
     </>
   );
 }
