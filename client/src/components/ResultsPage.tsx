@@ -84,7 +84,7 @@ function ResultsPage({
   let goodEwasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good Ewaste
   let repairEwasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable Ewaste
   let allEwaste: EwasteItem[] = []; // All selected Ewaste regardless of condition
-  let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
+  let ebinEwasteResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
     console.log("getResults() called");
@@ -191,7 +191,7 @@ function ResultsPage({
       .map((sel, i) => (sel ? i : -1))
       .filter((i) => i != -1)
       .map((i) => ewasteData[i]);
-    ewasteEbinResults = allEwaste.map((item: EwasteItem) => {
+    ebinEwasteResults = allEwaste.map((item: EwasteItem) => {
       return EEData.filter(
         (entry: EE) => entry["ewaste_id"] == item["ewaste_id"]
       )
@@ -302,7 +302,7 @@ function ResultsPage({
       .fill([])
       .map((_emptyArray, i) =>
         Array<boolean>(
-          ewasteEbinResults[i].reduce(
+          ebinEwasteResults[i].reduce(
             (numberOfLocations, ebinLocations) =>
               numberOfLocations + ebinLocations["ebinLocations"].length,
             0
@@ -316,7 +316,7 @@ function ResultsPage({
       .map((_emptyArray, i) =>
         Array<boolean>(
           goodEwasteResults[i].reduce(
-            (numberOfLocations, donateOrganisationLocations) =>
+            (numberOfLocations: number, donateOrganisationLocations) =>
               numberOfLocations +
               donateOrganisationLocations["donateLocations"].length,
             0
@@ -392,7 +392,7 @@ function ResultsPage({
         repairDonatablesResults={repairDonatablesResults}
         goodEwasteResults={goodEwasteResults}
         repairEwasteResults={repairEwasteResults}
-        ewasteEbinResults={ewasteEbinResults}
+        ebinEwasteResults={ebinEwasteResults}
       />
       <Stack
         direction={{ xs: "column", sm: "row" }}
@@ -650,14 +650,14 @@ function ResultsPage({
                         timeout="auto"
                         unmountOnExit
                       >
-                        {ewasteEbinResults[index].length === 0 ? (
+                        {ebinEwasteResults[index].length === 0 ? (
                           <p>
                             For {item["ewaste_type"]}, refer to collection drive
                             info below
                           </p>
                         ) : (
                           <List component="div" disablePadding>
-                            {ewasteEbinResults[index].map(
+                            {ebinEwasteResults[index].map(
                               (binInfo: EbinLocations) => {
                                 const bin = binInfo["ebin"];
                                 // const locations = entry["donateLocations"];

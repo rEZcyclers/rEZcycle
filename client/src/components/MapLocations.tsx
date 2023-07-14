@@ -33,7 +33,7 @@ interface Props {
   repairDonatablesResults: RepairLocation[][]; // List of repairLocations for every selected repairable donatable
   goodEwasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good Ewaste
   repairEwasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable Ewaste
-  ewasteEbinResults: EbinLocations[][];
+  ebinEwasteResults: EbinLocations[][];
 }
 
 const recyclableColor = "#00FF00";
@@ -133,7 +133,7 @@ function MapLocations({
   repairDonatablesResults,
   goodEwasteResults,
   repairEwasteResults,
-  ewasteEbinResults,
+  ebinEwasteResults,
 }: Props) {
   let bluebinLocations: LocationInfo[] = [];
   let GDLocations: LocationInfo[][] = [];
@@ -228,7 +228,7 @@ function MapLocations({
         });
       }
     );
-    EELocations = ewasteEbinResults.map(
+    EELocations = ebinEwasteResults.map(
       // For each selected ewaste item, create a list of LocationInfo
       (item: EbinLocations[]) => {
         // For each ebin type that accepts the selected eWaste item, transform it to a flat list of LocationInfo
@@ -276,7 +276,7 @@ function MapLocations({
   //   Array<LocationInfo>(repairEwasteResults.length)
   // );
   // const [nearestEELocations, setNearestEELocations] = useState<LocationInfo[]>(
-  //   Array<LocationInfo>(ewasteEbinResults.length)
+  //   Array<LocationInfo>(ebinEwasteResults.length)
   // );
 
   /*
@@ -390,7 +390,7 @@ function MapLocations({
       ]);
     }
     // Update nearest ebin Location for each ewaste item
-    for (let i = 0; i < ewasteEbinResults.length; i++) {
+    for (let i = 0; i < ebinEwasteResults.length; i++) {
       const nearestLocation = findNearestLocation(
         newUserLocation[0],
         newUserLocation[1],
