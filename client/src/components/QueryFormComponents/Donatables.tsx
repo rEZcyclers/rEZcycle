@@ -12,12 +12,22 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 interface Props {
   selectedDonatables: boolean[];
   setSelectedDonatables: (newArray: boolean[]) => void;
+  numSelectedItems: number;
+  setNumSelectedItems: (num: number) => void;
 }
 
-function Donatables({ selectedDonatables, setSelectedDonatables }: Props) {
+function Donatables({
+  selectedDonatables,
+  setSelectedDonatables,
+  numSelectedItems,
+  setNumSelectedItems,
+}: Props) {
   const { donatablesData } = useContext(backendContext);
 
   const toggleDonatableSelection = (index: number) => {
+    setNumSelectedItems(
+      selectedDonatables[index] ? numSelectedItems - 1 : numSelectedItems + 1
+    );
     setSelectedDonatables([
       ...selectedDonatables.slice(0, index),
       !selectedDonatables[index],
