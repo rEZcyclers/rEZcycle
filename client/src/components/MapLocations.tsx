@@ -15,13 +15,18 @@ import GeocoderControl from "./GeocoderControl";
 
 interface Props {
   showBluebin: boolean;
-  showGDPins: boolean[];
-  showRDPins: boolean[];
-  showGEPins: boolean[];
-  showREPins: boolean[];
-  showEwastePins: boolean[];
+  showGDPins: boolean[][];
+  showRDPins: boolean[][];
+  showGEPins: boolean[][];
+  showREPins: boolean[][];
+  showEwastePins: boolean[][];
 
   setShowBluebin: (showBluebin: boolean) => void;
+  setShowGDPins: (showGDPins: boolean[][]) => void;
+  setShowRDPins: (showRDPins: boolean[][]) => void;
+  setShowGEPins: (showGEPins: boolean[][]) => void;
+  setShowREPins: (showREPins: boolean[][]) => void;
+  setShowEwastePins: (showEwastePins: boolean[][]) => void;
 
   bluebinsData: Bluebin[];
   goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
@@ -47,7 +52,7 @@ type LocationInfo = {
   lng: number;
 };
 
-// Header 1 start: Functions that identify locations that are nearest to the user
+// HEADER 1 START: Functions that identify locations that are nearest to the user
 // Function to calculate the distance between two coordinates using the Haversine formula
 function calculateDistance(
   lat1: number,
@@ -77,41 +82,38 @@ function toRadians(degrees: number): number {
   return degrees * (Math.PI / 180);
 }
 
-// Function to find the location of the blue bin that is closest to the current location
-function findNearestBluebinLocation(
+// Function to find the location of the blue bin that is closest to the current location\
+// returns a LocationInfo object AND its index in the locationList
+function findNearestLocation(
   currentLat: number,
   currentLon: number,
-  bluebins: Bluebin[]
-): LocationInfo {
+  locationList: LocationInfo[]
+): { nearestLocationInfo: LocationInfo; nearestLocationIndex: number } {
   let nearestDistance = Infinity;
-  let nearestBluebin: Bluebin = bluebins[0];
+  let nearestLocationInfo: LocationInfo = locationList[0];
 
-  for (const bluebin of bluebins) {
+  let nearestLocationIndex = 0;
+  for (let i = 0; i < locationList.length; i++) {
     const distance = calculateDistance(
       currentLat,
       currentLon,
-      bluebin.latitude,
-      bluebin.longitude
+      locationList[i].lat,
+      locationList[i].lng
     );
     if (distance < nearestDistance) {
       nearestDistance = distance;
-      nearestBluebin = bluebin;
+      nearestLocationInfo = locationList[i];
+      nearestLocationIndex = i;
     }
   }
 
-  const nearestBluebinLocation: LocationInfo = {
-    locationType: "recycle",
-    name: "Blue Bin",
-    address: nearestBluebin["address"],
-    contact: "No contact available",
-    lat: nearestBluebin["latitude"],
-    lng: nearestBluebin["longitude"],
+  return {
+    nearestLocationInfo: nearestLocationInfo,
+    nearestLocationIndex: nearestLocationIndex,
   };
-
-  return nearestBluebinLocation;
 }
 
-// Header 1 end: End of set of functions that identify locations that are nearest to the user
+// HEADER 1 END: End of set of functions that identify locations that are nearest to the user
 
 function MapLocations({
   showBluebin,
@@ -121,6 +123,11 @@ function MapLocations({
   showREPins,
   showEwastePins,
   setShowBluebin,
+  setShowGDPins,
+  setShowRDPins,
+  setShowGEPins,
+  setShowREPins,
+  setShowEwastePins,
   bluebinsData,
   goodDonatablesResults,
   repairDonatablesResults,
@@ -128,6 +135,7 @@ function MapLocations({
   repairEwasteResults,
   ebinEwasteResults,
 }: Props) {
+  let bluebinLocations: LocationInfo[] = [];
   let GDLocations: LocationInfo[][] = [];
   let RDLocations: LocationInfo[][] = [];
   let GELocations: LocationInfo[][] = [];
@@ -135,6 +143,17 @@ function MapLocations({
   let EELocations: LocationInfo[][] = [];
 
   function getLocations() {
+    bluebinLocations = bluebinsData.map((bluebin: Bluebin) => {
+      const locationInfo: LocationInfo = {
+        locationType: "recycle",
+        name: "Blue Bin",
+        address: bluebin["address"],
+        contact: "No contact available",
+        lat: bluebin["latitude"],
+        lng: bluebin["longitude"],
+      };
+      return locationInfo;
+    });
     GDLocations = goodDonatablesResults.map(
       // For each selected good donatable item, create a list of LocationInfo
       (item: DonateOrganisationLocations[]) => {
@@ -243,6 +262,23 @@ function MapLocations({
   const [nearestBluebinLocation, setNearestBluebinLocation] =
     useState<LocationInfo>();
 
+  // Arrays to store the Location Info of each nearest location
+  // const [nearestGDLocations, setNearestGDLocations] = useState<LocationInfo[]>(
+  //   Array<LocationInfo>(goodDonatablesResults.length)
+  // );
+  // const [nearestRDLocations, setNearestRDLocations] = useState<LocationInfo[]>(
+  //   Array<LocationInfo>(repairDonatablesResults.length)
+  // );
+  // const [nearestGELocations, setNearestGELocations] = useState<LocationInfo[]>(
+  //   Array<LocationInfo>(goodEwasteResults.length)
+  // );
+  // const [nearestRELocations, setNearestRELocations] = useState<LocationInfo[]>(
+  //   Array<LocationInfo>(repairEwasteResults.length)
+  // );
+  // const [nearestEELocations, setNearestEELocations] = useState<LocationInfo[]>(
+  //   Array<LocationInfo>(ewasteEbinResults.length)
+  // );
+
   /*
   dummy locationinfo
   {
@@ -258,14 +294,121 @@ function MapLocations({
   function updateNearestLocations(newUserLocation: number[]) {
     setUserLocation(newUserLocation);
     console.log("current userLocation: ", userLocation);
+    // Update nearest bluebin
     setNearestBluebinLocation(
-      findNearestBluebinLocation(
+      findNearestLocation(
         newUserLocation[0],
         newUserLocation[1],
-        bluebinsData
-      )
+        bluebinLocations
+      )["nearestLocationInfo"]
     );
     setShowBluebin(true);
+    // Update nearest DonateLocation for each good donatable item
+    for (let i = 0; i < goodDonatablesResults.length; i++) {
+      const nearestLocation = findNearestLocation(
+        newUserLocation[0],
+        newUserLocation[1],
+        GDLocations[i]
+      );
+      // No need to store Location Info. We can just conditionally render the nearestLocations
+      // using the showGDPins array.
+
+      // setNearestGDLocations([
+      //   ...nearestGDLocations.slice(0, i),
+      //   nearestLocation["nearestLocationInfo"],
+      //   ...nearestGDLocations.slice(i + 1),
+      // ]);
+
+      setShowGDPins([
+        ...showGDPins.slice(0, i),
+        [
+          ...showGDPins[i].slice(0, nearestLocation["nearestLocationIndex"]),
+          true,
+          ...showGDPins[i].slice(nearestLocation["nearestLocationIndex"] + 1),
+        ],
+        ...showGDPins.slice(i + 1),
+      ]);
+    }
+    // Update nearest RepairLocation for each repairable donatable item
+    for (let i = 0; i < repairDonatablesResults.length; i++) {
+      const nearestLocation = findNearestLocation(
+        newUserLocation[0],
+        newUserLocation[1],
+        RDLocations[i]
+      );
+      // setNearestRDLocations([
+      //   ...nearestRDLocations.slice(0, i),
+      //   nearestLocation["nearestLocationInfo"],
+      //   ...nearestRDLocations.slice(i + 1),
+      // ]);
+      setShowRDPins([
+        ...showRDPins.slice(0, i),
+        showRDPins[i].map((_show, j) =>
+          j === nearestLocation["nearestLocationIndex"] ? true : false
+        ),
+        ...showRDPins.slice(i + 1),
+      ]);
+    }
+    // Update nearest DonateLocation for each good ewaste item
+    for (let i = 0; i < goodEwasteResults.length; i++) {
+      const nearestLocation = findNearestLocation(
+        newUserLocation[0],
+        newUserLocation[1],
+        GELocations[i]
+      );
+      // setNearestGELocations([
+      //   ...nearestGELocations.slice(0, i),
+      //   nearestLocation["nearestLocationInfo"],
+      //   ...nearestGELocations.slice(i + 1),
+      // ]);
+      setShowGEPins([
+        ...showGEPins.slice(0, i),
+        showGEPins[i].map((_show, j) =>
+          j === nearestLocation["nearestLocationIndex"] ? true : false
+        ),
+        ...showGEPins.slice(i + 1),
+      ]);
+    }
+    // Update nearest repair Location for each repairable ewaste item
+    for (let i = 0; i < repairEwasteResults.length; i++) {
+      const nearestLocation = findNearestLocation(
+        newUserLocation[0],
+        newUserLocation[1],
+        RELocations[i]
+      );
+      // setNearestRELocations([
+      //   ...nearestRELocations.slice(0, i),
+      //   nearestLocation["nearestLocationInfo"],
+      //   ...nearestRELocations.slice(i + 1),
+      // ]);
+      setShowREPins([
+        ...showREPins.slice(0, i),
+        showREPins[i].map((_show, j) =>
+          j === nearestLocation["nearestLocationIndex"] ? true : false
+        ),
+        ...showREPins.slice(i + 1),
+      ]);
+    }
+    // Update nearest ebin Location for each ewaste item
+    for (let i = 0; i < ewasteEbinResults.length; i++) {
+      const nearestLocation = findNearestLocation(
+        newUserLocation[0],
+        newUserLocation[1],
+        EELocations[i]
+      );
+      // setNearestEELocations([
+      //   ...nearestEELocations.slice(0, i),
+      //   nearestLocation["nearestLocationInfo"],
+      //   ...nearestEELocations.slice(i + 1),
+      // ]);
+      setShowEwastePins([
+        ...showEwastePins.slice(0, i),
+        showEwastePins[i].map((_show, j) =>
+          j === nearestLocation["nearestLocationIndex"] ? true : false
+        ),
+        ...showEwastePins.slice(i + 1),
+      ]);
+    }
   }
 
   return (
@@ -279,6 +422,7 @@ function MapLocations({
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
     >
+      {/* Code that displays search box */}
       <GeocoderControl
         mapboxAccessToken={MAPBOX_TOKEN}
         position="top-left"
@@ -292,111 +436,153 @@ function MapLocations({
           onClick={() => setActiveMarker(nearestBluebinLocation)}
         />
       )}
+
       {showGDPins
-        .map((sel, i) => (sel ? i : -1))
+        // Show all locations of an item only if ALL of the item's individual locations are to be shown
+        .map((showItemLocations, i) =>
+          showItemLocations.filter((showMarker) => showMarker).length >= 1
+            ? i
+            : -1
+        )
         .filter((i) => i != -1)
         .map((i) => {
           const locations: LocationInfo[] = GDLocations[i];
           return (
             <>
-              {locations.map((location: LocationInfo) => {
-                return (
-                  <Marker
-                    latitude={location.lat}
-                    longitude={location.lng}
-                    color={donatableColor}
-                    onClick={() => setActiveMarker(location)}
-                  />
-                );
-              })}
+              {locations
+                .filter(
+                  (_location, locationIndex) => showGDPins[i][locationIndex]
+                )
+                .map((location: LocationInfo) => {
+                  return (
+                    <Marker
+                      latitude={location.lat}
+                      longitude={location.lng}
+                      color={donatableColor}
+                      onClick={() => setActiveMarker(location)}
+                    />
+                  );
+                })}
             </>
           );
         })}
       {showRDPins
-        .map((sel, i) => (sel ? i : -1))
+        .map((showItemLocations, i) =>
+          showItemLocations.filter((showMarker) => showMarker).length >= 1
+            ? i
+            : -1
+        )
         .filter((i) => i != -1)
         .map((i) => {
           const locations: LocationInfo[] = RDLocations[i];
           return (
             <>
-              {locations.map((location: LocationInfo) => {
-                return (
-                  <Marker
-                    latitude={location.lat}
-                    longitude={location.lng}
-                    children={<BuildIcon sx={{ color: donatableColor }} />}
-                    onClick={() => setActiveMarker(location)}
-                  />
-                );
-              })}
+              {locations
+                .filter(
+                  (_location, locationIndex) => showRDPins[i][locationIndex]
+                )
+                .map((location: LocationInfo) => {
+                  return (
+                    <Marker
+                      latitude={location.lat}
+                      longitude={location.lng}
+                      children={<BuildIcon sx={{ color: donatableColor }} />}
+                      onClick={() => setActiveMarker(location)}
+                    />
+                  );
+                })}
             </>
           );
         })}
       {showGEPins
-        .map((sel, i) => (sel ? i : -1))
+        .map((showItemLocations, i) =>
+          showItemLocations.filter((showMarker) => showMarker).length >= 1
+            ? i
+            : -1
+        )
         .filter((i) => i != -1)
         .map((i) => {
           const locations: LocationInfo[] = GELocations[i];
           return (
             <>
-              {locations.map((location: LocationInfo) => {
-                return (
-                  <Marker
-                    latitude={location.lat}
-                    longitude={location.lng}
-                    color={ewasteColor}
-                    onClick={() => setActiveMarker(location)}
-                  />
-                );
-              })}
+              {locations
+                .filter(
+                  (_location, locationIndex) => showGEPins[i][locationIndex]
+                )
+                .map((location: LocationInfo) => {
+                  return (
+                    <Marker
+                      latitude={location.lat}
+                      longitude={location.lng}
+                      color={ewasteColor}
+                      onClick={() => setActiveMarker(location)}
+                    />
+                  );
+                })}
             </>
           );
         })}
       {showREPins
-        .map((sel, i) => (sel ? i : -1))
+        .map((showItemLocations, i) =>
+          showItemLocations.filter((showMarker) => showMarker).length >= 1
+            ? i
+            : -1
+        )
         .filter((i) => i != -1)
         .map((i) => {
           const locations: LocationInfo[] = RELocations[i];
           return (
             <>
-              {locations.map((location: LocationInfo) => {
-                return (
-                  <Marker
-                    latitude={location.lat}
-                    longitude={location.lng}
-                    children={<BuildIcon sx={{ color: ewasteColor }} />}
-                    onClick={() => setActiveMarker(location)}
-                  />
-                );
-              })}
+              {locations
+                .filter(
+                  (_location, locationIndex) => showREPins[i][locationIndex]
+                )
+                .map((location: LocationInfo) => {
+                  return (
+                    <Marker
+                      latitude={location.lat}
+                      longitude={location.lng}
+                      children={<BuildIcon sx={{ color: ewasteColor }} />}
+                      onClick={() => setActiveMarker(location)}
+                    />
+                  );
+                })}
             </>
           );
         })}
       {showEwastePins
-        .map((sel, i) => (sel ? i : -1))
+        .map((showItemLocations, i) =>
+          showItemLocations.filter((showMarker) => showMarker).length >= 1
+            ? i
+            : -1
+        )
         .filter((i) => i != -1)
         .map((i) => {
           const locations: LocationInfo[] = EELocations[i];
           return (
             <>
-              {locations.map((location: LocationInfo) => {
-                return (
-                  <Marker
-                    latitude={location.lat}
-                    longitude={location.lng}
-                    onClick={() => setActiveMarker(location)}
-                  >
-                    <RecyclingIcon
-                      style={{
-                        backgroundColor: ewasteColor,
-                        color: "white",
-                        border: "1px solid white",
-                        borderRadius: 10,
-                      }}
-                    />
-                  </Marker>
-                );
-              })}
+              {locations
+                .filter(
+                  (_location, locationIndex) => showEwastePins[i][locationIndex]
+                )
+                .map((location: LocationInfo) => {
+                  return (
+                    <Marker
+                      latitude={location.lat}
+                      longitude={location.lng}
+                      onClick={() => setActiveMarker(location)}
+                    >
+                      <RecyclingIcon
+                        style={{
+                          backgroundColor: ewasteColor,
+                          color: "white",
+                          border: "1px solid white",
+                          borderRadius: 10,
+                        }}
+                      />
+                    </Marker>
+                  );
+                })}
             </>
           );
         })}

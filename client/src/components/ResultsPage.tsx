@@ -281,58 +281,104 @@ function ResultsPage({
     ]);
   };
 
-  // State for deciding whether to show map location pins for every result item or not
+  // State for deciding whether to show map location pins for every result item and every location or not
   const [showBluebin, setShowBluebin] = useState<boolean>(false);
-  const [showGDPins, setShowGDPins] = useState<boolean[]>(
-    Array<boolean>(goodDonatables.length)
+
+  const [showGDPins, setShowGDPins] = useState<boolean[][]>(
+    Array<boolean[]>(goodDonatables.length)
+      // Must fill array with something in order to use map
+      .fill([])
+      .map((_emptyArray, i) =>
+        Array<boolean>(
+          // Get number of locations for each item
+          goodDonatablesResults[i].reduce(
+            (numberOfLocations, donateOrganisationLocations) =>
+              numberOfLocations +
+              donateOrganisationLocations["donateLocations"].length,
+            0
+          )
+        ).fill(false)
+      )
   );
-  const [showRDPins, setShowRDPins] = useState<boolean[]>(
-    Array<boolean>(repairDonatables.length)
+
+  const [showRDPins, setShowRDPins] = useState<boolean[][]>(
+    Array<boolean[]>(repairDonatables.length)
+      .fill([])
+      .map((_emptyArray, i) =>
+        Array<boolean>(repairDonatablesResults[i].length).fill(false)
+      )
   );
-  const [showEwastePins, setShowEwastePins] = useState<boolean[]>(
-    Array<boolean>(ebinEwaste.length)
+
+  const [showEwastePins, setShowEwastePins] = useState<boolean[][]>(
+    Array<boolean[]>(allEwaste.length)
+      .fill([])
+      .map((_emptyArray, i) =>
+        Array<boolean>(
+          ewasteEbinResults[i].reduce(
+            (numberOfLocations, ebinLocations) =>
+              numberOfLocations + ebinLocations["ebinLocations"].length,
+            0
+          )
+        ).fill(false)
+      )
+
   );
-  const [showGEPins, setShowGEPins] = useState<boolean[]>(
-    Array<boolean>(goodEwaste.length)
+  const [showGEPins, setShowGEPins] = useState<boolean[][]>(
+    Array<boolean[]>(goodEwaste.length)
+      .fill([])
+      .map((_emptyArray, i) =>
+        Array<boolean>(
+          goodEwasteResults[i].reduce(
+            (numberOfLocations, donateOrganisationLocations) =>
+              numberOfLocations +
+              donateOrganisationLocations["donateLocations"].length,
+            0
+          )
+        ).fill(false)
+      )
   );
-  const [showREPins, setShowREPins] = useState<boolean[]>(
-    Array<boolean>(repairDonatables.length)
+  const [showREPins, setShowREPins] = useState<boolean[][]>(
+    Array<boolean[]>(repairEwaste.length)
+      .fill([])
+      .map((_emptyArray, i) =>
+        Array<boolean>(repairEwasteResults[i].length).fill(false)
+      )
   );
   const handleShowBluebin = () => {
     setShowBluebin(!showBluebin);
   };
-  const handleShowGDPins = (index: number) => {
+  const handleShowGDPins = (index: number, show: boolean) => {
     setShowGDPins([
       ...showGDPins.slice(0, index),
-      !showGDPins[index],
+      showGDPins[index].map(() => show),
       ...showGDPins.slice(index + 1),
     ]);
   };
-  const handleShowRDPins = (index: number) => {
+  const handleShowRDPins = (index: number, show: boolean) => {
     setShowRDPins([
       ...showRDPins.slice(0, index),
-      !showRDPins[index],
+      showRDPins[index].map(() => show),
       ...showRDPins.slice(index + 1),
     ]);
   };
-  const handleShowEwastePins = (index: number) => {
+  const handleShowEwastePins = (index: number, show: boolean) => {
     setShowEwastePins([
       ...showEwastePins.slice(0, index),
-      !showEwastePins[index],
+      showEwastePins[index].map(() => show),
       ...showEwastePins.slice(index + 1),
     ]);
   };
-  const handleShowGEPins = (index: number) => {
+  const handleShowGEPins = (index: number, show: boolean) => {
     setShowGEPins([
       ...showGEPins.slice(0, index),
-      !showGEPins[index],
+      showGEPins[index].map(() => show),
       ...showGEPins.slice(index + 1),
     ]);
   };
-  const handleShowREPins = (index: number) => {
+  const handleShowREPins = (index: number, show: boolean) => {
     setShowREPins([
       ...showREPins.slice(0, index),
-      !showREPins[index],
+      showREPins[index].map(() => show),
       ...showREPins.slice(index + 1),
     ]);
   };
@@ -349,6 +395,11 @@ function ResultsPage({
         showREPins={showREPins}
         showEwastePins={showEwastePins}
         setShowBluebin={setShowBluebin}
+        setShowGDPins={setShowGDPins}
+        setShowRDPins={setShowRDPins}
+        setShowGEPins={setShowGEPins}
+        setShowREPins={setShowREPins}
+        setShowEwastePins={setShowEwastePins}
         bluebinsData={bluebinsData}
         goodDonatablesResults={goodDonatablesResults}
         repairDonatablesResults={repairDonatablesResults}
@@ -462,14 +513,28 @@ function ResultsPage({
                         </Collapse>
                       </List>
                       <Button
-                        variant={showGDPins[index] ? "contained" : "outlined"}
+                        variant={
+                          // check if all pins are shown
+                          showGDPins[index].filter((shown) => shown).length ==
+                            showGDPins[index].length &&
+                          showGDPins[index].length != 0
+                            ? "contained"
+                            : "outlined"
+                        }
                         sx={{
                           mt: 1,
                           height: 50,
                           fontSize: "small",
                         }}
                         onClick={() => {
-                          handleShowGDPins(index);
+                          handleShowGDPins(
+                            index,
+                            // if all pins are shown, hide all pins
+                            !(
+                              showGDPins[index].filter((shown) => shown)
+                                .length == showGDPins[index].length
+                            )
+                          );
                         }}
                       >
                         Show On Map
@@ -534,11 +599,23 @@ function ResultsPage({
                         </Collapse>
                       </List>
                       <Button
-                        variant={showRDPins[index] ? "contained" : "outlined"}
+                        variant={
+                          showRDPins[index].filter((shown) => shown).length ==
+                            showRDPins[index].length &&
+                          showRDPins[index].length != 0
+                            ? "contained"
+                            : "outlined"
+                        }
                         color="primary"
                         sx={{ mt: 1, height: 50, fontSize: "small" }}
                         onClick={() => {
-                          handleShowRDPins(index);
+                          handleShowRDPins(
+                            index,
+                            !(
+                              showRDPins[index].filter((shown) => shown)
+                                .length == showRDPins[index].length
+                            )
+                          );
                         }}
                       >
                         Show On Map
@@ -612,11 +689,23 @@ function ResultsPage({
                       </Collapse>
                     </List>
                     <Button
-                      variant={showEwastePins[index] ? "contained" : "outlined"}
+                      variant={
+                        showEwastePins[index].filter((shown) => shown).length ==
+                          showEwastePins[index].length &&
+                        showEwastePins[index].length != 0
+                          ? "contained"
+                          : "outlined"
+                      }
                       color="primary"
                       sx={{ mt: 1, height: 50, fontSize: "small" }}
                       onClick={() => {
-                        handleShowEwastePins(index);
+                        handleShowEwastePins(
+                          index,
+                          !(
+                            showEwastePins[index].filter((shown) => shown)
+                              .length == showEwastePins[index].length
+                          )
+                        );
                       }}
                     >
                       Show On Map
@@ -710,11 +799,23 @@ function ResultsPage({
                           </Collapse>
                         </List>
                         <Button
-                          variant={showGEPins[index] ? "contained" : "outlined"}
+                          variant={
+                            showGEPins[index].filter((shown) => shown).length ==
+                              showGEPins[index].length &&
+                            showGEPins[index].length != 0
+                              ? "contained"
+                              : "outlined"
+                          }
                           color="primary"
                           sx={{ mt: 1, height: 50, fontSize: "small" }}
                           onClick={() => {
-                            handleShowGEPins(index);
+                            handleShowGEPins(
+                              index,
+                              !(
+                                showGEPins[index].filter((shown) => shown)
+                                  .length == showGEPins[index].length
+                              )
+                            );
                           }}
                         >
                           Show On Map
@@ -784,12 +885,22 @@ function ResultsPage({
                           </List>
                           <Button
                             variant={
-                              showREPins[index] ? "contained" : "outlined"
+                              showREPins[index].filter((shown) => shown)
+                                .length == showREPins[index].length &&
+                              showREPins[index].length != 0
+                                ? "contained"
+                                : "outlined"
                             }
                             color="primary"
                             sx={{ mt: 1, height: 50, fontSize: "small" }}
                             onClick={() => {
-                              handleShowREPins(index);
+                              handleShowREPins(
+                                index,
+                                !(
+                                  showREPins[index].filter((shown) => shown)
+                                    .length == showREPins[index].length
+                                )
+                              );
                             }}
                           >
                             Show On Map
