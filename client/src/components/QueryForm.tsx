@@ -6,6 +6,7 @@ import Donatables from "./QueryFormComponents/Donatables";
 import Ewaste from "./QueryFormComponents/Ewaste";
 import { Alert, Button, Snackbar } from "@mui/material";
 import { useState } from "react";
+// import recyclablesPoster from "../images/bluebin-label.jpg";
 
 interface Props {
   setStage: (num: number) => void;
@@ -74,6 +75,7 @@ function QueryForm({
             numSelectedItems={numSelectedItems}
             setNumSelectedItems={setNumSelectedItems}
           />
+          {/* <img src={recyclablesPoster} style={{ height: 150 }} /> */}
         </Box>
         <Box flex={1}>
           <h2>Donatables</h2>
