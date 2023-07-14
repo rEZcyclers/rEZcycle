@@ -326,7 +326,6 @@ function ResultsPage({
           )
         ).fill(false)
       )
-
   );
   const [showGEPins, setShowGEPins] = useState<boolean[][]>(
     Array<boolean[]>(goodEwaste.length)
@@ -697,33 +696,35 @@ function ResultsPage({
                                 )}
                               </List>
                             )}
-                      </Collapse>
-                    </List>
-                    <Button
-                      variant={
-                        showEwastePins[index].filter((shown) => shown).length ==
-                          showEwastePins[index].length &&
-                        showEwastePins[index].length != 0
-                          ? "contained"
-                          : "outlined"
-                      }
-                      color="primary"
-                      sx={{ mt: 1, height: 50, fontSize: "small" }}
-                      onClick={() => {
-                        handleShowEwastePins(
-                          index,
-                          !(
+                          </Collapse>
+                        </List>
+                        <Button
+                          variant={
                             showEwastePins[index].filter((shown) => shown)
-                              .length == showEwastePins[index].length
-                          )
-                        );
-                      }}
-                    >
-                      Show On Map
-                    </Button>
-                  </div>
-                );
-              })}
+                              .length == showEwastePins[index].length &&
+                            showEwastePins[index].length != 0
+                              ? "contained"
+                              : "outlined"
+                          }
+                          color="primary"
+                          sx={{ mt: 1, height: 50, fontSize: "small" }}
+                          onClick={() => {
+                            handleShowEwastePins(
+                              index,
+                              !(
+                                showEwastePins[index].filter((shown) => shown)
+                                  .length == showEwastePins[index].length
+                              )
+                            );
+                          }}
+                        >
+                          Show On Map
+                        </Button>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
               {regulatedEwaste.length != 0 && (
                 <>
                   <h4 style={{ marginBottom: 0 }}>
