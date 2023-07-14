@@ -89,7 +89,6 @@ function ResultsPage({
   let ebinEwasteResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
   let goodEwasteResults: DonateOrganisationLocations[][] = []; // List of donateLocations & their locations for every selected good Ewaste
   let repairEwasteResults: RepairLocation[][] = []; // List of repairLocations for every selected repairable Ewaste
-  let ewasteEbinResults: EbinLocations[][] = []; // List of ebinLocations for every selected Ewaste
 
   function getResults() {
     console.log("getResults() called");
