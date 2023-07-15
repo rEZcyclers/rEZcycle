@@ -69,7 +69,19 @@ function App() {
   }, []); // Note: infinite useEffect() call occurs when userSession != null if
   // userSession is included in dependency
 
-  // useEffect to fetch all backend data related to the main feature from server
+  // Fetches user profile if user is logged in
+  function fetchUserProfile(session: Session | null) {
+    if (session == null) return;
+    fetch(`${serverAPI}/userProfile?id=${session["user"]["id"]}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUserProfile(data[0]);
+      })
+      .then(() => console.log("UserProfile fetched"))
+      .catch((err) => console.log(err));
+  }
+
+  // Fetches all backend data related to the main feature from server on start
   function fetchBackendData() {
     fetch(`${serverAPI}/recyclables`)
       .then((res) => res.json())
@@ -156,17 +168,7 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  function fetchUserProfile(session: Session | null) {
-    if (session == null) return;
-    fetch(`${serverAPI}/userProfile?id=${session["user"]["id"]}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setUserProfile(data[0]);
-      })
-      .then(() => console.log("UserProfile fetched"))
-      .catch((err) => console.log(err));
-  }
-  useEffect(fetchBackendData, []);
+  useEffect(fetchBackendData, []); // Backend data is only fetched once (upon initialisation)
 
   return (
     // Make userSession & backend data globally available to all pages via backendContext object

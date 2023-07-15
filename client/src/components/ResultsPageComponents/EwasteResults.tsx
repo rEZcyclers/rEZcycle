@@ -32,12 +32,12 @@ interface Props {
   handleShowGEResults: (i: number) => void;
   showREResults: boolean[];
   handleShowREResults: (i: number) => void;
-  showEwastePins: boolean[];
-  handleShowEwastePins: (i: number) => void;
-  showGEPins: boolean[];
-  handleShowGEPins: (i: number) => void;
-  showREPins: boolean[];
-  handleShowREPins: (i: number) => void;
+  showEEMarkers: boolean[];
+  handleShowEEMarkers: (i: number) => void;
+  showGEMarkers: boolean[];
+  handleShowGEMarkers: (i: number) => void;
+  showREMarkers: boolean[];
+  handleShowREMarkers: (i: number) => void;
 
   preferredGELocations: LocationInfo[];
   preferredRELocations: LocationInfo[];
@@ -60,12 +60,12 @@ export default function ({
   handleShowGEResults,
   showREResults,
   handleShowREResults,
-  showEwastePins,
-  handleShowEwastePins,
-  showGEPins,
-  handleShowGEPins,
-  showREPins,
-  handleShowREPins,
+  showEEMarkers,
+  handleShowEEMarkers,
+  showGEMarkers,
+  handleShowGEMarkers,
+  showREMarkers,
+  handleShowREMarkers,
   preferredGELocations,
   preferredRELocations,
   preferredEELocations,
@@ -149,12 +149,12 @@ export default function ({
                       </List>
                       <Button
                         variant={
-                          showEwastePins[index] ? "contained" : "outlined"
+                          showEEMarkers[index] ? "contained" : "outlined"
                         }
                         color="primary"
                         sx={{ mt: 1, height: 50, fontSize: "small" }}
                         onClick={() => {
-                          handleShowEwastePins(index);
+                          handleShowEEMarkers(index);
                         }}
                       >
                         Show On Map
@@ -259,11 +259,13 @@ export default function ({
                         </Collapse>
                       </List>
                       <Button
-                        variant={showGEPins[index] ? "contained" : "outlined"}
+                        variant={
+                          showGEMarkers[index] ? "contained" : "outlined"
+                        }
                         color="primary"
                         sx={{ mt: 1, height: 50, fontSize: "small" }}
                         onClick={() => {
-                          handleShowGEPins(index);
+                          handleShowGEMarkers(index);
                         }}
                       >
                         Show On Map
@@ -340,11 +342,13 @@ export default function ({
                           </Collapse>
                         </List>
                         <Button
-                          variant={showREPins[index] ? "contained" : "outlined"}
+                          variant={
+                            showREMarkers[index] ? "contained" : "outlined"
+                          }
                           color="primary"
                           sx={{ mt: 1, height: 50, fontSize: "small" }}
                           onClick={() => {
-                            handleShowREPins(index);
+                            handleShowREMarkers(index);
                           }}
                         >
                           Show On Map

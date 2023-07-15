@@ -27,10 +27,10 @@ interface Props {
   showRDResults: boolean[];
   handleShowRDResults: (i: number) => void;
 
-  showGDPins: boolean[];
-  handleShowGDPins: (i: number) => void;
-  showRDPins: boolean[];
-  handleShowRDPins: (i: number) => void;
+  showGDMarkers: boolean[];
+  handleShowGDMarkers: (i: number) => void;
+  showRDMarkers: boolean[];
+  handleShowRDMarkers: (i: number) => void;
 
   preferredGDLocations: LocationInfo[];
   preferredRDLocations: LocationInfo[];
@@ -43,13 +43,13 @@ export default function DonatablesResults({
   handleShowGDResults,
   showGDResults,
   goodDonatablesResults,
-  showGDPins,
-  handleShowGDPins,
+  showGDMarkers,
+  handleShowGDMarkers,
   showRDResults,
   repairDonatablesResults,
   handleShowRDResults,
-  showRDPins,
-  handleShowRDPins,
+  showRDMarkers,
+  handleShowRDMarkers,
   preferredGDLocations,
   preferredRDLocations,
   onlyShowClosest,
@@ -136,11 +136,11 @@ export default function DonatablesResults({
                       </Collapse>
                     </List>
                     <Button
-                      variant={showGDPins[index] ? "contained" : "outlined"}
+                      variant={showGDMarkers[index] ? "contained" : "outlined"}
                       color="primary"
                       sx={{ mt: 1, height: 50, fontSize: "small" }}
                       onClick={() => {
-                        handleShowGDPins(index);
+                        handleShowGDMarkers(index);
                       }}
                     >
                       Show On Map
@@ -214,11 +214,11 @@ export default function DonatablesResults({
                       </Collapse>
                     </List>
                     <Button
-                      variant={showRDPins[index] ? "contained" : "outlined"}
+                      variant={showRDMarkers[index] ? "contained" : "outlined"}
                       color="primary"
                       sx={{ mt: 1, height: 50, fontSize: "small" }}
                       onClick={() => {
-                        handleShowRDPins(index);
+                        handleShowRDMarkers(index);
                       }}
                     >
                       Show On Map
