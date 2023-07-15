@@ -2,7 +2,8 @@ import { useState } from "react";
 import Base from "../components/Base";
 import QueryForm from "../components/QueryForm";
 import ChecklistForm from "../components/ChecklistForm";
-import ResultsPage from "../components/ResultsPage";
+// import ResultsPage from "../components/ResultsPage";
+import ResultsV2 from "../components/ResultsV2";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -77,7 +78,7 @@ function HomePage() {
           setEwasteConditions={setEwasteConditions}
         />
       ) : (
-        <ResultsPage
+        <ResultsV2
           setStage={setStage}
           selectedRecyclables={selectedRecyclables}
           selectedDonatables={selectedDonatables}
