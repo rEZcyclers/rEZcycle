@@ -2,7 +2,8 @@ import TopBar from "./TopBar";
 import SideBar from "./SideBar";
 import "./Base.css";
 import { CssBaseline } from "@mui/material";
-import { ReactNode, useState } from "react";
+import { ReactNode, useContext } from "react";
+import { backendContext } from "../App";
 
 interface Props {
   children: ReactNode; // Page specific content
@@ -11,13 +12,13 @@ interface Props {
 
 // Base layout component for every web page
 function Base({ children, bgiAbsolutePath }: Props) {
-  const [sideBarOpen, setSideBarOpen] = useState<boolean>(true);
+  const { sideBarState } = useContext(backendContext);
   return (
     <div>
       <CssBaseline />
-      <TopBar sideBarState={[sideBarOpen, setSideBarOpen]} />
+      <TopBar sideBarState={sideBarState} />
       <div className="FlexContainer">
-        {sideBarOpen && <SideBar />}
+        {sideBarState[0] && <SideBar />}
         <div className="WebPage">{children}</div>
         {bgiAbsolutePath && (
           <div

@@ -47,7 +47,7 @@ function ChecklistForm({
   const [showAlert, setShowAlert] = useState(false);
 
   // Retrieves raw data to get checklist info
-  const { recyclablesData, donatablesData, ewasteData } =
+  const { recyclablesData, donatablesData, ewasteData, sideBarState } =
     useContext(backendContext);
 
   // Keeps track of conditions of selected recyclables
@@ -78,8 +78,10 @@ function ChecklistForm({
   };
 
   const handleNextClick = () => {
-    if (isChecklistComplete()) setStage(3);
-    else setShowAlert(true);
+    if (isChecklistComplete()) {
+      setStage(3);
+      sideBarState[1](false);
+    } else setShowAlert(true);
   };
 
   const isChecklistComplete = () => {
