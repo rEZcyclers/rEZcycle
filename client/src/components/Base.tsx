@@ -2,7 +2,7 @@ import TopBar from "./TopBar";
 import SideBar from "./SideBar";
 import "./Base.css";
 import { CssBaseline } from "@mui/material";
-import { ReactNode, useContext, useState } from "react";
+import { ReactNode, useContext } from "react";
 import { backendContext } from "../App";
 
 interface Props {

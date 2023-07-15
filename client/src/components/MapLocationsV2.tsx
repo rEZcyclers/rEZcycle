@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl";
 import {
   DonateLocation,
@@ -104,6 +104,7 @@ function MapLocationsV2({
   onlyShowClosest,
   setOnlyShowClosest,
 }: Props) {
+  const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
   const [GDLocations, setGDLocations] = useState<LocationInfo[][]>([]);
   const [RDLocations, setRDLocations] = useState<LocationInfo[][]>([]);
   const [GELocations, setGELocations] = useState<LocationInfo[][]>([]);
@@ -134,6 +135,20 @@ function MapLocationsV2({
   };
 
   function getLocations() {
+    setBBLocations(
+      // Convert to LocationInfo for compatibility in finding nearest location
+      bluebinsData.map((bluebin: Bluebin) => {
+        const locationInfo: LocationInfo = {
+          locationType: "bluebin",
+          name: "bluebin",
+          address: bluebin["address"],
+          contact: "No contact available",
+          lat: bluebin["latitude"],
+          lng: bluebin["longitude"],
+        };
+        return locationInfo;
+      })
+    );
     setGDLocations(
       goodDonatablesResults.map(
         // For each selected good donatable item, create a list of LocationInfo
@@ -249,6 +264,7 @@ function MapLocationsV2({
     // the userLocation state hasn't been set by the time we call closestLocation(),
     // hence just pass in userLocation into closestLocation() instead of using the
     // state which is not yet available
+    const closestBluebinLoc = closestLocation(BBLocations, userLocation);
     const closestGDLoc = GDLocations.map((itemLocations: LocationInfo[]) => {
       return closestLocation(itemLocations, userLocation);
     });
@@ -265,6 +281,7 @@ function MapLocationsV2({
     const closestEELoc = EELocations.map((itemLocations: LocationInfo[]) => {
       return closestLocation(itemLocations, userLocation);
     });
+    setClosestBluebinLoc(closestBluebinLoc);
     setClosestGDLoc(closestGDLoc);
     setClosestRDLoc(closestRDLoc);
     setClosestGELoc(closestGELoc);

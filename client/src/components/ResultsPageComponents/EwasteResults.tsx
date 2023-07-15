@@ -66,6 +66,9 @@ export default function ({
   handleShowGEPins,
   showREPins,
   handleShowREPins,
+  preferredGELocations,
+  preferredRELocations,
+  preferredEELocations,
   onlyShowClosest,
 }: Props) {
   return (
@@ -101,7 +104,16 @@ export default function ({
                               <ExpandMore />
                             )}
                           </ListItemIcon>
-                          <ListItemText primary={item["ewaste_type"]} />
+                          <ListItemText>
+                            {item["ewaste_type"]}
+                            {onlyShowClosest && (
+                              <p style={{ margin: 0, color: "red" }}>
+                                Closest Location:{" "}
+                                {preferredEELocations[index]["name"]} at{" "}
+                                {preferredEELocations[index]["address"]}
+                              </p>
+                            )}
+                          </ListItemText>
                         </ListItemButton>
                         <Collapse
                           in={showEEResults[index]}
@@ -200,7 +212,16 @@ export default function ({
                               <ExpandMore />
                             )}
                           </ListItemIcon>
-                          <ListItemText primary={item["ewaste_type"]} />
+                          <ListItemText>
+                            {item["ewaste_type"]}
+                            {onlyShowClosest && (
+                              <p style={{ margin: 0, color: "red" }}>
+                                Closest Location:{" "}
+                                {preferredGELocations[index]["name"]} at{" "}
+                                {preferredGELocations[index]["address"]}
+                              </p>
+                            )}
+                          </ListItemText>
                         </ListItemButton>
                         <Collapse
                           in={showGEResults[index]}
@@ -279,7 +300,16 @@ export default function ({
                                 <ExpandMore />
                               )}
                             </ListItemIcon>
-                            <ListItemText primary={item["ewaste_type"]} />
+                            <ListItemText>
+                              {item["ewaste_type"]}
+                              {onlyShowClosest && (
+                                <p style={{ margin: 0, color: "red" }}>
+                                  Closest Location:{" "}
+                                  {preferredRELocations[index]["name"]} at{" "}
+                                  {preferredRELocations[index]["address"]}
+                                </p>
+                              )}
+                            </ListItemText>
                           </ListItemButton>
                           <Collapse
                             in={showREResults[index]}

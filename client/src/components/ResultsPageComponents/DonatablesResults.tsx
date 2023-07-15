@@ -179,8 +179,8 @@ export default function DonatablesResults({
                           {onlyShowClosest && (
                             <p style={{ margin: 0, color: "red" }}>
                               Closest Location:{" "}
-                              {preferredGDLocations[index]["name"]} at{" "}
-                              {preferredGDLocations[index]["address"]}
+                              {preferredRDLocations[index]["name"]} at{" "}
+                              {preferredRDLocations[index]["address"]}
                             </p>
                           )}
                         </ListItemText>
