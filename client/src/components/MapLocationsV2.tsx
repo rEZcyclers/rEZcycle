@@ -19,16 +19,17 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import GeocoderControlV2 from "./GeocoderControlV2";
+import GeocoderControl from "./MapComponents/GeocoderControl";
+import MarkerRenderer from "./MapComponents/MarkerRenderer";
 
 interface Props {
   // 'Show on Map' button states for every result item
   showBluebin: boolean;
-  showGDPins: boolean[];
-  showRDPins: boolean[];
-  showGEPins: boolean[];
-  showREPins: boolean[];
-  showEwastePins: boolean[];
+  showGDMarkers: boolean[];
+  showRDMarkers: boolean[];
+  showGEMarkers: boolean[];
+  showREMarkers: boolean[];
+  showEEMarkers: boolean[];
 
   bluebinsData: Bluebin[]; // List of bluebin locations
   goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
@@ -83,13 +84,13 @@ function calculateDistance(
   return distance;
 }
 
-function MapLocationsV2({
+export default function MapLocationsV2({
   showBluebin,
-  showGDPins,
-  showRDPins,
-  showGEPins,
-  showREPins,
-  showEwastePins,
+  showGDMarkers,
+  showRDMarkers,
+  showGEMarkers,
+  showREMarkers,
+  showEEMarkers,
   bluebinsData,
   goodDonatablesResults,
   repairDonatablesResults,
@@ -104,6 +105,7 @@ function MapLocationsV2({
   onlyShowClosest,
   setOnlyShowClosest,
 }: Props) {
+  ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
   const [GDLocations, setGDLocations] = useState<LocationInfo[][]>([]);
   const [RDLocations, setRDLocations] = useState<LocationInfo[][]>([]);
@@ -111,6 +113,7 @@ function MapLocationsV2({
   const [RELocations, setRELocations] = useState<LocationInfo[][]>([]);
   const [EELocations, setEELocations] = useState<LocationInfo[][]>([]);
 
+  ////////// States the save the closest location for every result item
   const [closestBluebinLoc, setClosestBluebinLoc] =
     useState<LocationInfo | null>(null);
   const [closestGDLoc, setClosestGDLoc] = useState<LocationInfo[]>([]);
@@ -119,10 +122,10 @@ function MapLocationsV2({
   const [closestRELoc, setClosestRELoc] = useState<LocationInfo[]>([]);
   const [closestEELoc, setClosestEELoc] = useState<LocationInfo[]>([]);
 
+  ////////// User States for marker popup, user location & error alert
   const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
   const [showAlert, setShowAlert] = useState(false);
-
   const closeAlert = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -134,9 +137,81 @@ function MapLocationsV2({
     setShowAlert(false);
   };
 
+  /** ////////// Start of getLocations() //////////
+   * Gets all the location information needed for each result item, so as to be able
+   * to render all of their associated location markers on the map.
+   */
   function getLocations() {
+    /**
+     * Helper function to get the location info specific to good condition items.
+     * @param goodResults - Results for good condition items
+     * @param setDonateLocations - Sets the donate location info for these items
+     */
+    function getDonateLocations(
+      goodResults: DonateOrganisationLocations[][],
+      setDonateLocations: (newArray: LocationInfo[][]) => void
+    ) {
+      setDonateLocations(
+        goodResults.map(
+          // For each good condition item's result, map it to a LocationInfo[]
+          (itemResult: DonateOrganisationLocations[]) => {
+            // For each result, flatmap all organisations into a single LocationInfo[]
+            return itemResult.flatMap(
+              (organisation: DonateOrganisationLocations) => {
+                const locations: DonateLocation[] =
+                  organisation["donateLocations"];
+                return locations.map((location: DonateLocation) => {
+                  const locationInfo: LocationInfo = {
+                    locationType: "donate",
+                    name: location["location_name"],
+                    address: location["address"],
+                    contact: location["contact"],
+                    lat: location["latitude"],
+                    lng: location["longitude"],
+                  };
+                  return locationInfo;
+                });
+              }
+            );
+          }
+        )
+      );
+    }
+    /**
+     * Helper function to get the location info specific to repairable items.
+     * @param repairResults - Results for repairable items
+     * @param setRepairLocations - Sets the repair location info for these items
+     */
+    function getRepairLocations(
+      repairResults: RepairLocation[][],
+      setRepairLocations: (newArray: LocationInfo[][]) => void
+    ) {
+      setRepairLocations(
+        repairResults.map((item: RepairLocation[]) => {
+          // For each repairable item's result, map it to a LocationInfo[]
+          return item.map((location: RepairLocation) => {
+            const locationInfo: LocationInfo = {
+              locationType: "repair",
+              name: location["center_name"],
+              address: location["stall_number"],
+              contact: "No contact available",
+              lat: location["latitude"],
+              lng: location["longitude"],
+            };
+            return locationInfo;
+          });
+        })
+      );
+    }
+    // Get LocationInfo[][] for good & repairable items
+    getDonateLocations(goodDonatablesResults, setGDLocations);
+    getDonateLocations(goodEwasteResults, setGELocations);
+    getRepairLocations(repairDonatablesResults, setRDLocations);
+    getRepairLocations(repairEwasteResults, setRELocations);
+
+    // Special case: Bluebins
     setBBLocations(
-      // Convert to LocationInfo for compatibility in finding nearest location
+      // Map each Bluebin to a LocationInfo for finding nearest bluebin later on
       bluebinsData.map((bluebin: Bluebin) => {
         const locationInfo: LocationInfo = {
           locationType: "bluebin",
@@ -149,93 +224,13 @@ function MapLocationsV2({
         return locationInfo;
       })
     );
-    setGDLocations(
-      goodDonatablesResults.map(
-        // For each selected good donatable item, create a list of LocationInfo
-        (item: DonateOrganisationLocations[]) => {
-          // For each organisation that accepts the selected good donatable item, transform it to a flat list of LocationInfo
-          return item.flatMap((organisation: DonateOrganisationLocations) => {
-            const locations: DonateLocation[] = organisation["donateLocations"];
-            return locations.map((location: DonateLocation) => {
-              const locationInfo: LocationInfo = {
-                locationType: "donate",
-                name: location["location_name"],
-                address: location["address"],
-                contact: location["contact"],
-                lat: location["latitude"],
-                lng: location["longitude"],
-              };
-              return locationInfo;
-            });
-          });
-        }
-      )
-    );
-    setRDLocations(
-      repairDonatablesResults.map(
-        // For each selected repairable donatable item, create a list of LocationInfo
-        (item: RepairLocation[]) => {
-          // For each repair location that accepts the selected repairable donatable item, transform it to data of type LocationInfo
-          return item.map((location: RepairLocation) => {
-            const locationInfo: LocationInfo = {
-              locationType: "repair",
-              name: location["center_name"],
-              address: location["stall_number"],
-              contact: "No contact available",
-              lat: location["latitude"],
-              lng: location["longitude"],
-            };
-            return locationInfo;
-          });
-        }
-      )
-    );
-    setGELocations(
-      goodEwasteResults.map(
-        // For each selected good donatable item, create a list of donateLocations
-        (item: DonateOrganisationLocations[]) => {
-          // For each organisation that accepts the selected good donatable item, transform it to a flat list of LocationInfo
-          return item.flatMap((organisation: DonateOrganisationLocations) => {
-            const locations: DonateLocation[] = organisation["donateLocations"];
-            return locations.map((location: DonateLocation) => {
-              const locationInfo: LocationInfo = {
-                locationType: "donate",
-                name: location["location_name"],
-                address: location["address"],
-                contact: location["contact"],
-                lat: location["latitude"],
-                lng: location["longitude"],
-              };
-              return locationInfo;
-            });
-          });
-        }
-      )
-    );
-    setRELocations(
-      repairEwasteResults.map(
-        // For each selected repairable donatable item, create a list of LocationInfo
-        (item: RepairLocation[]) => {
-          // For each repair location that accepts the selected repairable donatable item, transform it to data of type LocationInfo
-          return item.map((location: RepairLocation) => {
-            const locationInfo: LocationInfo = {
-              locationType: "repair",
-              name: location["center_name"],
-              address: location["stall_number"],
-              contact: "No contact available",
-              lat: location["latitude"],
-              lng: location["longitude"],
-            };
-            return locationInfo;
-          });
-        }
-      )
-    );
+
+    // Special case: Ebins
     setEELocations(
       ebinEwasteResults.map(
-        // For each selected ewaste item, create a list of LocationInfo
+        // For each ebin-eligible Ewaste item's result, map it to a LocationInfo[]
         (item: EbinLocations[]) => {
-          // For each ebin type that accepts the selected eWaste item, transform it to a flat list of LocationInfo
+          // For each result, flatmap all ebins into a single LocationInfo[]
           return item.flatMap((ebinInfo: EbinLocations) => {
             const ebin: Ebin = ebinInfo["ebin"];
             const locations: EbinLocation[] = ebinInfo["ebinLocations"];
@@ -255,15 +250,49 @@ function MapLocationsV2({
       )
     );
   }
+  ////////// End of getLocations() //////////
 
-  useEffect(getLocations, []);
+  useEffect(getLocations, []); // Only getLocations() once (upon initialisation)
 
+  /** ////////// Start of getClosestLocations() //////////
+   * Gets the closest location for every result item relative to the user's location.
+   * @param userLocation - Coordinates of the user's input address
+   */
   function getClosestLocations(userLocation: number[]) {
     console.log("getClosesetLocations() called!");
     setUserLocation(userLocation); // This line will pass too quickly such that
-    // the userLocation state hasn't been set by the time we call closestLocation(),
-    // hence just pass in userLocation into closestLocation() instead of using the
-    // state which is not yet available
+    // the userLocation state hasn't been set by the time closestLocation() is called,
+    // hence just pass userLocation in as another param into closestLocation() since
+    // we're unable to use the state which is not yet available
+
+    /**
+     * Helper function to get the 1 closest location given a list of locations
+     * @param itemLocations - List of locations
+     * @param userLocation - Distance is relative to user location
+     * @returns {LocationInfo}
+     */
+    function closestLocation( // Helper function to get the 1 closest location from
+      itemLocations: LocationInfo[], // a list of locations
+      userLocation: number[]
+    ) {
+      let closestDistToUser = Infinity;
+      let closestLocation = itemLocations[0];
+      for (const location of itemLocations) {
+        const distToUser = calculateDistance(
+          userLocation[0],
+          userLocation[1],
+          location["lat"],
+          location["lng"]
+        );
+        if (distToUser < closestDistToUser) {
+          closestDistToUser = distToUser;
+          closestLocation = location;
+        }
+      }
+      return closestLocation;
+    }
+
+    // Calculate all closest locations for every item using the helper function
     const closestBluebinLoc = closestLocation(BBLocations, userLocation);
     const closestGDLoc = GDLocations.map((itemLocations: LocationInfo[]) => {
       return closestLocation(itemLocations, userLocation);
@@ -281,39 +310,75 @@ function MapLocationsV2({
     const closestEELoc = EELocations.map((itemLocations: LocationInfo[]) => {
       return closestLocation(itemLocations, userLocation);
     });
+    // Then save all closest locations in this component's state
     setClosestBluebinLoc(closestBluebinLoc);
     setClosestGDLoc(closestGDLoc);
     setClosestRDLoc(closestRDLoc);
     setClosestGELoc(closestGELoc);
     setClosestRELoc(closestRELoc);
     setClosestEELoc(closestEELoc);
+    // Also set the closest locations as user's preferred locations initially
     setPreferredGDLocations(closestGDLoc);
     setPreferredRDLocations(closestRDLoc);
     setPreferredGELocations(closestGELoc);
     setPreferredRELocations(closestRELoc);
     setPreferredEELocations(closestEELoc);
   }
+  ////////// End of getClosestLocations() //////////
 
-  function closestLocation(
-    itemLocations: LocationInfo[],
-    userLocation: number[]
-  ) {
-    let closestDistToUser = Infinity;
-    let closestLocation = itemLocations[0];
-    for (const location of itemLocations) {
-      const distToUser = calculateDistance(
-        userLocation[0],
-        userLocation[1],
-        location["lat"],
-        location["lng"]
-      );
-      if (distToUser < closestDistToUser) {
-        closestDistToUser = distToUser;
-        closestLocation = location;
-      }
-    }
-    return closestLocation;
-  }
+  /* Markers to render for different types of result items: 
+   - Good Donatables (GD)
+   - Repair Donatables (RD)
+   - Good Ewaste (GE)
+   - Repair Ewaste (RE)
+   - Ebin Ewaste (EE)
+   */
+  const markersToRender = [
+    {
+      itemMarkersToShow: showGDMarkers, // GD
+      closestLocList: closestGDLoc,
+      allLocations: GDLocations,
+      markerColor: donatableColor,
+      markerStyle: null,
+    },
+    {
+      itemMarkersToShow: showRDMarkers, // RD
+      closestLocList: closestRDLoc,
+      allLocations: RDLocations,
+      markerColor: donatableColor,
+      markerStyle: <BuildIcon sx={{ color: donatableColor }} />,
+    },
+    {
+      itemMarkersToShow: showGEMarkers, // GE
+      closestLocList: closestGELoc,
+      allLocations: GELocations,
+      markerColor: ewasteColor,
+      markerStyle: null,
+    },
+    {
+      itemMarkersToShow: showREMarkers, // RE
+      closestLocList: closestRELoc,
+      allLocations: RELocations,
+      markerColor: ewasteColor,
+      markerStyle: <BuildIcon sx={{ color: ewasteColor }} />,
+    },
+    {
+      itemMarkersToShow: showEEMarkers, // EE
+      closestLocList: closestEELoc,
+      allLocations: EELocations,
+      markerColor: ewasteColor,
+      markerStyle: (
+        <RecyclingIcon
+          style={{
+            backgroundColor: ewasteColor,
+            color: "white",
+            border: "1px solid white",
+            borderRadius: 10,
+          }}
+        />
+      ),
+    },
+  ];
 
   return (
     <div style={{ position: "relative", width: "95%", height: "60%" }}>
@@ -327,12 +392,11 @@ function MapLocationsV2({
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
-        <GeocoderControlV2
+        <GeocoderControl
           mapboxAccessToken={MAPBOX_TOKEN}
           position="top-left"
           getClosestLocations={getClosestLocations}
         />
-
         {showBluebin && closestBluebinLoc != null && (
           <Marker
             latitude={closestBluebinLoc.lat}
@@ -341,186 +405,17 @@ function MapLocationsV2({
             onClick={() => setActiveMarker(closestBluebinLoc)}
           />
         )}
-        {showGDPins
-          .map((sel, i) => (sel ? i : -1))
-          .filter((i) => i != -1)
-          .map((i) => {
-            if (onlyShowClosest) {
-              const closestLoc: LocationInfo = closestGDLoc[i];
-              return (
-                <Marker
-                  latitude={closestLoc.lat}
-                  longitude={closestLoc.lng}
-                  color={donatableColor}
-                  onClick={() => setActiveMarker(closestLoc)}
-                />
-              );
-            } else {
-              const locations: LocationInfo[] = GDLocations[i];
-              return (
-                <>
-                  {locations.map((location: LocationInfo) => {
-                    return (
-                      <Marker
-                        latitude={location.lat}
-                        longitude={location.lng}
-                        color={donatableColor}
-                        onClick={() => setActiveMarker(location)}
-                      />
-                    );
-                  })}
-                </>
-              );
-            }
-          })}
-        {showRDPins
-          .map((sel, i) => (sel ? i : -1))
-          .filter((i) => i != -1)
-          .map((i) => {
-            if (onlyShowClosest) {
-              const closestLoc: LocationInfo = closestRDLoc[i];
-              return (
-                <Marker
-                  latitude={closestLoc.lat}
-                  longitude={closestLoc.lng}
-                  onClick={() => setActiveMarker(closestLoc)}
-                >
-                  <BuildIcon sx={{ color: donatableColor }} />
-                </Marker>
-              );
-            } else {
-              const locations: LocationInfo[] = RDLocations[i];
-              return (
-                <>
-                  {locations.map((location: LocationInfo) => {
-                    return (
-                      <Marker
-                        latitude={location.lat}
-                        longitude={location.lng}
-                        onClick={() => setActiveMarker(location)}
-                      >
-                        <BuildIcon sx={{ color: donatableColor }} />
-                      </Marker>
-                    );
-                  })}
-                </>
-              );
-            }
-          })}
-        {showGEPins
-          .map((sel, i) => (sel ? i : -1))
-          .filter((i) => i != -1)
-          .map((i) => {
-            if (onlyShowClosest) {
-              const closestLoc: LocationInfo = closestGELoc[i];
-              return (
-                <Marker
-                  latitude={closestLoc.lat}
-                  longitude={closestLoc.lng}
-                  color={ewasteColor}
-                  onClick={() => setActiveMarker(closestLoc)}
-                />
-              );
-            } else {
-              const locations: LocationInfo[] = GELocations[i];
-              return (
-                <>
-                  {locations.map((location: LocationInfo) => {
-                    return (
-                      <Marker
-                        latitude={location.lat}
-                        longitude={location.lng}
-                        color={ewasteColor}
-                        onClick={() => setActiveMarker(location)}
-                      />
-                    );
-                  })}
-                </>
-              );
-            }
-          })}
-        {showREPins
-          .map((sel, i) => (sel ? i : -1))
-          .filter((i) => i != -1)
-          .map((i) => {
-            if (onlyShowClosest) {
-              const closestLoc: LocationInfo = closestRELoc[i];
-              return (
-                <Marker
-                  latitude={closestLoc.lat}
-                  longitude={closestLoc.lng}
-                  onClick={() => setActiveMarker(closestLoc)}
-                >
-                  <BuildIcon sx={{ color: ewasteColor }} />
-                </Marker>
-              );
-            } else {
-              const locations: LocationInfo[] = RELocations[i];
-              return (
-                <>
-                  {locations.map((location: LocationInfo) => {
-                    return (
-                      <Marker
-                        latitude={location.lat}
-                        longitude={location.lng}
-                        onClick={() => setActiveMarker(location)}
-                      >
-                        <BuildIcon sx={{ color: ewasteColor }} />
-                      </Marker>
-                    );
-                  })}
-                </>
-              );
-            }
-          })}
-        {showEwastePins
-          .map((sel, i) => (sel ? i : -1))
-          .filter((i) => i != -1)
-          .map((i) => {
-            if (onlyShowClosest) {
-              const closestLoc: LocationInfo = closestEELoc[i];
-              return (
-                <Marker
-                  latitude={closestLoc.lat}
-                  longitude={closestLoc.lng}
-                  onClick={() => setActiveMarker(closestLoc)}
-                >
-                  <RecyclingIcon
-                    style={{
-                      backgroundColor: ewasteColor,
-                      color: "white",
-                      border: "1px solid white",
-                      borderRadius: 10,
-                    }}
-                  />
-                </Marker>
-              );
-            } else {
-              const locations: LocationInfo[] = EELocations[i];
-              return (
-                <>
-                  {locations.map((location: LocationInfo) => {
-                    return (
-                      <Marker
-                        latitude={location.lat}
-                        longitude={location.lng}
-                        onClick={() => setActiveMarker(location)}
-                      >
-                        <RecyclingIcon
-                          style={{
-                            backgroundColor: ewasteColor,
-                            color: "white",
-                            border: "1px solid white",
-                            borderRadius: 10,
-                          }}
-                        />
-                      </Marker>
-                    );
-                  })}
-                </>
-              );
-            }
-          })}
+        {markersToRender.map((params) => (
+          <MarkerRenderer
+            itemMarkersToShow={params.itemMarkersToShow}
+            closestLocList={params.closestLocList}
+            allLocations={params.allLocations}
+            markerColor={params.markerColor}
+            markerStyle={params.markerStyle}
+            onlyShowClosest={onlyShowClosest}
+            setActiveMarker={setActiveMarker}
+          />
+        ))}
         {activeMarker != null && (
           <Popup
             latitude={activeMarker.lat}
@@ -595,5 +490,3 @@ function MapLocationsV2({
     </div>
   );
 }
-
-export default MapLocationsV2;

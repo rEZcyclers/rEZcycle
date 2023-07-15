@@ -332,59 +332,59 @@ function ResultsV2({
     ]);
   };
 
-  // State for deciding whether to show map location pins for every result item or not
+  // State for deciding whether to show map location Markers for every result item or not
   const [showBluebin, setShowBluebin] = useState<boolean>(false);
-  const [showGDPins, setShowGDPins] = useState<boolean[]>(
+  const [showGDMarkers, setShowGDMarkers] = useState<boolean[]>(
     Array<boolean>(goodDonatables.length)
   );
-  const [showRDPins, setShowRDPins] = useState<boolean[]>(
+  const [showRDMarkers, setShowRDMarkers] = useState<boolean[]>(
     Array<boolean>(repairDonatables.length)
   );
-  const [showEwastePins, setShowEwastePins] = useState<boolean[]>(
+  const [showEEMarkers, setShowEEMarkers] = useState<boolean[]>(
     Array<boolean>(allEwaste.length)
   );
-  const [showGEPins, setShowGEPins] = useState<boolean[]>(
+  const [showGEMarkers, setShowGEMarkers] = useState<boolean[]>(
     Array<boolean>(goodEwaste.length)
   );
-  const [showREPins, setShowREPins] = useState<boolean[]>(
+  const [showREMarkers, setShowREMarkers] = useState<boolean[]>(
     Array<boolean>(repairDonatables.length)
   );
   const handleShowBluebin = () => {
     setShowBluebin(!showBluebin);
   };
-  const handleShowGDPins = (index: number) => {
-    setShowGDPins([
-      ...showGDPins.slice(0, index),
-      !showGDPins[index],
-      ...showGDPins.slice(index + 1),
+  const handleShowGDMarkers = (index: number) => {
+    setShowGDMarkers([
+      ...showGDMarkers.slice(0, index),
+      !showGDMarkers[index],
+      ...showGDMarkers.slice(index + 1),
     ]);
   };
-  const handleShowRDPins = (index: number) => {
-    setShowRDPins([
-      ...showRDPins.slice(0, index),
-      !showRDPins[index],
-      ...showRDPins.slice(index + 1),
+  const handleShowRDMarkers = (index: number) => {
+    setShowRDMarkers([
+      ...showRDMarkers.slice(0, index),
+      !showRDMarkers[index],
+      ...showRDMarkers.slice(index + 1),
     ]);
   };
-  const handleShowEwastePins = (index: number) => {
-    setShowEwastePins([
-      ...showEwastePins.slice(0, index),
-      !showEwastePins[index],
-      ...showEwastePins.slice(index + 1),
+  const handleShowEEMarkers = (index: number) => {
+    setShowEEMarkers([
+      ...showEEMarkers.slice(0, index),
+      !showEEMarkers[index],
+      ...showEEMarkers.slice(index + 1),
     ]);
   };
-  const handleShowGEPins = (index: number) => {
-    setShowGEPins([
-      ...showGEPins.slice(0, index),
-      !showGEPins[index],
-      ...showGEPins.slice(index + 1),
+  const handleShowGEMarkers = (index: number) => {
+    setShowGEMarkers([
+      ...showGEMarkers.slice(0, index),
+      !showGEMarkers[index],
+      ...showGEMarkers.slice(index + 1),
     ]);
   };
-  const handleShowREPins = (index: number) => {
-    setShowREPins([
-      ...showREPins.slice(0, index),
-      !showREPins[index],
-      ...showREPins.slice(index + 1),
+  const handleShowREMarkers = (index: number) => {
+    setShowREMarkers([
+      ...showREMarkers.slice(0, index),
+      !showREMarkers[index],
+      ...showREMarkers.slice(index + 1),
     ]);
   };
 
@@ -398,11 +398,11 @@ function ResultsV2({
           <h1 style={{ margin: 0 }}>Here's where to recycle your items</h1>
           <MapLocationsV2
             showBluebin={showBluebin}
-            showGDPins={showGDPins}
-            showRDPins={showRDPins}
-            showGEPins={showGEPins}
-            showREPins={showREPins}
-            showEwastePins={showEwastePins}
+            showGDMarkers={showGDMarkers}
+            showRDMarkers={showRDMarkers}
+            showGEMarkers={showGEMarkers}
+            showREMarkers={showREMarkers}
+            showEEMarkers={showEEMarkers}
             bluebinsData={bluebinsData}
             goodDonatablesResults={goodDonatablesResults}
             repairDonatablesResults={repairDonatablesResults}
@@ -436,10 +436,10 @@ function ResultsV2({
               handleShowGDResults={handleShowGDResults}
               showRDResults={showRDResults}
               handleShowRDResults={handleShowRDResults}
-              showGDPins={showGDPins}
-              handleShowGDPins={handleShowGDPins}
-              showRDPins={showRDPins}
-              handleShowRDPins={handleShowRDPins}
+              showGDMarkers={showGDMarkers}
+              handleShowGDMarkers={handleShowGDMarkers}
+              showRDMarkers={showRDMarkers}
+              handleShowRDMarkers={handleShowRDMarkers}
               preferredGDLocations={preferredGDLocations}
               preferredRDLocations={preferredRDLocations}
               onlyShowClosest={onlyShowClosest}
@@ -459,12 +459,12 @@ function ResultsV2({
               handleShowGEResults={handleShowGEResults}
               showREResults={showREResults}
               handleShowREResults={handleShowREResults}
-              showEwastePins={showEwastePins}
-              handleShowEwastePins={handleShowEwastePins}
-              showGEPins={showGEPins}
-              handleShowGEPins={handleShowGEPins}
-              showREPins={showREPins}
-              handleShowREPins={handleShowREPins}
+              showEEMarkers={showEEMarkers}
+              handleShowEEMarkers={handleShowEEMarkers}
+              showGEMarkers={showGEMarkers}
+              handleShowGEMarkers={handleShowGEMarkers}
+              showREMarkers={showREMarkers}
+              handleShowREMarkers={handleShowREMarkers}
               preferredGELocations={preferredGELocations}
               preferredRELocations={preferredRELocations}
               preferredEELocations={preferredEELocations}

@@ -612,3 +612,227 @@
 export default function MapLocations() {
   return <></>;
 }
+
+// Code befor refactoring
+{
+  /* {renderPins(
+          showGDPins,
+          closestGDLoc,
+          GDLocations,
+          donatableColor,
+          null
+        )}
+        {renderPins(
+          showRDPins,
+          closestRDLoc,
+          RDLocations,
+          donatableColor,
+          <BuildIcon sx={{ color: donatableColor }} />
+        )}
+        {renderPins(showGEPins, closestGELoc, GELocations, ewasteColor, null)}
+        {renderPins(
+          showREPins,
+          closestRELoc,
+          RELocations,
+          ewasteColor,
+          <BuildIcon sx={{ color: ewasteColor }} />
+        )}
+        {renderPins(
+          showEwastePins,
+          closestEELoc,
+          EELocations,
+          ewasteColor,
+          <RecyclingIcon
+            style={{
+              backgroundColor: ewasteColor,
+              color: "white",
+              border: "1px solid white",
+              borderRadius: 10,
+            }}
+          />
+        )} */
+}
+
+// Oldest code before renderPins
+{
+  /* {showGDPins
+          .map((sel, i) => (sel ? i : -1))
+          .filter((i) => i != -1)
+          .map((i) => {
+            if (onlyShowClosest) {
+              const closestLoc: LocationInfo = closestGDLoc[i];
+              return (
+                <Marker
+                  latitude={closestLoc.lat}
+                  longitude={closestLoc.lng}
+                  color={donatableColor}
+                  onClick={() => setActiveMarker(closestLoc)}
+                />
+              );
+            } else {
+              const locations: LocationInfo[] = GDLocations[i];
+              return (
+                <>
+                  {locations.map((location: LocationInfo) => {
+                    return (
+                      <Marker
+                        latitude={location.lat}
+                        longitude={location.lng}
+                        color={donatableColor}
+                        onClick={() => setActiveMarker(location)}
+                      />
+                    );
+                  })}
+                </>
+              );
+            }
+          })}
+        {showRDPins
+          .map((sel, i) => (sel ? i : -1))
+          .filter((i) => i != -1)
+          .map((i) => {
+            if (onlyShowClosest) {
+              const closestLoc: LocationInfo = closestRDLoc[i];
+              return (
+                <Marker
+                  latitude={closestLoc.lat}
+                  longitude={closestLoc.lng}
+                  onClick={() => setActiveMarker(closestLoc)}
+                >
+                  <BuildIcon sx={{ color: donatableColor }} />
+                </Marker>
+              );
+            } else {
+              const locations: LocationInfo[] = RDLocations[i];
+              return (
+                <>
+                  {locations.map((location: LocationInfo) => {
+                    return (
+                      <Marker
+                        latitude={location.lat}
+                        longitude={location.lng}
+                        onClick={() => setActiveMarker(location)}
+                      >
+                        <BuildIcon sx={{ color: donatableColor }} />
+                      </Marker>
+                    );
+                  })}
+                </>
+              );
+            }
+          })}
+        {showGEPins
+          .map((sel, i) => (sel ? i : -1))
+          .filter((i) => i != -1)
+          .map((i) => {
+            if (onlyShowClosest) {
+              const closestLoc: LocationInfo = closestGELoc[i];
+              return (
+                <Marker
+                  latitude={closestLoc.lat}
+                  longitude={closestLoc.lng}
+                  color={ewasteColor}
+                  onClick={() => setActiveMarker(closestLoc)}
+                />
+              );
+            } else {
+              const locations: LocationInfo[] = GELocations[i];
+              return (
+                <>
+                  {locations.map((location: LocationInfo) => {
+                    return (
+                      <Marker
+                        latitude={location.lat}
+                        longitude={location.lng}
+                        color={ewasteColor}
+                        onClick={() => setActiveMarker(location)}
+                      />
+                    );
+                  })}
+                </>
+              );
+            }
+          })}
+        {showREPins
+          .map((sel, i) => (sel ? i : -1))
+          .filter((i) => i != -1)
+          .map((i) => {
+            if (onlyShowClosest) {
+              const closestLoc: LocationInfo = closestRELoc[i];
+              return (
+                <Marker
+                  latitude={closestLoc.lat}
+                  longitude={closestLoc.lng}
+                  onClick={() => setActiveMarker(closestLoc)}
+                >
+                  <BuildIcon sx={{ color: ewasteColor }} />
+                </Marker>
+              );
+            } else {
+              const locations: LocationInfo[] = RELocations[i];
+              return (
+                <>
+                  {locations.map((location: LocationInfo) => {
+                    return (
+                      <Marker
+                        latitude={location.lat}
+                        longitude={location.lng}
+                        onClick={() => setActiveMarker(location)}
+                      >
+                        <BuildIcon sx={{ color: ewasteColor }} />
+                      </Marker>
+                    );
+                  })}
+                </>
+              );
+            }
+          })}
+        {showEwastePins
+          .map((sel, i) => (sel ? i : -1))
+          .filter((i) => i != -1)
+          .map((i) => {
+            if (onlyShowClosest) {
+              const closestLoc: LocationInfo = closestEELoc[i];
+              return (
+                <Marker
+                  latitude={closestLoc.lat}
+                  longitude={closestLoc.lng}
+                  onClick={() => setActiveMarker(closestLoc)}
+                >
+                  <RecyclingIcon
+                    style={{
+                      backgroundColor: ewasteColor,
+                      color: "white",
+                      border: "1px solid white",
+                      borderRadius: 10,
+                    }}
+                  />
+                </Marker>
+              );
+            } else {
+              const locations: LocationInfo[] = EELocations[i];
+              return (
+                <>
+                  {locations.map((location: LocationInfo) => {
+                    return (
+                      <Marker
+                        latitude={location.lat}
+                        longitude={location.lng}
+                        onClick={() => setActiveMarker(location)}
+                      >
+                        <RecyclingIcon
+                          style={{
+                            backgroundColor: ewasteColor,
+                            color: "white",
+                            border: "1px solid white",
+                            borderRadius: 10,
+                          }}
+                        />
+                      </Marker>
+                    );
+                  })}
+                </>
+              );
+            }
+          })} */
+}
