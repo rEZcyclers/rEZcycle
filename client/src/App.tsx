@@ -30,6 +30,9 @@ const serverAPI = "https://rezcycle-server.onrender.com";
 // const serverAPI = "http://localhost:8000";
 
 function App() {
+  // SideBar state
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(true);
+
   // User Profile Data
   const [userSession, setUserSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -163,13 +166,14 @@ function App() {
       .then(() => console.log("UserProfile fetched"))
       .catch((err) => console.log(err));
   }
-  useEffect(() => fetchBackendData(), []);
+  useEffect(fetchBackendData, []);
 
   return (
     // Make userSession & backend data globally available to all pages via backendContext object
     <backendContext.Provider
       value={{
         serverAPI,
+        sideBarState: [sideBarOpen, setSideBarOpen],
         userSession,
         userProfile,
         recyclablesData,
