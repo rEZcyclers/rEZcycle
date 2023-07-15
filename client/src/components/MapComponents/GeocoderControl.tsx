@@ -1,4 +1,5 @@
-// credits from https://visgl.github.io/react-map-gl/examples/geocoder
+// Credits to https://visgl.github.io/react-map-gl/examples/geocoder
+// Modified from https://github.com/visgl/react-map-gl/blob/7.1-release/examples/geocoder/src/geocoder-control.tsx
 
 import { ReactElement, useState } from "react";
 import { useControl, Marker, MarkerProps, ControlPosition } from "react-map-gl";
@@ -18,11 +19,11 @@ type GeocoderControlProps = Omit<
   onResult: (e: object) => void;
   onError: (e: object) => void;
 
-  updateNearestLocations: (userLocation: number[]) => void;
+  getClosestLocations: (userLocation: number[]) => void;
 };
 
 /* eslint-disable complexity,max-statements */
-export default function GeocoderControl(props: GeocoderControlProps) {
+export default function GeocoderControlV2(props: GeocoderControlProps) {
   const [marker, setMarker] = useState<ReactElement | null>(null);
 
   const geocoder = useControl<MapboxGeocoder>(
@@ -43,7 +44,7 @@ export default function GeocoderControl(props: GeocoderControlProps) {
           (result.center ||
             (result.geometry?.type === "Point" && result.geometry.coordinates));
         if (location && props.marker) {
-          props.updateNearestLocations([location[1], location[0]]);
+          props.getClosestLocations([location[1], location[0]]);
           setMarker(
             <Marker
               // Commented out the line below to avoid error
@@ -139,7 +140,7 @@ export default function GeocoderControl(props: GeocoderControlProps) {
 
 const noop = () => {};
 
-GeocoderControl.defaultProps = {
+GeocoderControlV2.defaultProps = {
   marker: true,
   onLoading: noop,
   onResults: noop,
