@@ -138,3 +138,12 @@ export type EbinLocations = {
 };
 
 
+export type LocationInfo = {
+  locationType: string;
+  name: string;
+  address: string;
+  contact: string;
+  lat: number;
+  lng: number;
+};
+
