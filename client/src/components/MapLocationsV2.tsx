@@ -12,6 +12,8 @@ import {
 } from "../DataTypes";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
+import WhereToVoteOutlinedIcon from "@mui/icons-material/WhereToVoteOutlined";
+
 import {
   Alert,
   FormControlLabel,
@@ -349,28 +351,72 @@ export default function MapLocationsV2({
       closestLocList: closestGDLoc,
       allLocations: GDLocations,
       markerColor: donatableColor,
-      markerStyle: null,
+      markerStyle: (
+        <WhereToVoteOutlinedIcon
+          sx={{
+            backgroundColor: donatableColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showRDMarkers, // RD
       closestLocList: closestRDLoc,
       allLocations: RDLocations,
       markerColor: donatableColor,
-      markerStyle: <BuildIcon sx={{ color: donatableColor }} />,
+      markerStyle: (
+        <BuildIcon
+          sx={{
+            backgroundColor: donatableColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showGEMarkers, // GE
       closestLocList: closestGELoc,
       allLocations: GELocations,
       markerColor: ewasteColor,
-      markerStyle: null,
+      markerStyle: (
+        <WhereToVoteOutlinedIcon
+          sx={{
+            backgroundColor: ewasteColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showREMarkers, // RE
       closestLocList: closestRELoc,
       allLocations: RELocations,
       markerColor: ewasteColor,
-      markerStyle: <BuildIcon sx={{ color: ewasteColor }} />,
+      markerStyle: (
+        <BuildIcon
+          sx={{
+            backgroundColor: ewasteColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showEEMarkers, // EE
@@ -379,11 +425,13 @@ export default function MapLocationsV2({
       markerColor: ewasteColor,
       markerStyle: (
         <RecyclingIcon
-          style={{
+          sx={{
             backgroundColor: ewasteColor,
             color: "white",
             border: "1px solid white",
-            borderRadius: 10,
+            width: 25,
+            height: 25,
+            borderRadius: 12,
           }}
         />
       ),
@@ -415,7 +463,7 @@ export default function MapLocationsV2({
             onClick={() => setActiveMarker(closestBluebinLoc)}
           />
         )}
-        {markersToRender.map((params) => (
+        {markersToRender.map((params, i) => (
           <MarkerRenderer
             itemMarkersToShow={params.itemMarkersToShow}
             closestLocList={params.closestLocList}
@@ -424,6 +472,7 @@ export default function MapLocationsV2({
             markerStyle={params.markerStyle}
             showClosest={showClosest}
             setActiveMarker={setActiveMarker}
+            itemType={i}
           />
         ))}
         {activeMarker != null && (
