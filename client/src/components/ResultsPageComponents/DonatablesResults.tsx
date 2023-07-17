@@ -3,6 +3,7 @@ import {
   Button,
   Collapse,
   List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -15,6 +16,7 @@ import {
   RepairLocation,
 } from "../../DataTypes";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 interface Props {
   goodDonatables: DonatableItem[];
@@ -65,7 +67,27 @@ export default function DonatablesResults({
                 These donatables can be donated at the following organisations:
               </h4>
               {goodDonatables.map((item: DonatableItem, index: number) => {
-                return (
+                return goodDonatablesResults[index].length === 0 ? (
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <List
+                      sx={{
+                        margin: 0,
+                        maxWidth: 500,
+                        bgcolor: "background.paper",
+                      }}
+                    >
+                      <ListItem>
+                        <ListItemIcon>
+                          <ErrorOutlineIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          Oops, donate locations found for{" "}
+                          {item["donatable_type"]}
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </div>
+                ) : (
                   <div
                     style={{
                       margin: 0,
@@ -107,32 +129,23 @@ export default function DonatablesResults({
                         timeout="auto"
                         unmountOnExit
                       >
-                        {goodDonatablesResults[index].length === 0 ? (
-                          <p>
-                            Oops, no locations found for{" "}
-                            {item["donatable_type"]}
-                          </p>
-                        ) : (
-                          <>
-                            <List component="div" disablePadding>
-                              {goodDonatablesResults[index].map(
-                                (entry: DonateOrganisationLocations) => {
-                                  const org = entry["donateOrg"];
-                                  return (
-                                    <ListItemButton sx={{ padding: 0, pl: 4 }}>
-                                      <ListItemIcon>
-                                        <StarBorder />
-                                      </ListItemIcon>
-                                      <ListItemText
-                                        primary={org["organisation_name"]}
-                                      />
-                                    </ListItemButton>
-                                  );
-                                }
-                              )}
-                            </List>
-                          </>
-                        )}
+                        <List component="div" disablePadding>
+                          {goodDonatablesResults[index].map(
+                            (entry: DonateOrganisationLocations) => {
+                              const org = entry["donateOrg"];
+                              return (
+                                <ListItemButton sx={{ padding: 0, pl: 4 }}>
+                                  <ListItemIcon>
+                                    <StarBorder />
+                                  </ListItemIcon>
+                                  <ListItemText
+                                    primary={org["organisation_name"]}
+                                  />
+                                </ListItemButton>
+                              );
+                            }
+                          )}
+                        </List>
                       </Collapse>
                     </List>
                     <Button
@@ -154,7 +167,27 @@ export default function DonatablesResults({
             <>
               <h4 style={{ margin: 0 }}>These donatables can be repaired:</h4>
               {repairDonatables.map((item: DonatableItem, index: number) => {
-                return (
+                return repairDonatablesResults[index].length === 0 ? (
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <List
+                      sx={{
+                        margin: 0,
+                        maxWidth: 500,
+                        bgcolor: "background.paper",
+                      }}
+                    >
+                      <ListItem>
+                        <ListItemIcon>
+                          <ErrorOutlineIcon />
+                        </ListItemIcon>
+                        <ListItemText>
+                          Oops, no repair locations found for{" "}
+                          {item["donatable_type"]}
+                        </ListItemText>
+                      </ListItem>
+                    </List>
+                  </div>
+                ) : (
                   <div style={{ display: "flex", flexDirection: "row" }}>
                     <List
                       sx={{
@@ -190,27 +223,20 @@ export default function DonatablesResults({
                         timeout="auto"
                         unmountOnExit
                       >
-                        {repairDonatablesResults[index].length === 0 ? (
-                          <p>
-                            Oops, no locations found for{" "}
-                            {item["donatable_type"]}
-                          </p>
-                        ) : (
-                          <ul>
-                            {repairDonatablesResults[index].map(
-                              (location: RepairLocation) => {
-                                return (
-                                  <li key={location["repair_id"]}>
-                                    <Typography>
-                                      {location["center_name"]}, stall number{" "}
-                                      {location["stall_number"]}
-                                    </Typography>
-                                  </li>
-                                );
-                              }
-                            )}
-                          </ul>
-                        )}
+                        <ul>
+                          {repairDonatablesResults[index].map(
+                            (location: RepairLocation) => {
+                              return (
+                                <li key={location["repair_id"]}>
+                                  <Typography>
+                                    {location["center_name"]}, stall number{" "}
+                                    {location["stall_number"]}
+                                  </Typography>
+                                </li>
+                              );
+                            }
+                          )}
+                        </ul>
                       </Collapse>
                     </List>
                     <Button
