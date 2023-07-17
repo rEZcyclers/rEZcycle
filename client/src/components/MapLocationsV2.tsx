@@ -42,14 +42,17 @@ interface Props {
   ebinEwasteResults: EbinLocations[][]; // EE results
 
   // User's preferred location for every item
-  setPreferredGDLocations: (newArray: LocationInfo[]) => void;
-  setPreferredRDLocations: (newArray: LocationInfo[]) => void;
-  setPreferredGELocations: (newArray: LocationInfo[]) => void;
-  setPreferredRELocations: (newArray: LocationInfo[]) => void;
-  setPreferredEELocations: (newArray: LocationInfo[]) => void;
+  closestBBLoc: LocationInfo | null;
+  setClosestBBLoc: (bluebin: LocationInfo) => void;
+  setPreferredGDLoc: (newArray: LocationInfo[]) => void;
+  setPreferredRDLoc: (newArray: LocationInfo[]) => void;
+  setPreferredGELoc: (newArray: LocationInfo[]) => void;
+  setPreferredRELoc: (newArray: LocationInfo[]) => void;
+  setPreferredEELoc: (newArray: LocationInfo[]) => void;
 
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
+  setShowBluebin: (show: boolean) => void;
 }
 
 const recyclableColor = "#00FF00";
@@ -108,13 +111,16 @@ export default function MapLocationsV2({
   goodEwasteResults,
   repairEwasteResults,
   ebinEwasteResults,
-  setPreferredGDLocations,
-  setPreferredRDLocations,
-  setPreferredGELocations,
-  setPreferredRELocations,
-  setPreferredEELocations,
+  closestBBLoc,
+  setClosestBBLoc,
+  setPreferredGDLoc,
+  setPreferredRDLoc,
+  setPreferredGELoc,
+  setPreferredRELoc,
+  setPreferredEELoc,
   showClosest,
   setShowClosest,
+  setShowBluebin,
 }: Props) {
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
@@ -125,8 +131,6 @@ export default function MapLocationsV2({
   const [EELocations, setEELocations] = useState<LocationInfo[][]>([]);
 
   ////////// States the save the closest location for every result item
-  const [closestBluebinLoc, setClosestBluebinLoc] =
-    useState<LocationInfo | null>(null);
   const [closestGDLoc, setClosestGDLoc] = useState<LocationInfo[]>([]);
   const [closestRDLoc, setClosestRDLoc] = useState<LocationInfo[]>([]);
   const [closestGELoc, setClosestGELoc] = useState<LocationInfo[]>([]);
@@ -323,18 +327,18 @@ export default function MapLocationsV2({
       return closestLocation(itemLocations, userLocation);
     });
     // Then save all closest locations in this component's state as defined earlier
-    setClosestBluebinLoc(closestBluebinLoc);
+    setClosestBBLoc(closestBluebinLoc);
     setClosestGDLoc(closestGDLoc);
     setClosestRDLoc(closestRDLoc);
     setClosestGELoc(closestGELoc);
     setClosestRELoc(closestRELoc);
     setClosestEELoc(closestEELoc);
     // Also set the closest locations as user's initial preferred locations
-    setPreferredGDLocations(closestGDLoc);
-    setPreferredRDLocations(closestRDLoc);
-    setPreferredGELocations(closestGELoc);
-    setPreferredRELocations(closestRELoc);
-    setPreferredEELocations(closestEELoc);
+    setPreferredGDLoc(closestGDLoc);
+    setPreferredRDLoc(closestRDLoc);
+    setPreferredGELoc(closestGELoc);
+    setPreferredRELoc(closestRELoc);
+    setPreferredEELoc(closestEELoc);
   }
   ////////// End of getClosestLocations() //////////
 
@@ -455,13 +459,23 @@ export default function MapLocationsV2({
           position="top-left"
           getClosestLocations={getClosestLocations}
         />
-        {showBluebin && closestBluebinLoc != null && (
+        {showBluebin && closestBBLoc != null && (
           <Marker
-            latitude={closestBluebinLoc.lat}
-            longitude={closestBluebinLoc.lng}
-            color={recyclableColor}
-            onClick={() => setActiveMarker(closestBluebinLoc)}
-          />
+            latitude={closestBBLoc.lat}
+            longitude={closestBBLoc.lng}
+            onClick={() => setActiveMarker(closestBBLoc)}
+          >
+            <RecyclingIcon
+              sx={{
+                backgroundColor: recyclableColor,
+                color: "white",
+                border: "2px solid white",
+                width: 27,
+                height: 27,
+                borderRadius: 14,
+              }}
+            />
+          </Marker>
         )}
         {markersToRender.map((params, i) => (
           <MarkerRenderer
@@ -518,6 +532,7 @@ export default function MapLocationsV2({
                 }
                 setShowAlert(false);
                 setShowClosest(!showClosest);
+                if (!showClosest) setShowBluebin(true);
               }}
               color="secondary"
               size="medium"
