@@ -168,7 +168,20 @@ function Ewaste({
                 </Box>
                 <Box flex={10} sx={{ marginTop: 1, overflow: "auto" }}>
                   {activeModal != -1 && ewasteData[activeModal]["description"]}
-                  <p>Insert some images here</p>
+                  {activeModal != -1 &&
+                    ewasteData[activeModal]["images"].map((imageInfo: any) => {
+                      return (
+                        <img
+                          src={imageInfo["link"]}
+                          alt={imageInfo["credits"]}
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            objectFit: "contain",
+                          }}
+                        />
+                      );
+                    })}
                 </Box>
                 <Box
                   flex={1}

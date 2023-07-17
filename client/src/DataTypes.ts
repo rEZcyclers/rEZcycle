@@ -24,6 +24,7 @@ export type DonatableItem = {
   donatable_id: number;
   donatable_type: string;
   description: string;
+  images: { link: string , credits: string}[];
 };
 
 export type EwasteItem = {
