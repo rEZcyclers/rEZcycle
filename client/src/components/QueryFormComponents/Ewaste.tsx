@@ -171,15 +171,20 @@ function Ewaste({
                   {activeModal != -1 &&
                     ewasteData[activeModal]["images"].map((imageInfo: any) => {
                       return (
-                        <img
-                          src={imageInfo["link"]}
-                          alt={imageInfo["credits"]}
-                          style={{
-                            width: "100%",
-                            height: "auto",
-                            objectFit: "contain",
-                          }}
-                        />
+                        <>
+                          <img
+                            src={imageInfo["link"]}
+                            alt={imageInfo["credits"]}
+                            style={{
+                              width: "60%",
+                              height: "auto",
+                              objectFit: "contain",
+                            }}
+                          />
+                          <figcaption style={{ fontStyle: "italic" }}>
+                            {"Credits: " + imageInfo["credits"]}
+                          </figcaption>
+                        </>
                       );
                     })}
                 </Box>
