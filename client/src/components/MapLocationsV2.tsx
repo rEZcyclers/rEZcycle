@@ -23,29 +23,31 @@ import GeocoderControl from "./MapComponents/GeocoderControl";
 import MarkerRenderer from "./MapComponents/MarkerRenderer";
 
 interface Props {
-  // 'Show on Map' button states for every result item
+  // 'Show on Map' button states for every selected item
   showBluebin: boolean;
-  showGDMarkers: boolean[];
-  showRDMarkers: boolean[];
-  showGEMarkers: boolean[];
-  showREMarkers: boolean[];
-  showEEMarkers: boolean[];
+  showGDMarkers: boolean[]; // Good Donatables (GD)
+  showRDMarkers: boolean[]; // Repairable Donatables (RD)
+  showGEMarkers: boolean[]; // Good Ewaste (GE)
+  showREMarkers: boolean[]; // Repairable Ewaste (RE)
+  showEEMarkers: boolean[]; // Ebin Ewaste (EE)
 
-  bluebinsData: Bluebin[]; // List of bluebin locations
-  goodDonatablesResults: DonateOrganisationLocations[][]; // List of donateOrganisations & their locations for every selected good donatable
-  repairDonatablesResults: RepairLocation[][]; // List of repairLocations for every selected repairable donatable
-  goodEwasteResults: DonateOrganisationLocations[][]; // List of donateLocations & their locations for every selected good Ewaste
-  repairEwasteResults: RepairLocation[][]; // List of repairLocations for every selected repairable Ewaste
-  ebinEwasteResults: EbinLocations[][]; // List of ebins & their locations for every selected ebin Ewaste
+  // Results for every item (i.e. a list of list of locations)
+  bluebinsData: Bluebin[]; // Any recyclable can go any bluebin, hence don't need 2D array
+  goodDonatablesResults: DonateOrganisationLocations[][]; // GD results
+  repairDonatablesResults: RepairLocation[][]; // RD results
+  goodEwasteResults: DonateOrganisationLocations[][]; // GE results
+  repairEwasteResults: RepairLocation[][]; // RE results
+  ebinEwasteResults: EbinLocations[][]; // EE results
 
+  // User's preferred location for every item
   setPreferredGDLocations: (newArray: LocationInfo[]) => void;
   setPreferredRDLocations: (newArray: LocationInfo[]) => void;
   setPreferredGELocations: (newArray: LocationInfo[]) => void;
   setPreferredRELocations: (newArray: LocationInfo[]) => void;
   setPreferredEELocations: (newArray: LocationInfo[]) => void;
 
-  onlyShowClosest: boolean;
-  setOnlyShowClosest: (toggle: boolean) => void;
+  showClosest: boolean;
+  setShowClosest: (toggle: boolean) => void;
 }
 
 const recyclableColor = "#00FF00";
@@ -55,18 +57,25 @@ const ewasteColor = "#FFC300";
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiaWFuNDQ0NCIsImEiOiJjbGhpeTVrMjcwY253M2RwNThlY2wzMWJ6In0.f3cyuNBJ5dmOBt-JTI6iCw";
 
-// Function to calculate the distance between two coordinates using the Haversine formula
+/**
+ * Calculates the distance between two locations using the Haversine formula. Credits to
+ * https://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript.
+ * @param lat1 - Latitude of first location
+ * @param lon1 - Longitude of first location
+ * @param lat2 - Latitude of second location
+ * @param lon2 - Longitude of second location
+ * @returns {number} - Distance in km
+ */
 function calculateDistance(
   lat1: number,
   lon1: number,
   lat2: number,
   lon2: number
 ): number {
-  const earthRadius = 6371; // Earth's radius in kilometers
+  const earthRadius = 6371; // Earth's radius in km
 
-  // Helper function to convert degrees to radians
   function toRadians(degrees: number): number {
-    return degrees * (Math.PI / 180);
+    return degrees * (Math.PI / 180); // Helper to convert degrees to radians
   }
 
   const dLat = toRadians(lat2 - lat1);
@@ -102,8 +111,8 @@ export default function MapLocationsV2({
   setPreferredGELocations,
   setPreferredRELocations,
   setPreferredEELocations,
-  onlyShowClosest,
-  setOnlyShowClosest,
+  showClosest,
+  setShowClosest,
 }: Props) {
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
@@ -139,7 +148,7 @@ export default function MapLocationsV2({
 
   /** ////////// Start of getLocations() //////////
    * Gets all the location information needed for each result item, so as to be able
-   * to render all of their associated location markers on the map.
+   * to render all of their associated location markers on the map. () => void.
    */
   function getLocations() {
     /**
@@ -252,11 +261,12 @@ export default function MapLocationsV2({
   }
   ////////// End of getLocations() //////////
 
-  useEffect(getLocations, []); // Only getLocations() once (upon initialisation)
+  useEffect(getLocations, []); // Only get all locations info once (upon initialisation )
 
   /** ////////// Start of getClosestLocations() //////////
    * Gets the closest location for every result item relative to the user's location.
    * @param userLocation - Coordinates of the user's input address
+   * @returns {void}
    */
   function getClosestLocations(userLocation: number[]) {
     console.log("getClosesetLocations() called!");
@@ -266,19 +276,20 @@ export default function MapLocationsV2({
     // we're unable to use the state which is not yet available
 
     /**
-     * Helper function to get the 1 closest location given a list of locations
+     * Helper function to get the 1 closest location to the user given a list of locations.
      * @param itemLocations - List of locations
-     * @param userLocation - Distance is relative to user location
-     * @returns {LocationInfo}
+     * @param userLocation - User's location coordinates
+     * @returns {LocationInfo} - The closest location
      */
-    function closestLocation( // Helper function to get the 1 closest location from
-      itemLocations: LocationInfo[], // a list of locations
+    function closestLocation(
+      itemLocations: LocationInfo[],
       userLocation: number[]
     ) {
       let closestDistToUser = Infinity;
       let closestLocation = itemLocations[0];
       for (const location of itemLocations) {
         const distToUser = calculateDistance(
+          // calculateDistance() defined at the start
           userLocation[0],
           userLocation[1],
           location["lat"],
@@ -291,7 +302,6 @@ export default function MapLocationsV2({
       }
       return closestLocation;
     }
-
     // Calculate all closest locations for every item using the helper function
     const closestBluebinLoc = closestLocation(BBLocations, userLocation);
     const closestGDLoc = GDLocations.map((itemLocations: LocationInfo[]) => {
@@ -310,14 +320,14 @@ export default function MapLocationsV2({
     const closestEELoc = EELocations.map((itemLocations: LocationInfo[]) => {
       return closestLocation(itemLocations, userLocation);
     });
-    // Then save all closest locations in this component's state
+    // Then save all closest locations in this component's state as defined earlier
     setClosestBluebinLoc(closestBluebinLoc);
     setClosestGDLoc(closestGDLoc);
     setClosestRDLoc(closestRDLoc);
     setClosestGELoc(closestGELoc);
     setClosestRELoc(closestRELoc);
     setClosestEELoc(closestEELoc);
-    // Also set the closest locations as user's preferred locations initially
+    // Also set the closest locations as user's initial preferred locations
     setPreferredGDLocations(closestGDLoc);
     setPreferredRDLocations(closestRDLoc);
     setPreferredGELocations(closestGELoc);
@@ -326,11 +336,11 @@ export default function MapLocationsV2({
   }
   ////////// End of getClosestLocations() //////////
 
-  /* Markers to render for different types of result items: 
+  /* Markers to render, for different types of result items as mentioned earlier: 
    - Good Donatables (GD)
-   - Repair Donatables (RD)
+   - Repairable Donatables (RD)
    - Good Ewaste (GE)
-   - Repair Ewaste (RE)
+   - Repairable Ewaste (RE)
    - Ebin Ewaste (EE)
    */
   const markersToRender = [
@@ -412,7 +422,7 @@ export default function MapLocationsV2({
             allLocations={params.allLocations}
             markerColor={params.markerColor}
             markerStyle={params.markerStyle}
-            onlyShowClosest={onlyShowClosest}
+            showClosest={showClosest}
             setActiveMarker={setActiveMarker}
           />
         ))}
@@ -438,6 +448,8 @@ export default function MapLocationsV2({
         style={{
           margin: 0,
           width: "15%",
+          minWidth: 70,
+          maxWidth: 100,
           position: "absolute",
           top: "1rem",
           right: "1rem",
@@ -449,14 +461,14 @@ export default function MapLocationsV2({
         <FormControlLabel
           control={
             <Switch
-              checked={onlyShowClosest}
+              checked={showClosest}
               onChange={() => {
                 if (userLocation === null) {
                   setShowAlert(true);
                   return;
                 }
                 setShowAlert(false);
-                setOnlyShowClosest(!onlyShowClosest);
+                setShowClosest(!showClosest);
               }}
               color="secondary"
               size="medium"
@@ -464,9 +476,7 @@ export default function MapLocationsV2({
           }
           label={
             <Typography fontSize={14} color={"black"}>
-              {onlyShowClosest
-                ? "Showing only closest places"
-                : "Show only closest places"}
+              {showClosest ? "Showing closest places" : "Show closest places"}
             </Typography>
           }
           labelPlacement="top"

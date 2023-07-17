@@ -184,3 +184,31 @@
 export default function Recyclables() {
   return <></>;
 }
+
+// Initial method of retrieving data by making Supabase call, but this returns a Promise object
+// instead of a DonateLocations[][] object, so doesn't work. Maybe will look into this again in future.
+//  goodDonatablesResults = goodDonatables.map(async (item: DonatableItem) => {
+//       const { data, error } = await supabase
+//         .from("DonatablesDonateLocations")
+//         .select()
+//         .match({ donatable_id: item["donatable_id"] });
+//       const locations =
+//         data === null
+//           ? []
+//           : data.map(async (entry) => {
+//               await supabase
+//                 .from("donateLocations")
+//                 .select()
+//                 .match({ donate_id: entry["donate_id"] });
+//             });
+//       return locations;
+//     });
+
+// Alternative method for getResults():
+// const recyclablesResults = recyclablesData.filter(
+//   (item: RecyclableItem, index: number) => {
+//     selectedItems[index] &&
+//       recyclableConditions[index] &&
+//       item["bluebin_eligibility"] != 0;
+//   }
+// );

@@ -28,27 +28,29 @@ import SpoiltResults from "./ResultsPageComponents/SpoiltResults";
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
 interface Props {
-  setStage: (num: number) => void;
+  // Items selected by user to process
   selectedRecyclables: boolean[];
   selectedDonatables: boolean[];
   selectedEwaste: boolean[];
   recyclableConditions: boolean[];
   donatableConditions: Condition[];
   ewasteConditions: Condition[];
+  // Functions to restart the form
+  setStage: (num: number) => void;
   clearForm: () => void;
 }
 
 function ResultsV2({
-  setStage,
   selectedRecyclables,
   selectedDonatables,
   selectedEwaste,
   recyclableConditions,
   donatableConditions,
   ewasteConditions,
+  setStage,
   clearForm,
 }: Props) {
-  ////////// Processing of Results //////////
+  ////////// Data needed to process results for items selected by user //////////
   const {
     recyclablesData,
     donatablesData,
@@ -66,6 +68,8 @@ function ResultsV2({
     EEData,
   } = useContext(backendContext);
 
+  ////////// States needed for saving the results of every selected item //////////
+  ///// Recyclable items & their results /////
   const [recyclablesResults, setRecyclablesResults] = useState<
     RecyclableItem[]
   >([]); // Selected recyclables which can be disposed in blue bins
@@ -73,6 +77,7 @@ function ResultsV2({
     RecyclableItem[]
   >([]); // Selected recyclables which CANNOT be disposed in blue bins
 
+  ///// Donatable items & their results
   const [goodDonatables, setGoodDonatables] = useState<DonatableItem[]>([]); // Selected donatables in good condition
   const [repairDonatables, setRepairDonatables] = useState<DonatableItem[]>([]); // Selected donatables in repairable condition
   const [spoiltDonatables, setSpoiltDonatables] = useState<DonatableItem[]>([]); // Selected donatables in spoilt condition
@@ -83,6 +88,7 @@ function ResultsV2({
     RepairLocation[][]
   >([]); // List of repairLocations for every selected repairable donatable
 
+  ///// Ewaste items & their results /////
   const [allEwaste, setAllEwaste] = useState<EwasteItem[]>([]); // All selected Ewaste
   const [ebinEwaste, setEbinEwaste] = useState<EwasteItem[]>([]); // Selected Ewaste eligible for ebins
   const [regulatedEwaste, setRegulatedEwaste] = useState<EwasteItem[]>([]); // Selected Ewaste eligible for collection drives
@@ -98,7 +104,7 @@ function ResultsV2({
     RepairLocation[][]
   >([]); // List of repairLocations for every selected repairable Ewaste
 
-  // User's preferred result locations
+  ////////// User states for showing and saving preferred locations //////////
   const [preferredGDLocations, setPreferredGDLocations] = useState<
     LocationInfo[]
   >([]);
@@ -114,11 +120,101 @@ function ResultsV2({
   const [preferredEELocations, setPreferredEELocations] = useState<
     LocationInfo[]
   >([]);
-
+  const [showClosest, setShowClosest] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [onlyShowClosest, setOnlyShowClosest] = useState(false);
 
-  // Main function to get & set all results
+  ////////// States for deciding whether to show nested list for every result item or not //////////
+  const [showGDResults, setShowGDResults] = useState<boolean[]>([]);
+  const [showRDResults, setShowRDResults] = useState<boolean[]>([]);
+  const [showEEResults, setShowEEResults] = useState<boolean[]>([]);
+  const [showGEResults, setShowGEResults] = useState<boolean[]>([]);
+  const [showREResults, setShowREResults] = useState<boolean[]>([]);
+  const handleShowGDResults = (index: number) => {
+    setShowGDResults([
+      ...showGDResults.slice(0, index),
+      !showGDResults[index],
+      ...showGDResults.slice(index + 1),
+    ]);
+  };
+  const handleShowRDResults = (index: number) => {
+    setShowRDResults([
+      ...showRDResults.slice(0, index),
+      !showRDResults[index],
+      ...showRDResults.slice(index + 1),
+    ]);
+  };
+  const handleshowEEResults = (index: number) => {
+    setShowEEResults([
+      ...showEEResults.slice(0, index),
+      !showEEResults[index],
+      ...showEEResults.slice(index + 1),
+    ]);
+  };
+  const handleShowGEResults = (index: number) => {
+    setShowGEResults([
+      ...showGEResults.slice(0, index),
+      !showGEResults[index],
+      ...showGEResults.slice(index + 1),
+    ]);
+  };
+  const handleShowREResults = (index: number) => {
+    setShowREResults([
+      ...showREResults.slice(0, index),
+      !showREResults[index],
+      ...showREResults.slice(index + 1),
+    ]);
+  };
+
+  ////////// States for deciding whether to show map location markers for every result item or not //////////
+  const [showBluebin, setShowBluebin] = useState<boolean>(false);
+  const [showGDMarkers, setShowGDMarkers] = useState<boolean[]>([]);
+  const [showRDMarkers, setShowRDMarkers] = useState<boolean[]>([]);
+  const [showEEMarkers, setShowEEMarkers] = useState<boolean[]>([]);
+  const [showGEMarkers, setShowGEMarkers] = useState<boolean[]>([]);
+  const [showREMarkers, setShowREMarkers] = useState<boolean[]>([]);
+  const handleShowBluebin = () => {
+    setShowBluebin(!showBluebin);
+  };
+  const handleShowGDMarkers = (index: number) => {
+    setShowGDMarkers([
+      ...showGDMarkers.slice(0, index),
+      !showGDMarkers[index],
+      ...showGDMarkers.slice(index + 1),
+    ]);
+  };
+  const handleShowRDMarkers = (index: number) => {
+    setShowRDMarkers([
+      ...showRDMarkers.slice(0, index),
+      !showRDMarkers[index],
+      ...showRDMarkers.slice(index + 1),
+    ]);
+  };
+  const handleShowEEMarkers = (index: number) => {
+    setShowEEMarkers([
+      ...showEEMarkers.slice(0, index),
+      !showEEMarkers[index],
+      ...showEEMarkers.slice(index + 1),
+    ]);
+  };
+  const handleShowGEMarkers = (index: number) => {
+    setShowGEMarkers([
+      ...showGEMarkers.slice(0, index),
+      !showGEMarkers[index],
+      ...showGEMarkers.slice(index + 1),
+    ]);
+  };
+  const handleShowREMarkers = (index: number) => {
+    setShowREMarkers([
+      ...showREMarkers.slice(0, index),
+      !showREMarkers[index],
+      ...showREMarkers.slice(index + 1),
+    ]);
+  };
+
+  ////////// Start of results processing & populating aforementioned states thereafter //////////
+  /**
+   * Main function to get & set the results for all items. () => void.
+   */
   function getResults() {
     console.log("getResults() called");
 
@@ -266,11 +362,34 @@ function ResultsV2({
     });
     setEbinEwasteResults(ebinEwasteResults);
     setLoaded(true);
+    console.log("Results have been processed and saved in their states");
   }
 
-  useEffect(getResults, []);
+  useEffect(getResults, []); // Only process results once (upon initialisation)
   ////////// End of Results Processing //////////
 
+  ////////// Rmb to set the states for showing results once results have loaded //////////
+  function setShowResultsStates() {
+    setShowGDResults(Array<boolean>(goodDonatables.length).fill(false));
+    setShowGDMarkers(Array<boolean>(goodDonatables.length).fill(false));
+
+    setShowRDResults(Array<boolean>(repairDonatables.length).fill(false));
+    setShowRDMarkers(Array<boolean>(repairDonatables.length).fill(false));
+
+    setShowGEResults(Array<boolean>(goodEwaste.length).fill(false));
+    setShowGEMarkers(Array<boolean>(goodEwaste.length).fill(false));
+
+    setShowREResults(Array<boolean>(repairEwaste.length).fill(false));
+    setShowREMarkers(Array<boolean>(repairEwaste.length).fill(false));
+
+    setShowEEResults(Array<boolean>(ebinEwaste.length).fill(false));
+    setShowEEMarkers(Array<boolean>(ebinEwaste.length).fill(false));
+
+    console.log("States for showing results have been set");
+  }
+  useEffect(setShowResultsStates, [loaded]);
+
+  ////////// Button handlers //////////
   const handleBackClick = () => {
     setStage(2);
   };
@@ -278,114 +397,6 @@ function ResultsV2({
   const restartQuery = () => {
     setStage(1);
     clearForm();
-  };
-
-  // State for deciding whether to show nested list for every result item or not
-  const [showGDResults, setShowGDResults] = useState<boolean[]>(
-    Array<boolean>(goodDonatables.length)
-  );
-  const [showRDResults, setShowRDResults] = useState<boolean[]>(
-    Array<boolean>(repairDonatables.length)
-  );
-  const [showEEResults, setShowEEResults] = useState<boolean[]>(
-    Array<boolean>(ebinEwaste.length)
-  );
-  const [showGEResults, setShowGEResults] = useState<boolean[]>(
-    Array<boolean>(goodEwaste.length)
-  );
-  const [showREResults, setShowREResults] = useState<boolean[]>(
-    Array<boolean>(repairDonatables.length)
-  );
-  const handleShowGDResults = (index: number) => {
-    setShowGDResults([
-      ...showGDResults.slice(0, index),
-      !showGDResults[index],
-      ...showGDResults.slice(index + 1),
-    ]);
-  };
-  const handleShowRDResults = (index: number) => {
-    setShowRDResults([
-      ...showRDResults.slice(0, index),
-      !showRDResults[index],
-      ...showRDResults.slice(index + 1),
-    ]);
-  };
-  const handleshowEEResults = (index: number) => {
-    setShowEEResults([
-      ...showEEResults.slice(0, index),
-      !showEEResults[index],
-      ...showEEResults.slice(index + 1),
-    ]);
-  };
-  const handleShowGEResults = (index: number) => {
-    setShowGEResults([
-      ...showGEResults.slice(0, index),
-      !showGEResults[index],
-      ...showGEResults.slice(index + 1),
-    ]);
-  };
-  const handleShowREResults = (index: number) => {
-    setShowREResults([
-      ...showREResults.slice(0, index),
-      !showREResults[index],
-      ...showREResults.slice(index + 1),
-    ]);
-  };
-
-  // State for deciding whether to show map location Markers for every result item or not
-  const [showBluebin, setShowBluebin] = useState<boolean>(false);
-  const [showGDMarkers, setShowGDMarkers] = useState<boolean[]>(
-    Array<boolean>(goodDonatables.length)
-  );
-  const [showRDMarkers, setShowRDMarkers] = useState<boolean[]>(
-    Array<boolean>(repairDonatables.length)
-  );
-  const [showEEMarkers, setShowEEMarkers] = useState<boolean[]>(
-    Array<boolean>(allEwaste.length)
-  );
-  const [showGEMarkers, setShowGEMarkers] = useState<boolean[]>(
-    Array<boolean>(goodEwaste.length)
-  );
-  const [showREMarkers, setShowREMarkers] = useState<boolean[]>(
-    Array<boolean>(repairDonatables.length)
-  );
-  const handleShowBluebin = () => {
-    setShowBluebin(!showBluebin);
-  };
-  const handleShowGDMarkers = (index: number) => {
-    setShowGDMarkers([
-      ...showGDMarkers.slice(0, index),
-      !showGDMarkers[index],
-      ...showGDMarkers.slice(index + 1),
-    ]);
-  };
-  const handleShowRDMarkers = (index: number) => {
-    setShowRDMarkers([
-      ...showRDMarkers.slice(0, index),
-      !showRDMarkers[index],
-      ...showRDMarkers.slice(index + 1),
-    ]);
-  };
-  const handleShowEEMarkers = (index: number) => {
-    setShowEEMarkers([
-      ...showEEMarkers.slice(0, index),
-      !showEEMarkers[index],
-      ...showEEMarkers.slice(index + 1),
-    ]);
-  };
-  const handleShowGEMarkers = (index: number) => {
-    setShowGEMarkers([
-      ...showGEMarkers.slice(0, index),
-      !showGEMarkers[index],
-      ...showGEMarkers.slice(index + 1),
-    ]);
-  };
-  const handleShowREMarkers = (index: number) => {
-    setShowREMarkers([
-      ...showREMarkers.slice(0, index),
-      !showREMarkers[index],
-      ...showREMarkers.slice(index + 1),
-    ]);
   };
 
   ////////// ResultsV2 Component begins here //////////
@@ -414,8 +425,8 @@ function ResultsV2({
             setPreferredGELocations={setPreferredGELocations}
             setPreferredRELocations={setPreferredRELocations}
             setPreferredEELocations={setPreferredEELocations}
-            onlyShowClosest={onlyShowClosest}
-            setOnlyShowClosest={setOnlyShowClosest}
+            showClosest={showClosest}
+            setShowClosest={setShowClosest}
           />
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -442,7 +453,7 @@ function ResultsV2({
               handleShowRDMarkers={handleShowRDMarkers}
               preferredGDLocations={preferredGDLocations}
               preferredRDLocations={preferredRDLocations}
-              onlyShowClosest={onlyShowClosest}
+              showClosest={showClosest}
             />
             <EwasteResults
               allEwaste={allEwaste}
@@ -468,7 +479,7 @@ function ResultsV2({
               preferredGELocations={preferredGELocations}
               preferredRELocations={preferredRELocations}
               preferredEELocations={preferredEELocations}
-              onlyShowClosest={onlyShowClosest}
+              showClosest={showClosest}
             />
           </Stack>
           <SpoiltResults
@@ -499,31 +510,3 @@ function ResultsV2({
 }
 
 export default ResultsV2;
-
-// Initial method of retrieving data by making Supabase call, but this returns a Promise object
-// instead of a DonateLocations[][] object, so doesn't work. Maybe will look into this again in future.
-//  goodDonatablesResults = goodDonatables.map(async (item: DonatableItem) => {
-//       const { data, error } = await supabase
-//         .from("DonatablesDonateLocations")
-//         .select()
-//         .match({ donatable_id: item["donatable_id"] });
-//       const locations =
-//         data === null
-//           ? []
-//           : data.map(async (entry) => {
-//               await supabase
-//                 .from("donateLocations")
-//                 .select()
-//                 .match({ donate_id: entry["donate_id"] });
-//             });
-//       return locations;
-//     });
-
-// Alternative method for getResults():
-// const recyclablesResults = recyclablesData.filter(
-//   (item: RecyclableItem, index: number) => {
-//     selectedItems[index] &&
-//       recyclableConditions[index] &&
-//       item["bluebin_eligibility"] != 0;
-//   }
-// );
