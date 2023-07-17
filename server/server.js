@@ -131,12 +131,18 @@ app.get("/recyclables", async (req, res) => {
 });
 
 app.get("/donatables", async (req, res) => {
-  const { data, error } = await supabase.from("Donatables").select().order("donatable_id", { ascending: true });
+  const { data, error } = await supabase
+    .from("Donatables")
+    .select()
+    .order("donatable_id", { ascending: true });
   res.json(data);
 });
 
 app.get("/ewaste", async (req, res) => {
-  const { data, error } = await supabase.from("Ewaste").select().order("ewaste_id", { ascending: true });
+  const { data, error } = await supabase
+    .from("Ewaste")
+    .select()
+    .order("ewaste_id", { ascending: true });
   res.json(data);
 });
 
