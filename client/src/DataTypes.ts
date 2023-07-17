@@ -33,6 +33,7 @@ export type EwasteItem = {
   description: string;
   is_regulated: boolean;
   remarks: string;
+  images: { link: string , credits: string}[];
 };
 
 
