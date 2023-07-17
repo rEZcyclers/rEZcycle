@@ -41,9 +41,9 @@ interface Props {
   showREMarkers: boolean[];
   handleShowREMarkers: (i: number) => void;
 
-  preferredGELocations: LocationInfo[];
-  preferredRELocations: LocationInfo[];
-  preferredEELocations: LocationInfo[];
+  preferredGELoc: LocationInfo[];
+  preferredRELoc: LocationInfo[];
+  preferredEELoc: LocationInfo[];
   showClosest: boolean;
 }
 
@@ -68,9 +68,9 @@ export default function ({
   handleShowGEMarkers,
   showREMarkers,
   handleShowREMarkers,
-  preferredGELocations,
-  preferredRELocations,
-  preferredEELocations,
+  preferredGELoc,
+  preferredRELoc,
+  preferredEELoc,
   showClosest,
 }: Props) {
   return (
@@ -111,8 +111,8 @@ export default function ({
                             {showClosest && (
                               <p style={{ margin: 0, color: "red" }}>
                                 Closest Location:{" "}
-                                {preferredEELocations[index]["name"]} at{" "}
-                                {preferredEELocations[index]["address"]}
+                                {preferredEELoc[index]["name"]} at{" "}
+                                {preferredEELoc[index]["address"]}
                               </p>
                             )}
                           </ListItemText>
@@ -230,8 +230,8 @@ export default function ({
                             {showClosest && (
                               <p style={{ margin: 0, color: "red" }}>
                                 Closest Location:{" "}
-                                {preferredGELocations[index]["name"]} at{" "}
-                                {preferredGELocations[index]["address"]}
+                                {preferredGELoc[index]["name"]} at{" "}
+                                {preferredGELoc[index]["address"]}
                               </p>
                             )}
                           </ListItemText>
@@ -331,8 +331,8 @@ export default function ({
                                 {showClosest && (
                                   <p style={{ margin: 0, color: "red" }}>
                                     Closest Location:{" "}
-                                    {preferredRELocations[index]["name"]} at{" "}
-                                    {preferredRELocations[index]["address"]}
+                                    {preferredRELoc[index]["name"]} at{" "}
+                                    {preferredRELoc[index]["address"]}
                                   </p>
                                 )}
                               </ListItemText>
