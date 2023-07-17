@@ -34,8 +34,8 @@ interface Props {
   showRDMarkers: boolean[];
   handleShowRDMarkers: (i: number) => void;
 
-  preferredGDLocations: LocationInfo[];
-  preferredRDLocations: LocationInfo[];
+  preferredGDLoc: LocationInfo[];
+  preferredRDLoc: LocationInfo[];
   showClosest: boolean;
 }
 
@@ -52,8 +52,8 @@ export default function DonatablesResults({
   handleShowRDResults,
   showRDMarkers,
   handleShowRDMarkers,
-  preferredGDLocations,
-  preferredRDLocations,
+  preferredGDLoc,
+  preferredRDLoc,
   showClosest,
 }: Props) {
   return (
@@ -117,9 +117,8 @@ export default function DonatablesResults({
                           <span>{item["donatable_type"]}</span>
                           {showClosest && (
                             <p style={{ margin: 0, color: "red" }}>
-                              Closest Location:{" "}
-                              {preferredGDLocations[index]["name"]} at{" "}
-                              {preferredGDLocations[index]["address"]}
+                              Closest Location: {preferredGDLoc[index]["name"]}{" "}
+                              at {preferredGDLoc[index]["address"]}
                             </p>
                           )}
                         </ListItemText>
@@ -211,9 +210,8 @@ export default function DonatablesResults({
                           {item["donatable_type"]}
                           {showClosest && (
                             <p style={{ margin: 0, color: "red" }}>
-                              Closest Location:{" "}
-                              {preferredRDLocations[index]["name"]} at{" "}
-                              {preferredRDLocations[index]["address"]}
+                              Closest Location: {preferredRDLoc[index]["name"]}{" "}
+                              at {preferredRDLoc[index]["address"]}
                             </p>
                           )}
                         </ListItemText>

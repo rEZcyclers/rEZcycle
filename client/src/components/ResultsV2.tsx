@@ -104,22 +104,13 @@ function ResultsV2({
     RepairLocation[][]
   >([]); // List of repairLocations for every selected repairable Ewaste
 
-  ////////// User states for showing and saving preferred locations //////////
-  const [preferredGDLocations, setPreferredGDLocations] = useState<
-    LocationInfo[]
-  >([]);
-  const [preferredRDLocations, setPreferredRDLocations] = useState<
-    LocationInfo[]
-  >([]);
-  const [preferredGELocations, setPreferredGELocations] = useState<
-    LocationInfo[]
-  >([]);
-  const [preferredRELocations, setPreferredRELocations] = useState<
-    LocationInfo[]
-  >([]);
-  const [preferredEELocations, setPreferredEELocations] = useState<
-    LocationInfo[]
-  >([]);
+  ////////// User states for showing and saving preferred locations which are closest locations by default //////////
+  const [closestBBLoc, setClosestBBLoc] = useState<LocationInfo | null>(null);
+  const [preferredGDLoc, setPreferredGDLoc] = useState<LocationInfo[]>([]);
+  const [preferredRDLoc, setPreferredRDLoc] = useState<LocationInfo[]>([]);
+  const [preferredGELoc, setPreferredGELoc] = useState<LocationInfo[]>([]);
+  const [preferredRELoc, setPreferredRELoc] = useState<LocationInfo[]>([]);
+  const [preferredEELoc, setPreferredEELoc] = useState<LocationInfo[]>([]);
   const [showClosest, setShowClosest] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -420,13 +411,16 @@ function ResultsV2({
             goodEwasteResults={goodEwasteResults}
             repairEwasteResults={repairEwasteResults}
             ebinEwasteResults={ebinEwasteResults}
-            setPreferredGDLocations={setPreferredGDLocations}
-            setPreferredRDLocations={setPreferredRDLocations}
-            setPreferredGELocations={setPreferredGELocations}
-            setPreferredRELocations={setPreferredRELocations}
-            setPreferredEELocations={setPreferredEELocations}
+            closestBBLoc={closestBBLoc}
+            setClosestBBLoc={setClosestBBLoc}
+            setPreferredGDLoc={setPreferredGDLoc}
+            setPreferredRDLoc={setPreferredRDLoc}
+            setPreferredGELoc={setPreferredGELoc}
+            setPreferredRELoc={setPreferredRELoc}
+            setPreferredEELoc={setPreferredEELoc}
             showClosest={showClosest}
             setShowClosest={setShowClosest}
+            setShowBluebin={setShowBluebin}
           />
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -436,6 +430,7 @@ function ResultsV2({
               recyclablesResults={recyclablesResults}
               showBluebin={showBluebin}
               handleShowBluebin={handleShowBluebin}
+              closestBBLoc={closestBBLoc}
             />
 
             <DonatablesResults
@@ -451,8 +446,8 @@ function ResultsV2({
               handleShowGDMarkers={handleShowGDMarkers}
               showRDMarkers={showRDMarkers}
               handleShowRDMarkers={handleShowRDMarkers}
-              preferredGDLocations={preferredGDLocations}
-              preferredRDLocations={preferredRDLocations}
+              preferredGDLoc={preferredGDLoc}
+              preferredRDLoc={preferredRDLoc}
               showClosest={showClosest}
             />
             <EwasteResults
@@ -476,9 +471,9 @@ function ResultsV2({
               handleShowGEMarkers={handleShowGEMarkers}
               showREMarkers={showREMarkers}
               handleShowREMarkers={handleShowREMarkers}
-              preferredGELocations={preferredGELocations}
-              preferredRELocations={preferredRELocations}
-              preferredEELocations={preferredEELocations}
+              preferredGELoc={preferredGELoc}
+              preferredRELoc={preferredRELoc}
+              preferredEELoc={preferredEELoc}
               showClosest={showClosest}
             />
           </Stack>

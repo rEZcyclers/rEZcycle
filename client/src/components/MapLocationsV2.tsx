@@ -12,6 +12,8 @@ import {
 } from "../DataTypes";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
+import WhereToVoteOutlinedIcon from "@mui/icons-material/WhereToVoteOutlined";
+
 import {
   Alert,
   FormControlLabel,
@@ -40,14 +42,17 @@ interface Props {
   ebinEwasteResults: EbinLocations[][]; // EE results
 
   // User's preferred location for every item
-  setPreferredGDLocations: (newArray: LocationInfo[]) => void;
-  setPreferredRDLocations: (newArray: LocationInfo[]) => void;
-  setPreferredGELocations: (newArray: LocationInfo[]) => void;
-  setPreferredRELocations: (newArray: LocationInfo[]) => void;
-  setPreferredEELocations: (newArray: LocationInfo[]) => void;
+  closestBBLoc: LocationInfo | null;
+  setClosestBBLoc: (bluebin: LocationInfo) => void;
+  setPreferredGDLoc: (newArray: LocationInfo[]) => void;
+  setPreferredRDLoc: (newArray: LocationInfo[]) => void;
+  setPreferredGELoc: (newArray: LocationInfo[]) => void;
+  setPreferredRELoc: (newArray: LocationInfo[]) => void;
+  setPreferredEELoc: (newArray: LocationInfo[]) => void;
 
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
+  setShowBluebin: (show: boolean) => void;
 }
 
 const recyclableColor = "#00FF00";
@@ -106,13 +111,16 @@ export default function MapLocationsV2({
   goodEwasteResults,
   repairEwasteResults,
   ebinEwasteResults,
-  setPreferredGDLocations,
-  setPreferredRDLocations,
-  setPreferredGELocations,
-  setPreferredRELocations,
-  setPreferredEELocations,
+  closestBBLoc,
+  setClosestBBLoc,
+  setPreferredGDLoc,
+  setPreferredRDLoc,
+  setPreferredGELoc,
+  setPreferredRELoc,
+  setPreferredEELoc,
   showClosest,
   setShowClosest,
+  setShowBluebin,
 }: Props) {
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
@@ -123,8 +131,6 @@ export default function MapLocationsV2({
   const [EELocations, setEELocations] = useState<LocationInfo[][]>([]);
 
   ////////// States the save the closest location for every result item
-  const [closestBluebinLoc, setClosestBluebinLoc] =
-    useState<LocationInfo | null>(null);
   const [closestGDLoc, setClosestGDLoc] = useState<LocationInfo[]>([]);
   const [closestRDLoc, setClosestRDLoc] = useState<LocationInfo[]>([]);
   const [closestGELoc, setClosestGELoc] = useState<LocationInfo[]>([]);
@@ -321,18 +327,18 @@ export default function MapLocationsV2({
       return closestLocation(itemLocations, userLocation);
     });
     // Then save all closest locations in this component's state as defined earlier
-    setClosestBluebinLoc(closestBluebinLoc);
+    setClosestBBLoc(closestBluebinLoc);
     setClosestGDLoc(closestGDLoc);
     setClosestRDLoc(closestRDLoc);
     setClosestGELoc(closestGELoc);
     setClosestRELoc(closestRELoc);
     setClosestEELoc(closestEELoc);
     // Also set the closest locations as user's initial preferred locations
-    setPreferredGDLocations(closestGDLoc);
-    setPreferredRDLocations(closestRDLoc);
-    setPreferredGELocations(closestGELoc);
-    setPreferredRELocations(closestRELoc);
-    setPreferredEELocations(closestEELoc);
+    setPreferredGDLoc(closestGDLoc);
+    setPreferredRDLoc(closestRDLoc);
+    setPreferredGELoc(closestGELoc);
+    setPreferredRELoc(closestRELoc);
+    setPreferredEELoc(closestEELoc);
   }
   ////////// End of getClosestLocations() //////////
 
@@ -349,28 +355,72 @@ export default function MapLocationsV2({
       closestLocList: closestGDLoc,
       allLocations: GDLocations,
       markerColor: donatableColor,
-      markerStyle: null,
+      markerStyle: (
+        <WhereToVoteOutlinedIcon
+          sx={{
+            backgroundColor: donatableColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showRDMarkers, // RD
       closestLocList: closestRDLoc,
       allLocations: RDLocations,
       markerColor: donatableColor,
-      markerStyle: <BuildIcon sx={{ color: donatableColor }} />,
+      markerStyle: (
+        <BuildIcon
+          sx={{
+            backgroundColor: donatableColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showGEMarkers, // GE
       closestLocList: closestGELoc,
       allLocations: GELocations,
       markerColor: ewasteColor,
-      markerStyle: null,
+      markerStyle: (
+        <WhereToVoteOutlinedIcon
+          sx={{
+            backgroundColor: ewasteColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showREMarkers, // RE
       closestLocList: closestRELoc,
       allLocations: RELocations,
       markerColor: ewasteColor,
-      markerStyle: <BuildIcon sx={{ color: ewasteColor }} />,
+      markerStyle: (
+        <BuildIcon
+          sx={{
+            backgroundColor: ewasteColor,
+            color: "white",
+            border: "2px solid white",
+            width: 25,
+            height: 25,
+            borderRadius: 12,
+          }}
+        />
+      ),
     },
     {
       itemMarkersToShow: showEEMarkers, // EE
@@ -379,11 +429,13 @@ export default function MapLocationsV2({
       markerColor: ewasteColor,
       markerStyle: (
         <RecyclingIcon
-          style={{
+          sx={{
             backgroundColor: ewasteColor,
             color: "white",
             border: "1px solid white",
-            borderRadius: 10,
+            width: 25,
+            height: 25,
+            borderRadius: 12,
           }}
         />
       ),
@@ -407,15 +459,25 @@ export default function MapLocationsV2({
           position="top-left"
           getClosestLocations={getClosestLocations}
         />
-        {showBluebin && closestBluebinLoc != null && (
+        {showBluebin && closestBBLoc != null && (
           <Marker
-            latitude={closestBluebinLoc.lat}
-            longitude={closestBluebinLoc.lng}
-            color={recyclableColor}
-            onClick={() => setActiveMarker(closestBluebinLoc)}
-          />
+            latitude={closestBBLoc.lat}
+            longitude={closestBBLoc.lng}
+            onClick={() => setActiveMarker(closestBBLoc)}
+          >
+            <RecyclingIcon
+              sx={{
+                backgroundColor: recyclableColor,
+                color: "white",
+                border: "2px solid white",
+                width: 27,
+                height: 27,
+                borderRadius: 14,
+              }}
+            />
+          </Marker>
         )}
-        {markersToRender.map((params) => (
+        {markersToRender.map((params, i) => (
           <MarkerRenderer
             itemMarkersToShow={params.itemMarkersToShow}
             closestLocList={params.closestLocList}
@@ -424,6 +486,7 @@ export default function MapLocationsV2({
             markerStyle={params.markerStyle}
             showClosest={showClosest}
             setActiveMarker={setActiveMarker}
+            itemType={i}
           />
         ))}
         {activeMarker != null && (
@@ -469,6 +532,7 @@ export default function MapLocationsV2({
                 }
                 setShowAlert(false);
                 setShowClosest(!showClosest);
+                if (!showClosest) setShowBluebin(true);
               }}
               color="secondary"
               size="medium"
