@@ -289,7 +289,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                 >
                   <EditIcon
                     sx={{
-                      width: "80%",
+                      height: "80%",
                     }}
                   ></EditIcon>
                 </IconButton>
@@ -356,7 +356,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                     >
                       <EditIcon
                         sx={{
-                          width: "80%",
+                          height: "80%",
                         }}
                       ></EditIcon>
                     </IconButton>
@@ -421,7 +421,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                     >
                       <EditIcon
                         sx={{
-                          width: "80%",
+                          height: "80%",
                         }}
                       ></EditIcon>
                     </IconButton>
@@ -490,7 +490,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
                     >
                       <EditIcon
                         sx={{
-                          width: "80%",
+                          height: "80%",
                         }}
                       ></EditIcon>
                     </IconButton>
