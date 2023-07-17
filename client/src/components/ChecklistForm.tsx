@@ -16,6 +16,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 interface Props {
@@ -240,14 +241,22 @@ function ChecklistForm({
         {donatablesChecklist.length !== 0 && (
           <Box flex={1}>
             <h2>Donatables</h2>
-            <h4>How is the condition of your donatable?</h4>
+            <h4>What is the condition of your donatable?</h4>
+            <Stack direction={"row"} alignItems={"center"} sx={{ mt: -3 }}>
+              <InfoIcon sx={{ mr: 1 }} color={"info"} />
+              <p>Items in different conditions will be processed differently</p>
+            </Stack>
             <Stack spacing={1}>{donatablesChecklist}</Stack>
           </Box>
         )}
         {ewasteChecklist.length !== 0 && (
           <Box flex={1}>
             <h2>E-waste</h2>
-            <h4>How is the condition of your E-waste?</h4>
+            <h4>What is the condition of your E-waste?</h4>
+            <Stack direction={"row"} alignItems={"center"} sx={{ mt: -3 }}>
+              <InfoIcon sx={{ mr: 1 }} color={"info"} />
+              <p>Items in different conditions will be processed differently</p>
+            </Stack>
             <Stack spacing={1}>{ewasteChecklist}</Stack>
           </Box>
         )}
