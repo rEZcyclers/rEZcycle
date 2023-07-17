@@ -42,7 +42,7 @@ interface Props {
   preferredGELocations: LocationInfo[];
   preferredRELocations: LocationInfo[];
   preferredEELocations: LocationInfo[];
-  onlyShowClosest: boolean;
+  showClosest: boolean;
 }
 
 export default function ({
@@ -69,7 +69,7 @@ export default function ({
   preferredGELocations,
   preferredRELocations,
   preferredEELocations,
-  onlyShowClosest,
+  showClosest,
 }: Props) {
   return (
     <>
@@ -106,7 +106,7 @@ export default function ({
                           </ListItemIcon>
                           <ListItemText>
                             {item["ewaste_type"]}
-                            {onlyShowClosest && (
+                            {showClosest && (
                               <p style={{ margin: 0, color: "red" }}>
                                 Closest Location:{" "}
                                 {preferredEELocations[index]["name"]} at{" "}
@@ -214,7 +214,7 @@ export default function ({
                           </ListItemIcon>
                           <ListItemText>
                             {item["ewaste_type"]}
-                            {onlyShowClosest && (
+                            {showClosest && (
                               <p style={{ margin: 0, color: "red" }}>
                                 Closest Location:{" "}
                                 {preferredGELocations[index]["name"]} at{" "}
@@ -304,7 +304,7 @@ export default function ({
                             </ListItemIcon>
                             <ListItemText>
                               {item["ewaste_type"]}
-                              {onlyShowClosest && (
+                              {showClosest && (
                                 <p style={{ margin: 0, color: "red" }}>
                                   Closest Location:{" "}
                                   {preferredRELocations[index]["name"]} at{" "}
