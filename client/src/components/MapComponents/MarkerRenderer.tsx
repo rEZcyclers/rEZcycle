@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { LocationInfo } from "../../DataTypes";
 import { Marker } from "react-map-gl";
 
