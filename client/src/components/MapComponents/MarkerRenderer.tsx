@@ -28,14 +28,16 @@ export default function MarkerRenderer({
           sel; // Prevent unused declaration
           const closestLoc: LocationInfo = closestLocList[i];
           return (
-            <Marker
-              latitude={closestLoc.lat}
-              longitude={closestLoc.lng}
-              color={markerColor}
-              onClick={() => setActiveMarker(closestLoc)}
-            >
-              {markerStyle != null && markerStyle}
-            </Marker>
+            closestLoc != null && (
+              <Marker
+                latitude={closestLoc.lat}
+                longitude={closestLoc.lng}
+                color={markerColor}
+                onClick={() => setActiveMarker(closestLoc)}
+              >
+                {markerStyle != null && markerStyle}
+              </Marker>
+            )
           );
         })}
       {itemMarkersToShow

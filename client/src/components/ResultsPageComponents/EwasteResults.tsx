@@ -3,6 +3,7 @@ import {
   Button,
   Collapse,
   List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -16,6 +17,7 @@ import {
   RepairLocation,
 } from "../../DataTypes";
 import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 interface Props {
   allEwaste: EwasteItem[];
@@ -120,31 +122,22 @@ export default function ({
                           timeout="auto"
                           unmountOnExit
                         >
-                          {ebinEwasteResults[index].length === 0 ? (
-                            <p>
-                              For {item["ewaste_type"]}, refer to collection
-                              drive info below
-                            </p>
-                          ) : (
-                            <List component="div" disablePadding>
-                              {ebinEwasteResults[index].map(
-                                (binInfo: EbinLocations) => {
-                                  const bin = binInfo["ebin"];
-                                  // const locations = entry["donateLocations"];
-                                  return (
-                                    <ListItemButton sx={{ padding: 0, pl: 4 }}>
-                                      <ListItemIcon>
-                                        <StarBorder />
-                                      </ListItemIcon>
-                                      <ListItemText
-                                        primary={bin["ebin_name"]}
-                                      />
-                                    </ListItemButton>
-                                  );
-                                }
-                              )}
-                            </List>
-                          )}
+                          <List component="div" disablePadding>
+                            {ebinEwasteResults[index].map(
+                              (binInfo: EbinLocations) => {
+                                const bin = binInfo["ebin"];
+                                // const locations = entry["donateLocations"];
+                                return (
+                                  <ListItemButton sx={{ padding: 0, pl: 4 }}>
+                                    <ListItemIcon>
+                                      <StarBorder />
+                                    </ListItemIcon>
+                                    <ListItemText primary={bin["ebin_name"]} />
+                                  </ListItemButton>
+                                );
+                              }
+                            )}
+                          </List>
                         </Collapse>
                       </List>
                       <Button
@@ -192,7 +185,27 @@ export default function ({
                   instead:
                 </h4>
                 {goodEwaste.map((item: EwasteItem, index: number) => {
-                  return (
+                  return goodEwasteResults[index].length === 0 ? (
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <List
+                        sx={{
+                          margin: 0,
+                          maxWidth: 500,
+                          bgcolor: "background.paper",
+                        }}
+                      >
+                        <ListItem>
+                          <ListItemIcon>
+                            <ErrorOutlineIcon />
+                          </ListItemIcon>
+                          <ListItemText>
+                            Oops, donate locations found for{" "}
+                            {item["ewaste_type"]}
+                          </ListItemText>
+                        </ListItem>
+                      </List>
+                    </div>
+                  ) : (
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <List
                         sx={{
@@ -228,34 +241,24 @@ export default function ({
                           timeout="auto"
                           unmountOnExit
                         >
-                          {goodEwasteResults[index].length === 0 ? (
-                            <p>
-                              Oops, no locations found for {item["ewaste_type"]}
-                            </p>
-                          ) : (
-                            <>
-                              <List component="div" disablePadding>
-                                {goodEwasteResults[index].map(
-                                  (entry: DonateOrganisationLocations) => {
-                                    const org = entry["donateOrg"];
-                                    // const locations = entry["donateLocations"];
-                                    return (
-                                      <ListItemButton
-                                        sx={{ padding: 0, pl: 4 }}
-                                      >
-                                        <ListItemIcon>
-                                          <StarBorder />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                          primary={org["organisation_name"]}
-                                        />
-                                      </ListItemButton>
-                                    );
-                                  }
-                                )}
-                              </List>
-                            </>
-                          )}
+                          <List component="div" disablePadding>
+                            {goodEwasteResults[index].map(
+                              (entry: DonateOrganisationLocations) => {
+                                const org = entry["donateOrg"];
+                                // const locations = entry["donateLocations"];
+                                return (
+                                  <ListItemButton sx={{ padding: 0, pl: 4 }}>
+                                    <ListItemIcon>
+                                      <StarBorder />
+                                    </ListItemIcon>
+                                    <ListItemText
+                                      primary={org["organisation_name"]}
+                                    />
+                                  </ListItemButton>
+                                );
+                              }
+                            )}
+                          </List>
                         </Collapse>
                       </List>
                       <Button
@@ -283,47 +286,62 @@ export default function ({
                 {repairEwaste.map((item: EwasteItem, index: number) => {
                   return (
                     <>
-                      <div style={{ display: "flex", flexDirection: "row" }}>
-                        <List
-                          sx={{
-                            margin: 0,
-                            width: "70%",
-                            maxWidth: 360,
-                            bgcolor: "background.paper",
-                          }}
-                        >
-                          <ListItemButton
-                            onClick={() => handleShowREResults(index)}
+                      {repairEwasteResults[index].length === 0 ? (
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <List
+                            sx={{
+                              margin: 0,
+                              maxWidth: 500,
+                              bgcolor: "background.paper",
+                            }}
                           >
-                            <ListItemIcon>
-                              {showREResults[index] ? (
-                                <ExpandLess />
-                              ) : (
-                                <ExpandMore />
-                              )}
-                            </ListItemIcon>
-                            <ListItemText>
-                              {item["ewaste_type"]}
-                              {showClosest && (
-                                <p style={{ margin: 0, color: "red" }}>
-                                  Closest Location:{" "}
-                                  {preferredRELocations[index]["name"]} at{" "}
-                                  {preferredRELocations[index]["address"]}
-                                </p>
-                              )}
-                            </ListItemText>
-                          </ListItemButton>
-                          <Collapse
-                            in={showREResults[index]}
-                            timeout="auto"
-                            unmountOnExit
-                          >
-                            {repairEwasteResults[index].length === 0 ? (
-                              <p>
-                                Oops, no locations found for{" "}
+                            <ListItem>
+                              <ListItemIcon>
+                                <ErrorOutlineIcon />
+                              </ListItemIcon>
+                              <ListItemText>
+                                Oops, no repair locations found for{" "}
                                 {item["ewaste_type"]}
-                              </p>
-                            ) : (
+                              </ListItemText>
+                            </ListItem>
+                          </List>
+                        </div>
+                      ) : (
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <List
+                            sx={{
+                              margin: 0,
+                              width: "70%",
+                              maxWidth: 360,
+                              bgcolor: "background.paper",
+                            }}
+                          >
+                            <ListItemButton
+                              onClick={() => handleShowREResults(index)}
+                            >
+                              <ListItemIcon>
+                                {showREResults[index] ? (
+                                  <ExpandLess />
+                                ) : (
+                                  <ExpandMore />
+                                )}
+                              </ListItemIcon>
+                              <ListItemText>
+                                {item["ewaste_type"]}
+                                {showClosest && (
+                                  <p style={{ margin: 0, color: "red" }}>
+                                    Closest Location:{" "}
+                                    {preferredRELocations[index]["name"]} at{" "}
+                                    {preferredRELocations[index]["address"]}
+                                  </p>
+                                )}
+                              </ListItemText>
+                            </ListItemButton>
+                            <Collapse
+                              in={showREResults[index]}
+                              timeout="auto"
+                              unmountOnExit
+                            >
                               <ul>
                                 {repairEwasteResults[index].map(
                                   (location: RepairLocation) => {
@@ -338,22 +356,22 @@ export default function ({
                                   }
                                 )}
                               </ul>
-                            )}
-                          </Collapse>
-                        </List>
-                        <Button
-                          variant={
-                            showREMarkers[index] ? "contained" : "outlined"
-                          }
-                          color="primary"
-                          sx={{ mt: 1, height: 50, fontSize: "small" }}
-                          onClick={() => {
-                            handleShowREMarkers(index);
-                          }}
-                        >
-                          Show On Map
-                        </Button>
-                      </div>
+                            </Collapse>
+                          </List>
+                          <Button
+                            variant={
+                              showREMarkers[index] ? "contained" : "outlined"
+                            }
+                            color="primary"
+                            sx={{ mt: 1, height: 50, fontSize: "small" }}
+                            onClick={() => {
+                              handleShowREMarkers(index);
+                            }}
+                          >
+                            Show On Map
+                          </Button>
+                        </div>
+                      )}
                     </>
                   );
                 })}
