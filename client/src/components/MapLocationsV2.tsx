@@ -293,7 +293,7 @@ export default function MapLocationsV2({
    * @returns {void}
    */
   function getClosestLocations(userLocation: number[]) {
-    console.log("getClosesetLocations() called!");
+    console.log("getClosestLocations() called!");
     setUserLocation(userLocation); // This line will pass too quickly such that
     // the userLocation state hasn't been set by the time closestLocation() is called,
     // hence just pass userLocation in as another param into closestLocation() since
