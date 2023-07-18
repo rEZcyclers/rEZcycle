@@ -130,8 +130,7 @@ export default function MapLocationsV2({
   isRecyclableSelected,
 }: Props) {
   ////////// Data needed to display result items on the map
-  const { recyclablesData, donatablesData, ewasteData } =
-    useContext(backendContext);
+  const { donatablesData, ewasteData } = useContext(backendContext);
 
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
