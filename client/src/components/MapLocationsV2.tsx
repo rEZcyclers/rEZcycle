@@ -54,9 +54,8 @@ interface Props {
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
   setShowBluebin: (show: boolean) => void;
+
   isRecyclableSelected: boolean;
-  userLocation: number[] | null;
-  setUserLocation: (location: number[] | null) => void;
 }
 
 const recyclableColor = "#00FF00";
@@ -115,8 +114,6 @@ export default function MapLocationsV2({
   goodEwasteResults,
   repairEwasteResults,
   ebinEwasteResults,
-  userLocation,
-  setUserLocation,
   closestBBLoc,
   setClosestBBLoc,
   setPreferredGDLoc,
@@ -464,6 +461,8 @@ export default function MapLocationsV2({
       ),
     },
   ];
+
+  const [userLocation, setUserLocation] = useState<number[] | null>(null);
 
   return (
     <div style={{ position: "relative", width: "95%", height: "60%" }}>
