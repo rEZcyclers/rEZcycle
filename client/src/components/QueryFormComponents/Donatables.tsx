@@ -171,8 +171,9 @@ function Donatables({
                     </IconButton>
                   </Box>
                   <Box flex={10} sx={{ marginTop: 1, overflow: "auto" }}>
-                    {activeModal != -1 &&
-                      donatablesData[activeModal]["description"]}
+                    {activeModal != -1 && (
+                      <p>{donatablesData[activeModal]["description"]}</p>
+                    )}
                     {activeModal != -1 &&
                       donatablesData[activeModal]["images"].map(
                         (imageInfo: any) => {
