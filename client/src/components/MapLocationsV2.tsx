@@ -54,6 +54,7 @@ interface Props {
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
   setShowBluebin: (show: boolean) => void;
+
   isRecyclableSelected: boolean;
 }
 
@@ -462,7 +463,6 @@ export default function MapLocationsV2({
   ];
 
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
-
 
   return (
     <div style={{ position: "relative", width: "95%", height: "60%" }}>
