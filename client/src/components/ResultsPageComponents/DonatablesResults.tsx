@@ -35,7 +35,7 @@ interface Props {
   handleShowRDMarkers: (i: number) => void;
 
   preferredGDLoc: LocationInfo[];
-  preferredRDLoc: LocationInfo[];
+  preferredRDLoc: (LocationInfo | null)[];
   showClosest: boolean;
 }
 
@@ -210,8 +210,8 @@ export default function DonatablesResults({
                           {item["donatable_type"]}
                           {showClosest && (
                             <p style={{ margin: 0, color: "red" }}>
-                              Closest Location: {preferredRDLoc[index]["name"]}{" "}
-                              at {preferredRDLoc[index]["address"]}
+                              Closest Location: {preferredRDLoc[index]?.name} at{" "}
+                              {preferredRDLoc[index]?.address}
                             </p>
                           )}
                         </ListItemText>

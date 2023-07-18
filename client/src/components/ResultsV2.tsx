@@ -108,9 +108,13 @@ function ResultsV2({
   ////////// User states for showing and saving preferred locations which are closest locations by default //////////
   const [closestBBLoc, setClosestBBLoc] = useState<LocationInfo | null>(null);
   const [preferredGDLoc, setPreferredGDLoc] = useState<LocationInfo[]>([]);
-  const [preferredRDLoc, setPreferredRDLoc] = useState<LocationInfo[]>([]);
+  const [preferredRDLoc, setPreferredRDLoc] = useState<(LocationInfo | null)[]>(
+    []
+  );
   const [preferredGELoc, setPreferredGELoc] = useState<LocationInfo[]>([]);
-  const [preferredRELoc, setPreferredRELoc] = useState<LocationInfo[]>([]);
+  const [preferredRELoc, setPreferredRELoc] = useState<(LocationInfo | null)[]>(
+    []
+  );
   const [preferredEELoc, setPreferredEELoc] = useState<LocationInfo[]>([]);
   const [showClosest, setShowClosest] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -333,6 +337,7 @@ function ResultsV2({
         return repairLocData[entry["repair_id"] - 1];
       });
     });
+    // .filter((result: RepairLocation[]) => result.length > 0);
     setRepairEwasteResults(repairEwasteResults);
 
     const ebinEwasteResults = ebinEwaste.map((item: EwasteItem) => {
@@ -404,6 +409,10 @@ function ResultsV2({
             <p>Search your location to see recycling facilities near you</p>
           </Stack>
           <MapLocationsV2
+            goodDonatables={goodDonatables}
+            repairDonatables={repairDonatables}
+            goodEwaste={goodEwaste}
+            repairEwaste={repairEwaste}
             showBluebin={showBluebin}
             showGDMarkers={showGDMarkers}
             showRDMarkers={showRDMarkers}
