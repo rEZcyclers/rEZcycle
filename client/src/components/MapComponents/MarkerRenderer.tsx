@@ -8,7 +8,7 @@ import { Typography } from "@mui/material";
 
 interface MarkerParams {
   itemMarkersToShow: boolean[];
-  closestLocList: LocationInfo[];
+  closestLocList: (LocationInfo | null)[];
   allLocations: LocationInfo[][];
   markerColor: string;
   markerStyle: ReactElement | null;
@@ -32,7 +32,7 @@ export default function MarkerRenderer({
       {showClosest &&
         itemMarkersToShow.map((sel, i) => {
           sel; // Prevent unused declaration
-          const closestLoc: LocationInfo = closestLocList[i];
+          const closestLoc: LocationInfo | null = closestLocList[i];
           return (
             closestLoc != null && (
               <Marker

@@ -42,7 +42,7 @@ interface Props {
   handleShowREMarkers: (i: number) => void;
 
   preferredGELoc: LocationInfo[];
-  preferredRELoc: LocationInfo[];
+  preferredRELoc: (LocationInfo | null)[];
   preferredEELoc: LocationInfo[];
   showClosest: boolean;
 }
@@ -331,8 +331,8 @@ export default function ({
                                 {showClosest && (
                                   <p style={{ margin: 0, color: "red" }}>
                                     Closest Location:{" "}
-                                    {preferredRELoc[index]["name"]} at{" "}
-                                    {preferredRELoc[index]["address"]}
+                                    {preferredRELoc[index]?.name} at{" "}
+                                    {preferredRELoc[index]?.address}
                                   </p>
                                 )}
                               </ListItemText>

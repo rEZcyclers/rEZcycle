@@ -9,6 +9,8 @@ import {
   Ebin,
   Bluebin,
   LocationInfo,
+  DonatableItem,
+  EwasteItem,
 } from "../DataTypes";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
@@ -26,6 +28,12 @@ import MarkerRenderer from "./MapComponents/MarkerRenderer";
 import { backendContext } from "../App";
 
 interface Props {
+  // Selected Items
+  goodDonatables: DonatableItem[];
+  repairDonatables: DonatableItem[];
+  goodEwaste: EwasteItem[];
+  repairEwaste: EwasteItem[];
+
   // 'Show on Map' button states for every selected item
   showBluebin: boolean;
   showGDMarkers: boolean[]; // Good Donatables (GD)
@@ -46,9 +54,9 @@ interface Props {
   closestBBLoc: LocationInfo | null;
   setClosestBBLoc: (bluebin: LocationInfo) => void;
   setPreferredGDLoc: (newArray: LocationInfo[]) => void;
-  setPreferredRDLoc: (newArray: LocationInfo[]) => void;
+  setPreferredRDLoc: (newArray: (LocationInfo|null)[]) => void;
   setPreferredGELoc: (newArray: LocationInfo[]) => void;
-  setPreferredRELoc: (newArray: LocationInfo[]) => void;
+  setPreferredRELoc: (newArray: (LocationInfo | null)[]) => void;
   setPreferredEELoc: (newArray: LocationInfo[]) => void;
 
   showClosest: boolean;
@@ -102,6 +110,10 @@ function calculateDistance(
 }
 
 export default function MapLocationsV2({
+  goodDonatables,
+  repairDonatables,
+  goodEwaste,
+  repairEwaste,
   showBluebin,
   showGDMarkers,
   showRDMarkers,
@@ -127,7 +139,7 @@ export default function MapLocationsV2({
   isRecyclableSelected,
 }: Props) {
   ////////// Data needed to display result items on the map
-  const { donatablesData, ewasteData } = useContext(backendContext);
+  const { ewasteData } = useContext(backendContext);
 
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
@@ -139,9 +151,9 @@ export default function MapLocationsV2({
 
   ////////// States the save the closest location for every result item
   const [closestGDLoc, setClosestGDLoc] = useState<LocationInfo[]>([]);
-  const [closestRDLoc, setClosestRDLoc] = useState<LocationInfo[]>([]);
+  const [closestRDLoc, setClosestRDLoc] = useState<(LocationInfo|null)[]>([]);
   const [closestGELoc, setClosestGELoc] = useState<LocationInfo[]>([]);
-  const [closestRELoc, setClosestRELoc] = useState<LocationInfo[]>([]);
+  const [closestRELoc, setClosestRELoc] = useState<(LocationInfo | null)[]>([]);
   const [closestEELoc, setClosestEELoc] = useState<LocationInfo[]>([]);
 
   ////////// User States for marker popup, user location & error alert
@@ -187,8 +199,8 @@ export default function MapLocationsV2({
                   const locationInfo: LocationInfo = {
                     locationType: "donate",
                     item: isEwasteItem
-                      ? ewasteData[i]["ewaste_type"]
-                      : donatablesData[i]["donatable_type"],
+                      ? goodEwaste[i]["ewaste_type"]
+                      : goodDonatables[i]["donatable_type"],
                     name: location["location_name"],
                     address: location["address"],
                     contact: location["contact"],
@@ -221,8 +233,8 @@ export default function MapLocationsV2({
             const locationInfo: LocationInfo = {
               locationType: "repair",
               item: isEwasteItem
-                ? ewasteData[i]["ewaste_type"]
-                : donatablesData[i]["donatable_type"],
+                ? repairEwaste[i]["ewaste_type"]
+                : repairDonatables[i]["donatable_type"],
               name: location["center_name"],
               address: location["stall_number"],
               contact: "No contact available",
@@ -232,6 +244,7 @@ export default function MapLocationsV2({
             return locationInfo;
           });
         })
+        // .filter((result: LocationInfo[]) => result.length != 0)
       );
     }
     // Get LocationInfo[][] for good & repairable items
@@ -328,21 +341,191 @@ export default function MapLocationsV2({
     }
     // Calculate all closest locations for every item using the helper function
     const closestBluebinLoc = closestLocation(BBLocations, userLocation);
-    const closestGDLoc = GDLocations.map((itemLocations: LocationInfo[]) => {
-      return closestLocation(itemLocations, userLocation);
-    });
-    const closestRDLoc = RDLocations.map((itemLocations: LocationInfo[]) => {
-      return closestLocation(itemLocations, userLocation);
-    });
-    const closestGELoc = GELocations.map((itemLocations: LocationInfo[]) => {
-      return closestLocation(itemLocations, userLocation);
+    const closestLocationsList: LocationInfo[] = []; // Array to store all closest locations
+    const multipurposeLocationsList: LocationInfo[] = []; // Array to store multipurpose locations
+
+    // USE NULL TO INDICATE NO LOCATIONS AVAILABLE AT ALL HENCE NO CLOSEST LOCATION
+
+    let closestGDLoc = GDLocations.map((itemLocations: LocationInfo[]) => {
+      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
+      closestLocationsList.push(loc);
+      return loc;
     });
 
-    const closestRELoc = RELocations.map((itemLocations: LocationInfo[]) => {
-      return closestLocation(itemLocations, userLocation);
+    let closestRDLoc = RDLocations.map((itemLocations: LocationInfo[]) => {
+      if (itemLocations.length === 0) {
+        return null;
+      }
+      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
+      closestLocationsList.push(loc);
+      return loc;
     });
-    const closestEELoc = EELocations.map((itemLocations: LocationInfo[]) => {
-      return closestLocation(itemLocations, userLocation);
+
+    let closestGELoc = GELocations.map((itemLocations: LocationInfo[]) => {
+      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
+      closestLocationsList.push(loc);
+      return loc;
+    });
+    let closestRELoc = RELocations.map((itemLocations: LocationInfo[]) => {
+      if (itemLocations.length === 0) {
+        return null;
+      }
+      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
+      closestLocationsList.push(loc);
+      return loc;
+    });
+    let closestEELoc = EELocations.map((itemLocations: LocationInfo[]) => {
+      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
+      closestLocationsList.push(loc);
+      return loc;
+    });
+
+    // For each loc in closestLocationsList, check if there are other locations with the same coordinates.
+    // If so, combine their item strings into a single string
+    const len = closestLocationsList.length;
+    for (let i = 0; i < len; i++) {
+      const loc: LocationInfo = closestLocationsList[i];
+      if (loc === null) continue;
+      // Don't process the location if another location with the same coordinates has already been processed
+      if (
+        multipurposeLocationsList.filter(
+          (multipurposeLoc: LocationInfo) =>
+            multipurposeLoc["lat"] === loc["lat"] &&
+            multipurposeLoc["lng"] === loc["lng"]
+        ).length === 1
+      ) {
+        continue;
+      }
+      let newItemString = loc["item"];
+      let itemStringChanged = false;
+      for (let j = 0; j < len; j++) {
+        const otherLoc: LocationInfo = closestLocationsList[j];
+        if (otherLoc === null) continue;
+        if (
+          i != j &&
+          loc["lat"] === otherLoc["lat"] &&
+          loc["lng"] === otherLoc["lng"]
+        ) {
+          newItemString += ", " + otherLoc["item"];
+          itemStringChanged = true;
+        }
+      }
+      if (itemStringChanged) {
+        const newLoc: LocationInfo = {
+          locationType: "multipurpose",
+          item: newItemString,
+          name: loc["name"],
+          address: loc["address"],
+          contact: loc["contact"],
+          lat: loc["lat"],
+          lng: loc["lng"],
+        };
+        multipurposeLocationsList.push(newLoc);
+      }
+    }
+
+    // Replace closest locations with multipurpose locations if they have the same coordinates
+    closestGDLoc = closestGDLoc.map((loc: LocationInfo) => {
+      for (const multipurposeLoc of multipurposeLocationsList) {
+        if (
+          loc["lat"] === multipurposeLoc["lat"] &&
+          loc["lng"] === multipurposeLoc["lng"]
+        ) {
+          const newLoc: LocationInfo = {
+            locationType: loc["locationType"],
+            item: multipurposeLoc["item"],
+            name: loc["name"],
+            address: loc["address"],
+            contact: loc["contact"],
+            lat: loc["lat"],
+            lng: loc["lng"],
+          };
+          return newLoc;
+        }
+      }
+      return loc;
+    });
+    closestRDLoc = closestRDLoc.map((loc: LocationInfo | null) => {
+      if (loc === null) return null;
+      for (const multipurposeLoc of multipurposeLocationsList) {
+        if (
+          loc["lat"] === multipurposeLoc["lat"] &&
+          loc["lng"] === multipurposeLoc["lng"]
+        ) {
+          const newLoc: LocationInfo = {
+            locationType: loc["locationType"],
+            item: multipurposeLoc["item"],
+            name: loc["name"],
+            address: loc["address"],
+            contact: loc["contact"],
+            lat: loc["lat"],
+            lng: loc["lng"],
+          };
+          return newLoc;
+        }
+      }
+      return loc;
+    });
+    closestGELoc = closestGELoc.map((loc: LocationInfo) => {
+      for (const multipurposeLoc of multipurposeLocationsList) {
+        if (
+          loc["lat"] === multipurposeLoc["lat"] &&
+          loc["lng"] === multipurposeLoc["lng"]
+        ) {
+          const newLoc: LocationInfo = {
+            locationType: loc["locationType"],
+            item: multipurposeLoc["item"],
+            name: loc["name"],
+            address: loc["address"],
+            contact: loc["contact"],
+            lat: loc["lat"],
+            lng: loc["lng"],
+          };
+          return newLoc;
+        }
+      }
+      return loc;
+    });
+    closestRELoc = closestRELoc.map((loc: LocationInfo | null) => {
+      if (loc === null) return null;
+      for (const multipurposeLoc of multipurposeLocationsList) {
+        if (
+          loc["lat"] === multipurposeLoc["lat"] &&
+          loc["lng"] === multipurposeLoc["lng"]
+        ) {
+          const newLoc: LocationInfo = {
+            locationType: loc["locationType"],
+            item: multipurposeLoc["item"],
+            name: loc["name"],
+            address: loc["address"],
+            contact: loc["contact"],
+            lat: loc["lat"],
+            lng: loc["lng"],
+          };
+          return newLoc;
+        }
+      }
+      return loc;
+    });
+    closestEELoc = closestEELoc.map((loc: LocationInfo) => {
+      for (const multipurposeLoc of multipurposeLocationsList) {
+        if (
+          loc["lat"] === multipurposeLoc["lat"] &&
+          loc["lng"] === multipurposeLoc["lng"]
+        ) {
+          const newLoc: LocationInfo = {
+            locationType: loc["locationType"],
+            item: multipurposeLoc["item"],
+            name: loc["name"],
+            address: loc["address"],
+            contact: loc["contact"],
+            lat: loc["lat"],
+            lng: loc["lng"],
+          };
+          return newLoc;
+        }
+      }
+      return loc;
     });
     // Then save all closest locations in this component's state as defined earlier
     setClosestBBLoc(closestBluebinLoc);
