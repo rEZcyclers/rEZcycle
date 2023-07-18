@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl";
 import {
   DonateLocation,
@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import GeocoderControl from "./MapComponents/GeocoderControl";
 import MarkerRenderer from "./MapComponents/MarkerRenderer";
+import { backendContext } from "../App";
 
 interface Props {
   // 'Show on Map' button states for every selected item
@@ -53,7 +54,7 @@ interface Props {
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
   setShowBluebin: (show: boolean) => void;
-
+  isRecyclableSelected: boolean;
   userLocation: number[] | null;
   setUserLocation: (location: number[] | null) => void;
 }
@@ -126,7 +127,12 @@ export default function MapLocationsV2({
   showClosest,
   setShowClosest,
   setShowBluebin,
+  isRecyclableSelected,
 }: Props) {
+  ////////// Data needed to display result items on the map
+  const { recyclablesData, donatablesData, ewasteData } =
+    useContext(backendContext);
+
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
   const [GDLocations, setGDLocations] = useState<LocationInfo[][]>([]);
@@ -165,15 +171,17 @@ export default function MapLocationsV2({
      * Helper function to get the location info specific to good condition items.
      * @param goodResults - Results for good condition items
      * @param setDonateLocations - Sets the donate location info for these items
+     *  @param isEwasteItem - Check whether the item is an Ewaste or Donatable
      */
     function getDonateLocations(
       goodResults: DonateOrganisationLocations[][],
-      setDonateLocations: (newArray: LocationInfo[][]) => void
+      setDonateLocations: (newArray: LocationInfo[][]) => void,
+      isEwasteItem: boolean
     ) {
       setDonateLocations(
         goodResults.map(
           // For each good condition item's result, map it to a LocationInfo[]
-          (itemResult: DonateOrganisationLocations[]) => {
+          (itemResult: DonateOrganisationLocations[], i: number) => {
             // For each result, flatmap all organisations into a single LocationInfo[]
             return itemResult.flatMap(
               (organisation: DonateOrganisationLocations) => {
@@ -182,6 +190,9 @@ export default function MapLocationsV2({
                 return locations.map((location: DonateLocation) => {
                   const locationInfo: LocationInfo = {
                     locationType: "donate",
+                    item: isEwasteItem
+                      ? ewasteData[i]["ewaste_type"]
+                      : donatablesData[i]["donatable_type"],
                     name: location["location_name"],
                     address: location["address"],
                     contact: location["contact"],
@@ -200,17 +211,22 @@ export default function MapLocationsV2({
      * Helper function to get the location info specific to repairable items.
      * @param repairResults - Results for repairable items
      * @param setRepairLocations - Sets the repair location info for these items
+     * @param isEwasteItem - Check whether the item is an Ewaste or Donatable
      */
     function getRepairLocations(
       repairResults: RepairLocation[][],
-      setRepairLocations: (newArray: LocationInfo[][]) => void
+      setRepairLocations: (newArray: LocationInfo[][]) => void,
+      isEwasteItem: boolean
     ) {
       setRepairLocations(
-        repairResults.map((item: RepairLocation[]) => {
+        repairResults.map((item: RepairLocation[], i: number) => {
           // For each repairable item's result, map it to a LocationInfo[]
           return item.map((location: RepairLocation) => {
             const locationInfo: LocationInfo = {
               locationType: "repair",
+              item: isEwasteItem
+                ? ewasteData[i]["ewaste_type"]
+                : donatablesData[i]["donatable_type"],
               name: location["center_name"],
               address: location["stall_number"],
               contact: "No contact available",
@@ -223,10 +239,10 @@ export default function MapLocationsV2({
       );
     }
     // Get LocationInfo[][] for good & repairable items
-    getDonateLocations(goodDonatablesResults, setGDLocations);
-    getDonateLocations(goodEwasteResults, setGELocations);
-    getRepairLocations(repairDonatablesResults, setRDLocations);
-    getRepairLocations(repairEwasteResults, setRELocations);
+    getDonateLocations(goodDonatablesResults, setGDLocations, false);
+    getDonateLocations(goodEwasteResults, setGELocations, true);
+    getRepairLocations(repairDonatablesResults, setRDLocations, false);
+    getRepairLocations(repairEwasteResults, setRELocations, true);
 
     // Special case: Bluebins
     setBBLocations(
@@ -235,6 +251,7 @@ export default function MapLocationsV2({
         const locationInfo: LocationInfo = {
           locationType: "bluebin",
           name: "bluebin",
+          item: "checked recyclable items",
           address: bluebin["address"],
           contact: "No contact available",
           lat: bluebin["latitude"],
@@ -248,7 +265,7 @@ export default function MapLocationsV2({
     setEELocations(
       ebinEwasteResults.map(
         // For each ebin-eligible Ewaste item's result, map it to a LocationInfo[]
-        (item: EbinLocations[]) => {
+        (item: EbinLocations[], i: number) => {
           // For each result, flatmap all ebins into a single LocationInfo[]
           return item.flatMap((ebinInfo: EbinLocations) => {
             const ebin: Ebin = ebinInfo["ebin"];
@@ -256,6 +273,7 @@ export default function MapLocationsV2({
             return locations.map((location: EbinLocation) => {
               const locationInfo: LocationInfo = {
                 locationType: "ebin",
+                item: ewasteData[i]["ewaste_type"],
                 name: ebin["ebin_name"],
                 address: location["address"],
                 contact: "No contact available",
@@ -343,6 +361,8 @@ export default function MapLocationsV2({
     setPreferredGELoc(closestGELoc);
     setPreferredRELoc(closestRELoc);
     setPreferredEELoc(closestEELoc);
+    // Lastly, show all closest locations to user by default once they are available
+    setShowClosest(true);
   }
   ////////// End of getClosestLocations() //////////
 
@@ -463,7 +483,7 @@ export default function MapLocationsV2({
           position="top-left"
           getClosestLocations={getClosestLocations}
         />
-        {showBluebin && closestBBLoc != null && (
+        {isRecyclableSelected && showBluebin && closestBBLoc != null && (
           <Marker
             latitude={closestBBLoc.lat}
             longitude={closestBBLoc.lng}
@@ -504,9 +524,10 @@ export default function MapLocationsV2({
             style={{ color: "green" }}
           >
             <div>
-              <h3>{activeMarker?.name}</h3>
-              <p>{activeMarker?.address}</p>
-              <p>{activeMarker?.contact}</p>
+              <h3>{activeMarker.name}</h3>
+              <p>For {activeMarker.item}</p>
+              <p>{activeMarker.address}</p>
+              <p>{activeMarker.contact}</p>
             </div>
           </Popup>
         )}
