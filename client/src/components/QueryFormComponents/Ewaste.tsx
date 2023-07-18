@@ -167,7 +167,9 @@ function Ewaste({
                   </IconButton>
                 </Box>
                 <Box flex={10} sx={{ marginTop: 1, overflow: "auto" }}>
-                  {activeModal != -1 && ewasteData[activeModal]["description"]}
+                  {activeModal != -1 && (
+                    <p>{ewasteData[activeModal]["description"]}</p>
+                  )}
                   {activeModal != -1 &&
                     ewasteData[activeModal]["images"].map((imageInfo: any) => {
                       return (
