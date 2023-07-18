@@ -4,6 +4,7 @@ import { Marker } from "react-map-gl";
 import BuildIcon from "@mui/icons-material/Build";
 import RecyclingIcon from "@mui/icons-material/Recycling";
 import WhereToVoteOutlinedIcon from "@mui/icons-material/WhereToVoteOutlined";
+import { Typography } from "@mui/material";
 
 interface MarkerParams {
   itemMarkersToShow: boolean[];
@@ -42,60 +43,145 @@ export default function MarkerRenderer({
               >
                 {markerStyle != null &&
                   (itemType === 0 ? (
-                    <WhereToVoteOutlinedIcon
-                      sx={{
-                        backgroundColor: markerColor,
-                        color: "white",
-                        border: "3px solid green",
-                        width: 27,
-                        height: 27,
-                        borderRadius: 14,
-                      }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <WhereToVoteOutlinedIcon
+                        sx={{
+                          backgroundColor: markerColor,
+                          color: "white",
+                          border: "3px solid green",
+                          width: 27,
+                          height: 27,
+                          borderRadius: 14,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: "black",
+                          position: "absolute",
+                          left: "50%", // Center the text horizontally
+                          transform: "translateX(-50%)", // Center the text horizontally
+                          backgroundColor: "white",
+                          borderRadius: 3,
+                          padding: 1,
+                          fontSize: 11,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {closestLoc["item"]}
+                      </Typography>
+                    </div>
                   ) : itemType === 1 ? (
-                    <BuildIcon
-                      sx={{
-                        backgroundColor: markerColor,
-                        color: "white",
-                        border: "3px solid green",
-                        width: 27,
-                        height: 27,
-                        borderRadius: 14,
-                      }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <BuildIcon
+                        sx={{
+                          backgroundColor: markerColor,
+                          color: "white",
+                          border: "3px solid green",
+                          width: 27,
+                          height: 27,
+                          borderRadius: 14,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: "black",
+                          position: "absolute",
+                          left: "50%", // Center the text horizontally
+                          transform: "translateX(-50%)", // Center the text horizontally
+                          backgroundColor: "white",
+                          borderRadius: 3,
+                          padding: 1,
+                          fontSize: 11,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {closestLoc["item"]}
+                      </Typography>
+                    </div>
                   ) : itemType === 2 ? (
-                    <WhereToVoteOutlinedIcon
-                      sx={{
-                        backgroundColor: markerColor,
-                        color: "white",
-                        border: "3px solid green",
-                        width: 27,
-                        height: 27,
-                        borderRadius: 14,
-                      }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <WhereToVoteOutlinedIcon
+                        sx={{
+                          backgroundColor: markerColor,
+                          color: "white",
+                          border: "3px solid green",
+                          width: 27,
+                          height: 27,
+                          borderRadius: 14,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: "black",
+                          position: "absolute",
+                          left: "50%", // Center the text horizontally
+                          transform: "translateX(-50%)", // Center the text horizontally
+                          backgroundColor: "white",
+                          borderRadius: 3,
+                          padding: 1,
+                          fontSize: 11,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {closestLoc["item"]}
+                      </Typography>
+                    </div>
                   ) : itemType === 3 ? (
-                    <BuildIcon
-                      sx={{
-                        backgroundColor: markerColor,
-                        color: "white",
-                        border: "3px solid green",
-                        width: 27,
-                        height: 27,
-                        borderRadius: 14,
-                      }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <BuildIcon
+                        sx={{
+                          backgroundColor: markerColor,
+                          color: "white",
+                          border: "3px solid green",
+                          width: 27,
+                          height: 27,
+                          borderRadius: 14,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: "black",
+                          position: "absolute",
+                          left: "50%", // Center the text horizontally
+                          transform: "translateX(-50%)", // Center the text horizontally
+                          backgroundColor: "white",
+                          borderRadius: 3,
+                          padding: 1,
+                          fontSize: 11,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {closestLoc["item"]}
+                      </Typography>
+                    </div>
                   ) : (
-                    <RecyclingIcon
-                      sx={{
-                        backgroundColor: markerColor,
-                        color: "white",
-                        border: "3px solid green",
-                        width: 27,
-                        height: 27,
-                        borderRadius: 14,
-                      }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <RecyclingIcon
+                        sx={{
+                          backgroundColor: markerColor,
+                          color: "white",
+                          border: "3px solid green",
+                          width: 27,
+                          height: 27,
+                          borderRadius: 14,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: "black",
+                          position: "absolute",
+                          left: "50%", // Center the text horizontally
+                          transform: "translateX(-50%)", // Center the text horizontally
+                          backgroundColor: "white",
+                          borderRadius: 3,
+                          padding: 1,
+                          fontSize: 11,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {closestLoc["item"]}
+                      </Typography>
+                    </div>
                   ))}
               </Marker>
             )
