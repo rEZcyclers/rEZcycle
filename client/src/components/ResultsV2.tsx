@@ -24,6 +24,7 @@ import RecyclablesResults from "./ResultsPageComponents/RecyclablesResults";
 import DonatablesResults from "./ResultsPageComponents/DonatablesResults";
 import EwasteResults from "./ResultsPageComponents/EwasteResults";
 import SpoiltResults from "./ResultsPageComponents/SpoiltResults";
+import InfoIcon from "@mui/icons-material/Info";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -390,6 +391,8 @@ function ResultsV2({
     clearForm();
   };
 
+  const [userLocation, setUserLocation] = useState<number[] | null>(null);
+
   ////////// ResultsV2 Component begins here //////////
   return (
     <>
@@ -398,6 +401,10 @@ function ResultsV2({
       ) : (
         <>
           <h1 style={{ margin: 0 }}>Here's where to recycle your items</h1>
+          <Stack direction={"row"} alignItems={"center"} sx={{ mt: -1 }}>
+            <InfoIcon sx={{ mr: 1 }} color={"info"} />
+            <p>Search your location to see recycling facilities near you</p>
+          </Stack>
           <MapLocationsV2
             showBluebin={showBluebin}
             showGDMarkers={showGDMarkers}
@@ -421,6 +428,8 @@ function ResultsV2({
             showClosest={showClosest}
             setShowClosest={setShowClosest}
             setShowBluebin={setShowBluebin}
+            userLocation={userLocation}
+            setUserLocation={setUserLocation}
           />
           <Stack
             direction={{ xs: "column", sm: "row" }}
