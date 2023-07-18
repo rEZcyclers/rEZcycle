@@ -391,8 +391,6 @@ function ResultsV2({
     clearForm();
   };
 
-  const [userLocation, setUserLocation] = useState<number[] | null>(null);
-
   ////////// ResultsV2 Component begins here //////////
   return (
     <>
@@ -428,8 +426,6 @@ function ResultsV2({
             showClosest={showClosest}
             setShowClosest={setShowClosest}
             setShowBluebin={setShowBluebin}
-            userLocation={userLocation}
-            setUserLocation={setUserLocation}
           />
           <Stack
             direction={{ xs: "column", sm: "row" }}
