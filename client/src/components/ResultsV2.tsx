@@ -426,6 +426,7 @@ function ResultsV2({
             showClosest={showClosest}
             setShowClosest={setShowClosest}
             setShowBluebin={setShowBluebin}
+            isRecyclableSelected={recyclablesResults.length > 0}
           />
           <Stack
             direction={{ xs: "column", sm: "row" }}
