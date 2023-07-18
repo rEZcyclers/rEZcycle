@@ -55,6 +55,8 @@ interface Props {
   setShowClosest: (toggle: boolean) => void;
   setShowBluebin: (show: boolean) => void;
   isRecyclableSelected: boolean;
+  userLocation: number[] | null;
+  setUserLocation: (location: number[] | null) => void;
 }
 
 const recyclableColor = "#00FF00";
@@ -113,6 +115,8 @@ export default function MapLocationsV2({
   goodEwasteResults,
   repairEwasteResults,
   ebinEwasteResults,
+  userLocation,
+  setUserLocation,
   closestBBLoc,
   setClosestBBLoc,
   setPreferredGDLoc,
@@ -146,7 +150,6 @@ export default function MapLocationsV2({
 
   ////////// User States for marker popup, user location & error alert
   const [activeMarker, setActiveMarker] = useState<LocationInfo | null>(null);
-  const [userLocation, setUserLocation] = useState<number[] | null>(null);
   const [showAlert, setShowAlert] = useState(false);
   const closeAlert = (
     event?: React.SyntheticEvent | Event,
