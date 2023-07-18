@@ -150,7 +150,7 @@ export default function ({
                           handleShowEEMarkers(index);
                         }}
                       >
-                        Show On Map
+                        Show All Locations
                       </Button>
                     </div>
                   );
@@ -271,7 +271,7 @@ export default function ({
                           handleShowGEMarkers(index);
                         }}
                       >
-                        Show On Map
+                        Show All Locations
                       </Button>
                     </div>
                   );
@@ -368,7 +368,7 @@ export default function ({
                               handleShowREMarkers(index);
                             }}
                           >
-                            Show On Map
+                            Show All Locations
                           </Button>
                         </div>
                       )}

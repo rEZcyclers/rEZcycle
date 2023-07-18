@@ -155,7 +155,7 @@ export default function DonatablesResults({
                         handleShowGDMarkers(index);
                       }}
                     >
-                      Show On Map
+                      Show All Locations
                     </Button>
                   </div>
                 );
@@ -245,7 +245,7 @@ export default function DonatablesResults({
                         handleShowRDMarkers(index);
                       }}
                     >
-                      Show On Map
+                      Show All Locations
                     </Button>
                   </div>
                 );
