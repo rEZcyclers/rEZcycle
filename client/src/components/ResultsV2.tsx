@@ -36,7 +36,7 @@ import DonatablesResults from "./ResultsPageComponents/DonatablesResults";
 import EwasteResults from "./ResultsPageComponents/EwasteResults";
 import SpoiltResults from "./ResultsPageComponents/SpoiltResults";
 import InfoIcon from "@mui/icons-material/Info";
-import AddtoCalendar from "./AddToCalendar";
+// import AddtoCalendar from "./AddToCalendar";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
