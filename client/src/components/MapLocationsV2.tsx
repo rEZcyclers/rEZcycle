@@ -50,6 +50,10 @@ interface Props {
   repairEwasteResults: RepairLocation[][]; // RE results
   ebinEwasteResults: EbinLocations[][]; // EE results
 
+  // User location
+  userLocation: number[] | null;
+  setUserLocation: (userLocation: number[] | null) => void;
+
   // User's preferred location for every item
   closestBBLoc: LocationInfo | null;
   setClosestBBLoc: (bluebin: LocationInfo) => void;
@@ -126,6 +130,8 @@ export default function MapLocationsV2({
   goodEwasteResults,
   repairEwasteResults,
   ebinEwasteResults,
+  userLocation,
+  setUserLocation,
   closestBBLoc,
   setClosestBBLoc,
   setPreferredGDLoc,
@@ -644,8 +650,6 @@ export default function MapLocationsV2({
       ),
     },
   ];
-
-  const [userLocation, setUserLocation] = useState<number[] | null>(null);
 
   const openEmailForm = (loc: LocationInfo) => {
     const recipient = loc.contact;
