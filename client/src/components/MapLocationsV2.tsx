@@ -764,7 +764,7 @@ export default function MapLocationsV2({
                 }
                 setShowAlert(false);
                 setShowClosest(!showClosest);
-                if (!showClosest) setShowBluebin(true);
+                if (!showClosest && isRecyclableSelected) setShowBluebin(true);
               }}
               color="secondary"
               size="medium"

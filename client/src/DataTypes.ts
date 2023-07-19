@@ -150,3 +150,20 @@ export type LocationInfo = {
   lng: number;
 };
 
+export type UserResults = {
+  userLocation: number[] | null,
+  recyclables: RecyclableItem[],
+  closestBluebin: LocationInfo | null,
+  goodDonatables: DonatableItem[],
+  preferredGDLoc: (LocationInfo | null)[],
+  repairDonatables: DonatableItem[],
+  preferredRDLoc: (LocationInfo | null)[],
+  regulatedEwaste: EwasteItem[],
+  ebinEwaste: EwasteItem[],
+  preferredEELoc: (LocationInfo | null)[],
+  goodEwaste: EwasteItem[],
+  preferredGELoc: (LocationInfo | null)[],
+  repairEwaste: EwasteItem[],
+  preferredRELoc: (LocationInfo | null)[],
+  unrecyclables: RecyclableItem[]
+}
