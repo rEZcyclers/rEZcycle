@@ -36,6 +36,7 @@ import DonatablesResults from "./ResultsPageComponents/DonatablesResults";
 import EwasteResults from "./ResultsPageComponents/EwasteResults";
 import SpoiltResults from "./ResultsPageComponents/SpoiltResults";
 import InfoIcon from "@mui/icons-material/Info";
+import AddtoCalendar from "./AddToCalendar";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -510,6 +511,8 @@ function ResultsV2({
             goodEwasteResults={goodEwasteResults}
             repairEwasteResults={repairEwasteResults}
             ebinEwasteResults={ebinEwasteResults}
+            userLocation={userLocation}
+            setUserLocation={setUserLocation}
             closestBBLoc={closestBBLoc}
             setClosestBBLoc={setClosestBBLoc}
             setPreferredGDLoc={setPreferredGDLoc}
@@ -584,6 +587,21 @@ function ResultsV2({
             spoiltDonatables={spoiltDonatables}
           />
           <Box display="flex" justifyContent="right" sx={{ mt: 4 }}>
+            {userLocation != null && (
+              <AddtoCalendar
+                closestBBLoc={closestBBLoc}
+                goodDonatables={goodDonatables}
+                repairDonatables={repairDonatables}
+                goodEwaste={goodEwaste}
+                repairEwaste={repairEwaste}
+                allEwaste={allEwaste}
+                preferredGDLoc={preferredGDLoc}
+                preferredRDLoc={preferredRDLoc}
+                preferredGELoc={preferredGELoc}
+                preferredRELoc={preferredRELoc}
+                preferredEELoc={preferredEELoc}
+              />
+            )}
             <Button
               variant="outlined"
               onClick={handleBackClick}

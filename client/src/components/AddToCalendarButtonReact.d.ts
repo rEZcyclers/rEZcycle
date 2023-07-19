@@ -1,0 +1,1 @@
+declare module 'add-to-calendar-button-react';
