@@ -30,7 +30,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import MapLocationsV2 from "./MapLocationsV2";
+import MapLocations from "./MapLocations";
 import RecyclablesResults from "./ResultsPageComponents/RecyclablesResults";
 import DonatablesResults from "./ResultsPageComponents/DonatablesResults";
 import EwasteResults from "./ResultsPageComponents/EwasteResults";
@@ -53,7 +53,7 @@ interface Props {
   clearForm: () => void;
 }
 
-function ResultsV2({
+function Results({
   selectedRecyclables,
   selectedDonatables,
   selectedEwaste,
@@ -479,7 +479,7 @@ function ResultsV2({
     setShowAlert(false);
   };
 
-  ////////// ResultsV2 Component begins here //////////
+  ////////// Results Component begins here //////////
   return (
     <>
       {!loaded ? (
@@ -496,7 +496,7 @@ function ResultsV2({
               you
             </p>
           </Stack>
-          <MapLocationsV2
+          <MapLocations
             goodDonatables={goodDonatables}
             repairDonatables={repairDonatables}
             goodEwaste={goodEwaste}
@@ -902,4 +902,4 @@ function ResultsV2({
   );
 }
 
-export default ResultsV2;
+export default Results;

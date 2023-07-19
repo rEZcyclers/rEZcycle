@@ -113,7 +113,7 @@ function calculateDistance(
   return distance;
 }
 
-export default function MapLocationsV2({
+export default function MapLocations({
   goodDonatables,
   repairDonatables,
   goodEwaste,

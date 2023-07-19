@@ -609,7 +609,7 @@
 
 // export default MapLocations;
 
-export default function MapLocations() {
+export default function MapLocationsOld() {
   return <></>;
 }
 

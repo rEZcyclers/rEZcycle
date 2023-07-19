@@ -14,7 +14,7 @@ interface Props {
   setNumSelectedItems: (num: number) => void;
 }
 
-export default function RecyclablesV2({
+export default function Recyclables({
   selectedRecyclables,
   setSelectedRecyclables,
   numSelectedItems,
