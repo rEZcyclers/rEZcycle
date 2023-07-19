@@ -17,8 +17,19 @@ import {
   DonateOrganisationLocations,
   EbinLocations,
   LocationInfo,
+  UserResults,
 } from "../DataTypes";
-import { Box, Button, Stack } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Modal,
+  Snackbar,
+  Stack,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import MapLocationsV2 from "./MapLocationsV2";
 import RecyclablesResults from "./ResultsPageComponents/RecyclablesResults";
 import DonatablesResults from "./ResultsPageComponents/DonatablesResults";
@@ -67,6 +78,8 @@ function ResultsV2({
     EDOrgData,
     ERLocData,
     EEData,
+    serverAPI,
+    userProfile,
   } = useContext(backendContext);
 
   ////////// States needed for saving the results of every selected item //////////
@@ -105,7 +118,9 @@ function ResultsV2({
     RepairLocation[][]
   >([]); // List of repairLocations for every selected repairable Ewaste
 
-  ////////// User states for showing and saving preferred locations which are closest locations by default //////////
+  ////////// User states for saving & showing preferred locations (which are closest locations to user location by default) //////////
+  const [userLocation, setUserLocation] = useState<number[] | null>(null);
+
   const [closestBBLoc, setClosestBBLoc] = useState<LocationInfo | null>(null);
   const [preferredGDLoc, setPreferredGDLoc] = useState<LocationInfo[]>([]);
   const [preferredRDLoc, setPreferredRDLoc] = useState<(LocationInfo | null)[]>(
@@ -359,7 +374,7 @@ function ResultsV2({
     });
     setEbinEwasteResults(ebinEwasteResults);
     setLoaded(true);
-    console.log("Results have been processed and saved in their states");
+    console.log("Results have been processed and User in their states");
   }
 
   useEffect(getResults, []); // Only process results once (upon initialisation)
@@ -396,6 +411,71 @@ function ResultsV2({
     clearForm();
   };
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMsg, setAlertMsg] = useState("");
+  const [error, setError] = useState(false);
+  const [showConfirmUserResults, setShowConfirmUserResults] = useState(false);
+  const [userResults, setUserResults] = useState<UserResults | null>(null);
+
+  const processUserResults = () => {
+    const results: UserResults = {
+      userLocation: userLocation,
+      recyclables: recyclablesResults,
+      closestBluebin: closestBBLoc,
+      goodDonatables: goodDonatables,
+      preferredGDLoc: preferredGDLoc,
+      repairDonatables: repairDonatables,
+      preferredRDLoc: preferredRDLoc,
+      regulatedEwaste: regulatedEwaste,
+      ebinEwaste: ebinEwaste,
+      preferredEELoc: preferredEELoc,
+      goodEwaste: goodEwaste,
+      preferredGELoc: preferredGELoc,
+      repairEwaste: repairEwaste,
+      preferredRELoc: preferredRELoc,
+      unrecyclables: unrecyclablesResults,
+    };
+    setUserResults(results);
+  };
+
+  const saveUserResults = () => {
+    if (userResults === null) {
+      setShowConfirmUserResults(false);
+      setAlertMsg("Error: User Results is null");
+      setError(true);
+      setShowAlert(true);
+      return;
+    }
+    fetch(`${serverAPI}/userSavedResults?id=${userProfile["user_id"]}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }, // Impt for Node server to parse json so it won't be empty
+      body: JSON.stringify(userResults),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 201) {
+          setAlertMsg("Result saved sucessfully");
+          setError(false);
+          setShowAlert(true);
+        } else {
+          setAlertMsg(`Error ${data.status}: ${data.statusText}`);
+          setError(true);
+          setShowAlert(true);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const closeAlert = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      console.log(event);
+      return;
+    }
+    setShowAlert(false);
+  };
   ////////// ResultsV2 Component begins here //////////
   return (
     <>
@@ -403,10 +483,15 @@ function ResultsV2({
         <span>Loading...</span>
       ) : (
         <>
-          <h1 style={{ margin: 0 }}>Here's where to recycle your items</h1>
-          <Stack direction={"row"} alignItems={"center"} sx={{ mt: -1 }}>
+          <h1 style={{ margin: 0 }}>
+            Here's where to recycle/donate your items
+          </h1>
+          <Stack direction={"row"} alignItems={"center"} sx={{ mt: -2 }}>
             <InfoIcon sx={{ mr: 1 }} color={"info"} />
-            <p>Search your location to see recycling facilities near you</p>
+            <p>
+              Input your location to see recycling/donation/repair services
+              nearby
+            </p>
           </Stack>
           <MapLocationsV2
             goodDonatables={goodDonatables}
@@ -432,6 +517,8 @@ function ResultsV2({
             setPreferredGELoc={setPreferredGELoc}
             setPreferredRELoc={setPreferredRELoc}
             setPreferredEELoc={setPreferredEELoc}
+            userLocation={userLocation}
+            setUserLocation={setUserLocation}
             showClosest={showClosest}
             setShowClosest={setShowClosest}
             setShowBluebin={setShowBluebin}
@@ -500,7 +587,7 @@ function ResultsV2({
             <Button
               variant="outlined"
               onClick={handleBackClick}
-              sx={{ mr: 10, mb: 10 }}
+              sx={{ mr: 5, mb: 10 }}
             >
               Back
             </Button>
@@ -508,11 +595,289 @@ function ResultsV2({
               variant="outlined"
               color="secondary"
               onClick={restartQuery}
-              sx={{ mr: 10, mb: 10 }}
+              sx={{ mr: 5, mb: 10 }}
             >
               Start new query
             </Button>
+            <Tooltip
+              title={
+                userLocation === null || userProfile === null
+                  ? "To save results, one must be logged in & have an input location."
+                  : ""
+              }
+              arrow
+            >
+              <div>
+                <Button
+                  variant="outlined"
+                  disabled={userLocation === null || userProfile === null}
+                  color="success"
+                  onClick={() => {
+                    processUserResults();
+                    setShowConfirmUserResults(true);
+                  }}
+                  sx={{ mr: 10, mb: 10 }}
+                >
+                  Save results
+                </Button>
+              </div>
+            </Tooltip>
           </Box>
+          <Modal open={showConfirmUserResults}>
+            <Box
+              flex={1}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "70%",
+                height: "70%",
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                flexWrap: "wrap",
+                borderRadius: ".8rem",
+              }}
+            >
+              <Toolbar
+                sx={{
+                  backgroundColor: "greenyellow",
+                  borderTopLeftRadius: ".8rem",
+                  borderTopRightRadius: ".8rem",
+                }}
+              >
+                <Typography
+                  id="modal-modal-title"
+                  variant="h6"
+                  component="h2"
+                  sx={{ flexGrow: 1 }}
+                >
+                  Please confirm the results to be saved:
+                </Typography>
+              </Toolbar>
+              <Stack
+                flexDirection={"column"}
+                sx={{
+                  flexWrap: "nowrap",
+                  height: "90%",
+                }}
+              >
+                {userResults !== null && (
+                  <Box sx={{ margin: 3, marginBottom: 0, overflowY: "auto" }}>
+                    {userResults["recyclables"].length !== 0 && (
+                      <p>
+                        These recyclables can be disposed at the nearest
+                        bluebin, located at{" "}
+                        <span style={{ color: "green" }}>
+                          {userResults["closestBluebin"]?.address}
+                        </span>
+                        :
+                        <ul style={{ margin: 0 }}>
+                          {userResults["recyclables"].map(
+                            (item: RecyclableItem) => (
+                              <li>
+                                {item["name"]}
+                                <span style={{ color: "red" }}>
+                                  {" (" + item["checklist"] + ")"}
+                                </span>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["goodDonatables"].length !== 0 && (
+                      <p>
+                        These donatables in good condition may be donated at the
+                        nearest donation centers:
+                        <ul style={{ margin: 0 }}>
+                          {userResults["preferredGDLoc"].map(
+                            (item: LocationInfo | null, i: number) => (
+                              <li>
+                                {userResults["goodDonatables"][i][
+                                  "donatable_type"
+                                ] + ": "}
+                                {item === null ? (
+                                  "No location found, consider either reusing this item or diposing as general waste instead."
+                                ) : (
+                                  <span style={{ color: "green" }}>
+                                    {item["name"]} at {item["address"]}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["repairDonatables"].length !== 0 && (
+                      <p>
+                        These unspoilt donatables may be repaired at the nearest
+                        repair facilities:
+                        <ul style={{ margin: 0 }}>
+                          {userResults["preferredRDLoc"].map(
+                            (item: LocationInfo | null, i: number) => (
+                              <li>
+                                {userResults["repairDonatables"][i][
+                                  "donatable_type"
+                                ] + ": "}
+                                {item === null ? (
+                                  "No location found, consider either reusing this item, searching for alternative repair channels, or diposing as general waste instead."
+                                ) : (
+                                  <span style={{ color: "green" }}>
+                                    {item["name"]} at {item["address"]}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["ebinEwaste"].length !== 0 && (
+                      <p>
+                        These Ewaste items may be disposed off at the nearest
+                        suitable ebins:
+                        <ul style={{ margin: 0 }}>
+                          {userResults["preferredEELoc"].map(
+                            (item: LocationInfo | null, i: number) => (
+                              <li>
+                                {userResults["ebinEwaste"][i]["ewaste_type"] +
+                                  ": "}
+                                {item === null ? (
+                                  "No location found, consider other methods of disposal (eg ALBA Collection Drives or Apple/Samsung Trade-ins) where applicable, else dispose as general waste."
+                                ) : (
+                                  <span style={{ color: "green" }}>
+                                    {item["name"]} at {item["address"]}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["regulatedEwaste"].length !== 0 && (
+                      <p>
+                        These regulated Ewaste items may be dropped off at{" "}
+                        <a
+                          href="https://alba-ewaste.sg/drop-off-at-collection-events/"
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          ALBA's E-Collection Drive
+                        </a>
+                        :
+                        <ul style={{ margin: 0 }}>
+                          {userResults["preferredRELoc"].map(
+                            (item: LocationInfo | null, i: number) => (
+                              <li>
+                                {userResults["repairEwaste"][i]["ewaste_type"] +
+                                  ": "}
+                                {item === null ? (
+                                  "No location found, consider other methods of disposal (eg ALBA Collection Drives or Apple/Samsung Trade-ins) where applicable, else dispose as general waste."
+                                ) : (
+                                  <span style={{ color: "green" }}>
+                                    {item["name"]} at {item["address"]}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["goodEwaste"].length !== 0 && (
+                      <p>
+                        These Ewaste items in good condition may be donated
+                        instead of being disposed:
+                        <ul style={{ margin: 0 }}>
+                          {userResults["preferredGELoc"].map(
+                            (item: LocationInfo | null, i: number) => (
+                              <li>
+                                {userResults["goodEwaste"][i]["ewaste_type"] +
+                                  ": "}
+                                {item === null ? (
+                                  "No location found, consider other methods of disposal (eg ALBA Collection Drives or Apple/Samsung Trade-ins) where applicable, else dispose as general waste."
+                                ) : (
+                                  <span style={{ color: "green" }}>
+                                    {item["name"]} at {item["address"]}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["repairEwaste"].length !== 0 && (
+                      <p>
+                        These Ewaste items which are damaged but unspoilt may be
+                        repaired instead:
+                        <ul style={{ margin: 0 }}>
+                          {userResults["preferredRELoc"].map(
+                            (item: LocationInfo | null, i: number) => (
+                              <li>
+                                {userResults["repairEwaste"][i]["ewaste_type"] +
+                                  ": "}
+                                {item === null ? (
+                                  "No location found, consider other methods of disposal (eg ALBA Collection Drives or Apple/Samsung Trade-ins) where applicable, else dispose as general waste."
+                                ) : (
+                                  <span style={{ color: "green" }}>
+                                    {item["name"]} at {item["address"]}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </p>
+                    )}
+                    {userResults["userLocation"] !== null && (
+                      <p>
+                        Your input location: Latitude{" "}
+                        {userResults["userLocation"][0]}, Longitude{" "}
+                        {userResults["userLocation"][1]}
+                      </p>
+                    )}
+                  </Box>
+                )}
+                <Box display="flex" justifyContent="right" sx={{ mt: 4 }}>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => setShowConfirmUserResults(false)}
+                    sx={{ mr: 5, mb: 10 }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="success"
+                    onClick={saveUserResults}
+                    sx={{ mr: 10, mb: 10 }}
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </Stack>
+            </Box>
+          </Modal>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={showAlert}
+            autoHideDuration={2500}
+            onClose={closeAlert}
+          >
+            <Alert
+              onClose={closeAlert}
+              severity={error ? "error" : "success"}
+              sx={{ width: "100%", borderRadius: 7 }}
+            >
+              {alertMsg}
+            </Alert>
+          </Snackbar>
         </>
       )}
     </>

@@ -94,7 +94,7 @@ app.put("/userProfile/photo", upload.single("image"), async (req, res) => {
     .upload(pathName, photoBuffer, {
       contentType,
       cacheControl: "3600",
-      upsert: true,
+      upsert: true, // Update if already present, else upload
     });
   if (data) {
     const { data } = await supabase.storage
@@ -121,6 +121,52 @@ app.put("/userProfile/photo", upload.single("image"), async (req, res) => {
   } else {
     console.log(error);
     res.error;
+  }
+});
+
+// Get all of user's saved results
+app.get("/userSavedResults", async (req, res) => {
+  const id = req.query.id;
+  const { data, error } = await supabase
+    .from("UserSavedResults")
+    .select()
+    .eq("user_id", id);
+  if (data) {
+    res.json(data);
+  } else {
+    console.log(error);
+  }
+});
+
+// Allow user to save a new result
+app.post("/userSavedResults", async (req, res) => {
+  const id = req.query.id;
+  const { error } = await supabase
+    .from("UserSavedResults")
+    .insert({ user_id: id, saved: req.body });
+  if (error) {
+    console.log(error);
+    res.send({
+      status: error.status,
+      statusText: error.message,
+    });
+  } else {
+    res.send({
+      status: 201,
+      statusText: "Created",
+    });
+  }
+});
+
+// Allow user to delete a saved result
+app.delete("/userSavedResults", async (req, res) => {
+  const entryId = req.body;
+  const { error } = await supabase
+    .from("UserSavedResults")
+    .delete()
+    .eq("id", entryId);
+  if (error) {
+    console.log(error);
   }
 });
 

@@ -59,10 +59,16 @@ interface Props {
   setPreferredRELoc: (newArray: (LocationInfo | null)[]) => void;
   setPreferredEELoc: (newArray: LocationInfo[]) => void;
 
+  // User Location state
+  userLocation: number[] | null;
+  setUserLocation: (newArray: number[]) => void;
+
+  // State for showing the closest locations
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
-  setShowBluebin: (show: boolean) => void;
 
+  // State for deciding whether to show closest bluebin location or not
+  setShowBluebin: (show: boolean) => void;
   isRecyclableSelected: boolean;
 }
 
@@ -133,6 +139,8 @@ export default function MapLocationsV2({
   setPreferredGELoc,
   setPreferredRELoc,
   setPreferredEELoc,
+  userLocation,
+  setUserLocation,
   showClosest,
   setShowClosest,
   setShowBluebin,
@@ -645,8 +653,6 @@ export default function MapLocationsV2({
     },
   ];
 
-  const [userLocation, setUserLocation] = useState<number[] | null>(null);
-
   const openEmailForm = (loc: LocationInfo) => {
     const recipient = loc.contact;
     const subject = `Enquiry for Donation of ${loc.item}`;
@@ -760,7 +766,7 @@ export default function MapLocationsV2({
                 }
                 setShowAlert(false);
                 setShowClosest(!showClosest);
-                if (!showClosest) setShowBluebin(true);
+                if (!showClosest && isRecyclableSelected) setShowBluebin(true);
               }}
               color="secondary"
               size="medium"
