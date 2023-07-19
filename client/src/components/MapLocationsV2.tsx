@@ -54,7 +54,7 @@ interface Props {
   closestBBLoc: LocationInfo | null;
   setClosestBBLoc: (bluebin: LocationInfo) => void;
   setPreferredGDLoc: (newArray: LocationInfo[]) => void;
-  setPreferredRDLoc: (newArray: (LocationInfo|null)[]) => void;
+  setPreferredRDLoc: (newArray: (LocationInfo | null)[]) => void;
   setPreferredGELoc: (newArray: LocationInfo[]) => void;
   setPreferredRELoc: (newArray: (LocationInfo | null)[]) => void;
   setPreferredEELoc: (newArray: LocationInfo[]) => void;
@@ -151,7 +151,7 @@ export default function MapLocationsV2({
 
   ////////// States the save the closest location for every result item
   const [closestGDLoc, setClosestGDLoc] = useState<LocationInfo[]>([]);
-  const [closestRDLoc, setClosestRDLoc] = useState<(LocationInfo|null)[]>([]);
+  const [closestRDLoc, setClosestRDLoc] = useState<(LocationInfo | null)[]>([]);
   const [closestGELoc, setClosestGELoc] = useState<LocationInfo[]>([]);
   const [closestRELoc, setClosestRELoc] = useState<(LocationInfo | null)[]>([]);
   const [closestEELoc, setClosestEELoc] = useState<LocationInfo[]>([]);
@@ -647,6 +647,15 @@ export default function MapLocationsV2({
 
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
 
+  const openEmailForm = (loc: LocationInfo) => {
+    const recipient = loc.contact;
+    const subject = `Enquiry for Donation of ${loc.item}`;
+    const body = `Dear ${loc.name},`;
+    const emailForm = `mailto:${recipient}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    window.location.href = emailForm;
+  };
   return (
     <div style={{ position: "relative", width: "95%", height: "60%" }}>
       <Map
@@ -705,10 +714,23 @@ export default function MapLocationsV2({
             style={{ color: "green" }}
           >
             <div>
-              <h3>{activeMarker.name}</h3>
+              <h3 style={{ margin: 0 }}>{activeMarker.name}</h3>
               <p>For {activeMarker.item}</p>
               <p>{activeMarker.address}</p>
               <p>{activeMarker.contact}</p>
+              {activeMarker.contact.includes("@") && (
+                <button
+                  onClick={() => openEmailForm(activeMarker)}
+                  style={{
+                    backgroundColor: "lightgreen",
+                    color: "green",
+                    border: "1px solid green",
+                    borderRadius: 5,
+                  }}
+                >
+                  Contact via email
+                </button>
+              )}
             </div>
           </Popup>
         )}
