@@ -454,6 +454,7 @@ function ResultsV2({
     })
       .then((res) => res.json())
       .then((data) => {
+        setShowConfirmUserResults(false);
         if (data.status === 201) {
           setAlertMsg("Result saved sucessfully");
           setError(false);
