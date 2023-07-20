@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
 
     /* Linting */
     "strict": true,
@@ -19,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "tests/Test.test.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
