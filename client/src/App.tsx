@@ -22,6 +22,7 @@ import {
   EDOrg,
   ERLoc,
   EE,
+  UserSavedResult,
 } from "./DataTypes";
 
 // backendContext object allows for sharing of state globally as seen later on
@@ -36,6 +37,9 @@ function App() {
   // User Profile Data
   const [userSession, setUserSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userSavedResults, setUserSavedResults] = useState<
+    UserSavedResult[] | null
+  >(null);
 
   // Item Data
   const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
@@ -72,12 +76,22 @@ function App() {
   // Fetches user profile if user is logged in
   function fetchUserProfile(session: Session | null) {
     if (session == null) return;
-    fetch(`${serverAPI}/userProfile?id=${session["user"]["id"]}`)
+
+    const userId = session["user"]["id"];
+    fetch(`${serverAPI}/userProfile?id=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setUserProfile(data[0]);
       })
       .then(() => console.log("UserProfile fetched"))
+      .catch((err) => console.log(err));
+
+    fetch(`${serverAPI}/userSavedResults?id=${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUserSavedResults(data);
+      })
+      .then(() => console.log("UserSavedResults fetched"))
       .catch((err) => console.log(err));
   }
 
@@ -178,6 +192,7 @@ function App() {
         sideBarState: [sideBarOpen, setSideBarOpen],
         userSession,
         userProfile,
+        userSavedResults,
         recyclablesData,
         donatablesData,
         ewasteData,
