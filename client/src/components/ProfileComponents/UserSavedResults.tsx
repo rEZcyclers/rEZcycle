@@ -1,6 +1,6 @@
 import { Card, IconButton } from "@mui/material";
 import { UserSavedResult } from "../../DataTypes";
-import ResultsSummary from "./ResultsSummary";
+import ResultsSummary from "../ResultsPageComponents/ResultsSummary";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Props {

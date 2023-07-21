@@ -3,7 +3,7 @@ import Base from "../components/Base";
 import QueryForm from "../components/QueryForm";
 import ChecklistForm from "../components/ChecklistForm";
 // import ResultsPage from "../components/ResultsPage";
-import Results from "../components/Results";
+import ResultsPage from "../components/ResultsPage";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -78,7 +78,7 @@ function HomePage() {
           setEwasteConditions={setEwasteConditions}
         />
       ) : (
-        <Results
+        <ResultsPage
           setStage={setStage}
           selectedRecyclables={selectedRecyclables}
           selectedDonatables={selectedDonatables}
