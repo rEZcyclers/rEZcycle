@@ -60,7 +60,7 @@ function QueryForm({
   };
 
   return (
-    <>
+    <div data-testid="query-form">
       <h1>What would you like to recycle today?</h1>
       <Stack
         direction={{ xs: "column", sm: "row" }}
@@ -124,7 +124,7 @@ function QueryForm({
           Please select at least one item before proceeding.
         </Alert>
       </Snackbar>
-    </>
+    </div>
   );
 }
 
