@@ -24,6 +24,8 @@ import {
   EE,
   UserSavedResult,
 } from "./DataTypes";
+import { ThemeProvider } from "@emotion/react";
+import { createTheme } from "@mui/material";
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
@@ -185,32 +187,35 @@ function App() {
   useEffect(fetchBackendData, []); // Backend data is only fetched once (upon initialisation)
 
   return (
-    // Make userSession & backend data globally available to all pages via backendContext object
-    <backendContext.Provider
-      value={{
-        serverAPI,
-        sideBarState: [sideBarOpen, setSideBarOpen],
-        userSession,
-        userProfile,
-        userSavedResults,
-        recyclablesData,
-        donatablesData,
-        ewasteData,
-        bluebinsData,
-        donateOrgData,
-        donateLocData,
-        repairLocData,
-        ebinData,
-        ebinLocData,
-        DDOrgData,
-        DRLocData,
-        EDOrgData,
-        ERLocData,
-        EEData,
-      }}
-    >
-      <RouterProvider router={AppRouter} />
-    </backendContext.Provider>
+    <ThemeProvider theme={createTheme()}>
+      {/* Make userSession & backend data globally available to all pages via
+      backendContext object */}
+      <backendContext.Provider
+        value={{
+          serverAPI,
+          sideBarState: [sideBarOpen, setSideBarOpen],
+          userSession,
+          userProfile,
+          userSavedResults,
+          recyclablesData,
+          donatablesData,
+          ewasteData,
+          bluebinsData,
+          donateOrgData,
+          donateLocData,
+          repairLocData,
+          ebinData,
+          ebinLocData,
+          DDOrgData,
+          DRLocData,
+          EDOrgData,
+          ERLocData,
+          EEData,
+        }}
+      >
+        <RouterProvider router={AppRouter} />
+      </backendContext.Provider>
+    </ThemeProvider>
   );
 }
 
