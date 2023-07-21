@@ -1,10 +1,12 @@
 import Base from "../components/Base";
 import { useContext } from "react";
 import { backendContext } from "../App";
-import ProfileCard from "../components/ProfileCard";
+import ProfileCard from "../components/ProfileComponents/ProfileCard";
+import UserSavedResults from "../components/ProfileComponents/UserSavedResults";
 
 function ProfilePage() {
-  const { serverAPI, userSession, userProfile } = useContext(backendContext);
+  const { serverAPI, userSession, userProfile, userSavedResults } =
+    useContext(backendContext);
 
   return (
     <Base>
@@ -17,6 +19,9 @@ function ProfilePage() {
           ) : (
             <>
               <ProfileCard server={serverAPI} userProfile={userProfile} />
+              {userSavedResults.length != 0 && (
+                <UserSavedResults userSavedResults={userSavedResults} />
+              )}
             </>
           )}
         </>

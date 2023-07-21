@@ -81,6 +81,7 @@ function Results({
     EEData,
     serverAPI,
     userProfile,
+    userSession,
   } = useContext(backendContext);
 
   ////////// States needed for saving the results of every selected item //////////
@@ -619,7 +620,7 @@ function Results({
             </Button>
             <Tooltip
               title={
-                userLocation === null || userProfile === null
+                userLocation === null || userSession === null
                   ? "To save results, one must be logged in & have an input location."
                   : ""
               }
@@ -628,7 +629,7 @@ function Results({
               <div>
                 <Button
                   variant="outlined"
-                  disabled={userLocation === null || userProfile === null}
+                  disabled={userLocation === null || userSession === null}
                   color="success"
                   onClick={() => {
                     processUserResults();
