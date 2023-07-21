@@ -167,3 +167,9 @@ export type UserResults = {
   preferredRELoc: (LocationInfo | null)[],
   unrecyclables: RecyclableItem[]
 }
+
+export type UserSavedResult = {
+  res_id: number,
+  user_id: string,
+  saved: UserResults
+}
