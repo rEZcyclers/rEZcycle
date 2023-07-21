@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Map, { Marker, Popup } from "react-map-gl";
+import ContactEmailButton from "./MapComponents/ContactEmailButton";
 import {
   DonateLocation,
   RepairLocation,
@@ -651,15 +652,6 @@ export default function MapLocations({
     },
   ];
 
-  const openEmailForm = (loc: LocationInfo) => {
-    const recipient = loc.contact;
-    const subject = `Enquiry for Donation of ${loc.item}`;
-    const body = `Dear ${loc.name},`;
-    const emailForm = `mailto:${recipient}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-    window.location.href = emailForm;
-  };
   return (
     <div style={{ position: "relative", width: "95%", height: "60%" }}>
       <Map
@@ -723,17 +715,7 @@ export default function MapLocations({
               <p>{activeMarker.address}</p>
               <p>{activeMarker.contact}</p>
               {activeMarker.contact.includes("@") && (
-                <button
-                  onClick={() => openEmailForm(activeMarker)}
-                  style={{
-                    backgroundColor: "lightgreen",
-                    color: "green",
-                    border: "1px solid green",
-                    borderRadius: 5,
-                  }}
-                >
-                  Contact via email
-                </button>
+                <ContactEmailButton activeMarker={activeMarker} />
               )}
             </div>
           </Popup>
