@@ -3,59 +3,15 @@ import React, { ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import HomePage from "../src/pages/HomePage";
 import "@testing-library/jest-dom";
-
-
-// Define the type for the children prop
-interface MockedWrapperProps {
-  children: React.ReactNode;
-}
-
-// Mock any components or modules that are used in HomePage, but aren't relevant to the current test.
-// Create a custom wrapper component to mock the backendContext
-const MockedWrapper: React.FC<MockedWrapperProps> = ({ children }) => {
-  // Mock backendContext with a non-null sideBarState
-  //   const backendContext = {
-  //     sideBarState: [true, () => {}], // Mocked value for sideBarState
-  //   };
-  const backendContext = {
-    serverAPI: "https://example.com",
-    sideBarState: [true, () => {}], // Mocked value for sideBarState
-    userSession: null,
-    userProfile: null,
-    recyclablesData: [], // 
-    donatablesData: [],
-    ewasteData: [],
-    bluebinsData: [],
-    donateOrgData: [],
-    donateLocData: [],
-    repairLocData: [],
-    ebinData: [],
-    ebinLocData: [],
-    DDOrgData: [],
-    DRLocData: [],
-    EDOrgData: [],
-    ERLocData: [],
-    EEData: [],
-  };
-
-  // Create a context provider with the mocked backendContext
-  const BackendContextProvider = React.createContext(backendContext);
-
-  // Use the context provider to wrap the children
-  return (
-    <BackendContextProvider.Provider value={backendContext}>
-      {children}
-    </BackendContextProvider.Provider>
-  );
-};
+import { backendContext } from "../src/App";
 
 describe("HomePage", () => {
   it("renders QueryForm when stage is 1", () => {
     // Render the HomePage component with stage 1 within the custom wrapper and Router
     render(
-        <MockedWrapper>
-          <HomePage />
-        </MockedWrapper>
+      <backendContext.Provider value={{ sidebarState: [true, () => {}] }}>
+        <HomePage />
+      </backendContext.Provider>
     );
 
     // QueryForm should be displayed on stage 1.
@@ -89,6 +45,4 @@ describe("HomePage", () => {
   //     expect(screen.queryByTestId("checklist-form")).not.toBeInTheDocument();
   //     expect(screen.getByTestId("results")).toBeInTheDocument();
   //   });
-
-  // You can write more test cases to test other functionalities and interactions.
 });
