@@ -13,7 +13,7 @@ function ProfilePage() {
       {userSession == null ? (
         <h1> Please log in to view profile page </h1>
       ) : (
-        <>
+        <div data-testid="profile-page">
           {userProfile == null ? (
             <h1>Loading...</h1>
           ) : (
@@ -24,7 +24,7 @@ function ProfilePage() {
               )}
             </>
           )}
-        </>
+        </div>
       )}
     </Base>
   );
