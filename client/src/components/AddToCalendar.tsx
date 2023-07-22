@@ -111,7 +111,7 @@ function AddtoCalendar({
     description += newline;
   }
   return (
-    <Box sx={{ mr: 10, mb: 10 }}>
+    <Box sx={{ mr: 10, mb: 10 }} data-testid={"AddToCalendarButton"}>
       <AddToCalendarButton
         name="Recycling Trip"
         description={description}
