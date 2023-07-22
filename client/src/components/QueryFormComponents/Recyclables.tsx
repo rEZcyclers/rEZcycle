@@ -2,7 +2,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete, {
   AutocompleteChangeDetails,
 } from "@mui/material/Autocomplete";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { backendContext } from "../../App";
 import { RecyclableItem } from "../../DataTypes";
 import { Button } from "@mui/material";
@@ -75,6 +75,7 @@ export default function Recyclables({
         (materialArray: RecyclableItem[], materialIndex: number) => {
           return (
             <Autocomplete
+              data-testid={`materialAutocomplete-${materialIndex}`}
               key={materialIndex}
               multiple
               value={materialArray.filter(

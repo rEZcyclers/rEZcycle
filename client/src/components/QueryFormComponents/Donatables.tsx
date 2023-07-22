@@ -93,6 +93,7 @@ function Donatables({
                         whiteSpace: "normal",
                       },
                     }}
+                    data-testid={`DonatableChip-${item["donatable_id"]}`}
                   />
                   <IconButton
                     onClick={() => openModal(item["donatable_id"] - 1)}

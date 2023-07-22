@@ -9,7 +9,6 @@ import { backendContext } from "../src/App";
 describe("HomePage", () => {
   it("renders QueryForm when stage is 1", () => {
     // Render the HomePage component with stage 1 within the custom wrapper and Router
-    const mockRecyclablesData = [];
     render(
       <MemoryRouter>
         <backendContext.Provider
