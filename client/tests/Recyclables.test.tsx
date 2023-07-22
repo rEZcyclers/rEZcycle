@@ -2,16 +2,11 @@ import { describe, test, it, expect, vi } from "vitest";
 import React from "react";
 import {
   render,
-  screen,
-  fireEvent,
-  waitFor,
-  getByText,
 } from "@testing-library/react";
 import Recyclables from "../src/components/QueryFormComponents/Recyclables";
 import { MemoryRouter } from "react-router-dom";
 import { backendContext } from "../src/App";
 import "@testing-library/jest-dom";
-import userEvent from "@testing-library/user-event";
 
 describe("Recyclables component", () => {
   it("Renders Autocomplete components for all materials", () => {

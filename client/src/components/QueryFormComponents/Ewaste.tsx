@@ -90,6 +90,7 @@ function Ewaste({
                       whiteSpace: "normal",
                     },
                   }}
+                  data-testid={`EwasteChip-${item["ewaste_id"]}`}
                 />
                 <IconButton
                   onClick={() => openModal(item["ewaste_id"] - 1)}
