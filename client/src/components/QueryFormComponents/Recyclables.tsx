@@ -2,7 +2,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete, {
   AutocompleteChangeDetails,
 } from "@mui/material/Autocomplete";
-import { useContext, useState } from "react";
+import { useContext} from "react";
 import { backendContext } from "../../App";
 import { RecyclableItem } from "../../DataTypes";
 import { Button } from "@mui/material";
