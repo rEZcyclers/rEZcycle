@@ -1,17 +1,42 @@
-import { Card, IconButton } from "@mui/material";
+import { Box, Card, IconButton, Stack } from "@mui/material";
 import { UserSavedResult } from "../../DataTypes";
 import ResultsSummary from "../ResultsPageComponents/ResultsSummary";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 
 interface Props {
+  server: string;
+  userId: string;
   userSavedResults: UserSavedResult[];
 }
 
-export default function UserSavedResults({ userSavedResults }: Props) {
+export default function UserSavedResults({
+  server,
+  userId,
+  userSavedResults,
+}: Props) {
+  const [localSavedRes, setLocalSavedRes] = useState(userSavedResults);
+  const deleteCard = (resId: number) => {
+    fetch(`${server}/userSavedResults?id=${userId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ resId }),
+    })
+      .then(() => {
+        setLocalSavedRes(
+          userSavedResults.filter(
+            (savedRes: UserSavedResult) => savedRes["res_id"] != resId
+          )
+        );
+        console.log("Result card deleted");
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <h1 style={{ marginBottom: 0 }}>Here are your saved results:</h1>
-      {userSavedResults.map((savedRes: UserSavedResult) => {
+      {localSavedRes.map((savedRes: UserSavedResult) => {
         return (
           <Card
             sx={{
@@ -23,10 +48,21 @@ export default function UserSavedResults({ userSavedResults }: Props) {
               borderRadius: "1.5rem",
             }}
           >
-            <IconButton>
-              <DeleteIcon></DeleteIcon>
-            </IconButton>
-            <ResultsSummary userResults={savedRes["saved"]} />
+            <Stack
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Box sx={{ display: "flex", justifyContent: "right" }}>
+                <IconButton onClick={() => deleteCard(savedRes["res_id"])}>
+                  <DeleteIcon></DeleteIcon>
+                </IconButton>
+              </Box>
+              <Box sx={{ mt: -5 }}>
+                <ResultsSummary userResults={savedRes["saved"]} />
+              </Box>
+            </Stack>
           </Card>
         );
       })}

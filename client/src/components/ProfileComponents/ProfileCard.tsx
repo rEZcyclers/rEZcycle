@@ -49,7 +49,6 @@ export default function ProfileCard({ server, userProfile }: Props) {
   //   fileInputRef.current?.click();
   // };
 
-  console.log(imgURL);
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files == null) return;
     updatePhoto(e.target.files[0]);

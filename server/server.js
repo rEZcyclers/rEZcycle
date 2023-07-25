@@ -160,13 +160,23 @@ app.post("/userSavedResults", async (req, res) => {
 
 // Allow user to delete a saved result
 app.delete("/userSavedResults", async (req, res) => {
-  const entryId = req.body;
+  if (req.query.id == null) {
+    res.error({ status: 400, statusText: "Not authorised" });
+    return;
+  }
+  const resId = req.body.resId;
   const { error } = await supabase
     .from("UserSavedResults")
     .delete()
-    .eq("id", entryId);
+    .eq("res_id", resId);
   if (error) {
     console.log(error);
+    res.error(error);
+  } else {
+    res.send({
+      status: 201,
+      statusText: "Deleted",
+    });
   }
 });
 

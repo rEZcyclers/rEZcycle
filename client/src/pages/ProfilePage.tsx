@@ -20,7 +20,11 @@ function ProfilePage() {
             <>
               <ProfileCard server={serverAPI} userProfile={userProfile} />
               {userSavedResults.length != 0 && (
-                <UserSavedResults userSavedResults={userSavedResults} />
+                <UserSavedResults
+                  server={serverAPI}
+                  userId={userProfile["user_id"]}
+                  userSavedResults={userSavedResults}
+                />
               )}
             </>
           )}

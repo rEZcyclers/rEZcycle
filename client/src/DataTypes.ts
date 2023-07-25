@@ -2,7 +2,7 @@
 
 // User Profile info + picture
 export type UserProfile = { 
-  user_id: number;
+  user_id: string;
   email: string;
   name: string;
   phone: string;
