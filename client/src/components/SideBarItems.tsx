@@ -1,4 +1,4 @@
-import { History, Home, Dashboard } from "@mui/icons-material";
+import { Home, Dashboard } from "@mui/icons-material";
 
 export const SideBarItems = [
   {
