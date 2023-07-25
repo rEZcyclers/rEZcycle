@@ -5,7 +5,14 @@ import { backendContext } from "../../App";
 import { EwasteItem } from "../../DataTypes";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { IconButton, Modal, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  IconButton,
+  Modal,
+  Stack,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 
@@ -91,18 +98,32 @@ function Ewaste({
                     },
                   }}
                 />
-                <IconButton
-                  onClick={() => openModal(item["ewaste_id"] - 1)}
-                  style={{
-                    margin: 0,
-                    padding: 0,
-                    color: "purple",
-                    fillOpacity: 0.5,
-                    maxHeight: 30,
-                  }}
+                <Tooltip
+                  title={
+                    <Typography
+                      sx={{
+                        maxHeight: 100,
+                        overflow: "hidden",
+                        fontSize: 12,
+                      }}
+                    >
+                      {item["description"]}
+                    </Typography>
+                  }
                 >
-                  <InfoOutlinedIcon />
-                </IconButton>
+                  <IconButton
+                    onClick={() => openModal(item["ewaste_id"] - 1)}
+                    style={{
+                      margin: 0,
+                      padding: 0,
+                      color: "purple",
+                      fillOpacity: 0.5,
+                      maxHeight: 30,
+                    }}
+                  >
+                    <InfoOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
               </div>
             );
           })}
@@ -121,88 +142,122 @@ function Ewaste({
                 boxShadow: 24,
                 flexWrap: "wrap",
                 borderRadius: ".8rem",
-                overflow: "auto",
               }}
             >
-              <Toolbar
-                sx={{
-                  backgroundColor: "greenyellow",
-                  borderTopLeftRadius: ".8rem",
-                  borderTopRightRadius: ".8rem",
-                }}
-              >
-                <Typography
-                  id="modal-modal-title"
-                  variant="h6"
-                  component="h2"
-                  sx={{ flexGrow: 1 }}
-                >
-                  {activeModal != -1 &&
-                    "More info for " + ewasteData[activeModal]["ewaste_type"]}
-                </Typography>
-                <IconButton
-                  onClick={() => closeModal()}
-                  sx={{ marginTop: -2, marginRight: -2 }}
-                >
-                  <CloseIcon></CloseIcon>
-                </IconButton>
-              </Toolbar>
-              <Stack
-                flexDirection={"row"}
-                sx={{
-                  flexWrap: "nowrap",
-                  height: "85%",
-                }}
-              >
-                <Box
-                  flex={1}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IconButton onClick={() => navigateLeft(activeModal)}>
-                    <ArrowBackIosNewIcon />
-                  </IconButton>
-                </Box>
-                <Box flex={10} sx={{ marginTop: 1, overflow: "auto" }}>
-                  {activeModal != -1 && (
-                    <p>{ewasteData[activeModal]["description"]}</p>
-                  )}
-                  {activeModal != -1 &&
-                    ewasteData[activeModal]["images"].map((imageInfo: any) => {
-                      return (
-                        <>
-                          <img
-                            src={imageInfo["link"]}
-                            alt={imageInfo["credits"]}
-                            style={{
-                              width: "60%",
-                              height: "auto",
-                              objectFit: "contain",
-                            }}
-                          />
-                          <figcaption style={{ fontStyle: "italic" }}>
-                            {"Credits: " + imageInfo["credits"]}
-                          </figcaption>
-                        </>
-                      );
-                    })}
-                </Box>
-                <Box
-                  flex={1}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IconButton onClick={() => navigateRight(activeModal)}>
-                    <ArrowForwardIosIcon />
-                  </IconButton>
-                </Box>
-              </Stack>
+              {activeModal != -1 && (
+                <>
+                  <Toolbar
+                    sx={{
+                      backgroundColor: "greenyellow",
+                      borderTopLeftRadius: ".8rem",
+                      borderTopRightRadius: ".8rem",
+                    }}
+                  >
+                    <Typography
+                      id="modal-modal-title"
+                      variant="h6"
+                      component="h2"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      {"More info for " +
+                        ewasteData[activeModal]["ewaste_type"]}
+                    </Typography>
+                    <IconButton
+                      onClick={() => closeModal()}
+                      sx={{ marginTop: -2, marginRight: -2 }}
+                    >
+                      <CloseIcon></CloseIcon>
+                    </IconButton>
+                  </Toolbar>
+                  <Stack
+                    flexDirection={"row"}
+                    sx={{
+                      flexWrap: "nowrap",
+                      height: "85%",
+                    }}
+                  >
+                    <Box
+                      flex={1}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <IconButton onClick={() => navigateLeft(activeModal)}>
+                        <ArrowBackIosNewIcon />
+                      </IconButton>
+                    </Box>
+                    <Box
+                      flex={10}
+                      sx={{
+                        marginTop: 1,
+                        overflow: "auto",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Typography sx={{ mb: 1, fontSize: 15 }}>
+                        {ewasteData[activeModal]["description"]}
+                      </Typography>
+
+                      {ewasteData[activeModal]["remarks"] != "-" && (
+                        <Typography sx={{ mb: 1, fontSize: 15 }}>
+                          {ewasteData[activeModal]["remarks"]}
+                        </Typography>
+                      )}
+                      <Stack
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing={{ xs: 1, sm: 2, md: 4 }}
+                        sx={{ flexWrap: "wrap" }}
+                      >
+                        {ewasteData[activeModal]["images"].map(
+                          (imageInfo: any) => {
+                            return (
+                              <Box
+                                flex={1}
+                                sx={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <img
+                                  src={imageInfo["link"]}
+                                  alt={imageInfo["credits"]}
+                                  style={{
+                                    maxWidth: 300,
+                                    height: "auto",
+                                    objectFit: "contain",
+                                  }}
+                                />
+                                <figcaption
+                                  style={{ fontStyle: "italic", fontSize: 10 }}
+                                >
+                                  {"Image: " + imageInfo["credits"]}
+                                </figcaption>
+                              </Box>
+                            );
+                          }
+                        )}
+                      </Stack>
+                    </Box>
+                    <Box
+                      flex={1}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <IconButton onClick={() => navigateRight(activeModal)}>
+                        <ArrowForwardIosIcon />
+                      </IconButton>
+                    </Box>
+                  </Stack>
+                </>
+              )}
             </Box>
           </Modal>
         </Box>
