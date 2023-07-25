@@ -39,9 +39,9 @@ function App() {
   // User Profile Data
   const [userSession, setUserSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [userSavedResults, setUserSavedResults] = useState<
-    UserSavedResult[] | null
-  >(null);
+  const [userSavedResults, setUserSavedResults] = useState<UserSavedResult[]>(
+    []
+  );
 
   // Item Data
   const [recyclablesData, setRecyclablesData] = useState<RecyclableItem[]>([]);
