@@ -392,7 +392,7 @@ export default function MapLocations({
     const len = closestLocationsList.length;
     for (let i = 0; i < len; i++) {
       const loc: LocationInfo = closestLocationsList[i];
-      if (loc == undefined || loc === null) continue;
+      if (loc === null) continue;
       // Don't process the location if another location with the same coordinates has already been processed
       if (
         multipurposeLocationsList.filter(

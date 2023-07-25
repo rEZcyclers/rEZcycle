@@ -51,7 +51,7 @@ function AddtoCalendar({
       "Donate " +
       goodDonatables[i]["donatable_type"] +
       " at " +
-      preferredGDLoc[i]["address"];
+      preferredGDLoc[i]?.address;
     description += newline;
   }
   for (let i = 0; i < repairDonatables.length; i++) {
@@ -79,7 +79,7 @@ function AddtoCalendar({
       "Donate " +
       goodEwaste[i]["ewaste_type"] +
       " at " +
-      preferredGELoc[i]["address"];
+      preferredGELoc[i]?.address;
     description += newline;
   }
   for (let i = 0; i < repairEwaste.length; i++) {
@@ -107,7 +107,7 @@ function AddtoCalendar({
       "Dispose of  " +
       allEwaste[i]["ewaste_type"] +
       " at " +
-      preferredEELoc[i]["address"];
+      preferredEELoc[i]?.address;
     description += newline;
   }
   return (
