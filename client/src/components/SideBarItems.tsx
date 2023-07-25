@@ -1,4 +1,4 @@
-import { History, Home, Dashboard } from "@mui/icons-material";
+import { Home, Dashboard } from "@mui/icons-material";
 
 export const SideBarItems = [
   {
@@ -11,9 +11,9 @@ export const SideBarItems = [
     icon: <Dashboard />,
     link: "/profile",
   },
-  {
-    name: "history",
-    icon: <History />,
-    link: "/history",
-  },
+  // {
+  //   name: "history",
+  //   icon: <History />,
+  //   link: "/history",
+  // },
 ];
