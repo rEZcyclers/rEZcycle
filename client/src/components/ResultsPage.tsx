@@ -122,6 +122,15 @@ function ResultsPage({
   >([]); // List of repairLocations for every selected repairable Ewaste
 
   ////////// User states for showing and saving preferred locations (which are closest to user location by default) //////////
+  /* closestGDLoc, closestEELoc & closestGELoc won't contain null, since every donatable or good ewaste has at least
+  1 place to donate to, and every ebin ewaste has at least 1 ebin to drop off at. For RD & RE items, they may not have
+  any repair locations, hence closestRDLoc & closestRELoc may contain null. BB is also initially set to null.
+  Whether an item has at least one result location or not is also reflected in our database schema, where donatables
+  have a one to (>= 1 many) relation to donate locations, while ewaste items have a one to (>= 0 many) relation to 
+  all locations, and donatatables have a one to (>= many) relation to repair locations. But GE excludes batteries by
+  processing, & EE is also filtered from ewaste items, hence GE & EE items have a one to (>= 1) many relation to 
+  their respective locations. Hence, overall, only RD & RE may have 0 result locations, while GD, GE & EE must have
+  at least 1 result location. */
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
 
   const [closestBBLoc, setClosestBBLoc] = useState<LocationInfo | null>(null);

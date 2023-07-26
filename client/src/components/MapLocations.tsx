@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Map, { Marker, Popup } from "react-map-gl";
+import { Map as MainMap, Marker, Popup } from "react-map-gl";
 import ContactEmailButton from "./MapComponents/ContactEmailButton";
 import {
   DonateLocation,
@@ -56,7 +56,7 @@ interface Props {
 
   // User's preferred location for every item
   closestBBLoc: LocationInfo | null;
-  setClosestBBLoc: (bluebin: LocationInfo) => void;
+  setClosestBBLoc: (bluebin: LocationInfo | null) => void;
   setPreferredGDLoc: (newArray: LocationInfo[]) => void;
   setPreferredRDLoc: (newArray: (LocationInfo | null)[]) => void;
   setPreferredGELoc: (newArray: LocationInfo[]) => void;
@@ -200,6 +200,7 @@ export default function MapLocations({
                   organisation["donateLocations"];
                 return locations.map((location: DonateLocation) => {
                   const locationInfo: LocationInfo = {
+                    key: `donateLoc${location["donateLoc_id"]}`,
                     locationType: "donate",
                     item: isEwasteItem
                       ? goodEwaste[i]["ewaste_type"]
@@ -234,6 +235,7 @@ export default function MapLocations({
           // For each repairable item's result, map it to a LocationInfo[]
           return item.map((location: RepairLocation) => {
             const locationInfo: LocationInfo = {
+              key: `repairLoc${location["repair_id"]}`,
               locationType: "repair",
               item: isEwasteItem
                 ? repairEwaste[i]["ewaste_type"]
@@ -261,6 +263,7 @@ export default function MapLocations({
       // Map each Bluebin to a LocationInfo for finding nearest bluebin later on
       bluebinsData.map((bluebin: Bluebin) => {
         const locationInfo: LocationInfo = {
+          key: bluebin["bluebin_id"].toString(),
           locationType: "bluebin",
           name: "bluebin",
           item: "checked recyclable items",
@@ -284,6 +287,7 @@ export default function MapLocations({
             const locations: EbinLocation[] = ebinInfo["ebinLocations"];
             return locations.map((location: EbinLocation) => {
               const locationInfo: LocationInfo = {
+                key: `ebin${location["ebinLoc_id"]}`,
                 locationType: "ebin",
                 item: ewasteData[i]["ewaste_type"],
                 name: ebin["ebin_name"],
@@ -316,8 +320,9 @@ export default function MapLocations({
     // we're unable to use the state which is not yet available
 
     /**
-     * Helper function to get the 1 closest location to the user given a list of locations.
-     * @param itemLocations - List of locations
+     * Helper function to get the 1 closest location to the user given a non-empty list
+     * of locations.
+     * @param itemLocations - Non-empty list of locations
      * @param userLocation - User's location coordinates
      * @returns {LocationInfo} - The closest location
      */
@@ -342,194 +347,69 @@ export default function MapLocations({
       }
       return closestLocation;
     }
-    // Calculate all closest locations for every item using the helper function
-    const closestBluebinLoc = closestLocation(BBLocations, userLocation);
-    const closestLocationsList: LocationInfo[] = []; // Array to store all closest locations
-    const multipurposeLocationsList: LocationInfo[] = []; // Array to store multipurpose locations
 
-    // USE NULL TO INDICATE NO LOCATIONS AVAILABLE AT ALL HENCE NO CLOSEST LOCATION
+    /**
+     * HashMap for keeping track of all closest locations with merged item names.
+     * Allows for merging to be done in O(n) time & space instead of O(n^2) time
+     * & O(n) space.
+     */
+    let mergedLocs: Map<string, LocationInfo> = new Map<string, LocationInfo>();
 
-    let closestGDLoc = GDLocations.map((itemLocations: LocationInfo[]) => {
-      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
-      closestLocationsList.push(loc);
-      return loc;
-    });
-
-    let closestRDLoc = RDLocations.map((itemLocations: LocationInfo[]) => {
-      if (itemLocations.length === 0) {
-        return null;
-      }
-      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
-      closestLocationsList.push(loc);
-      return loc;
-    });
-
-    let closestGELoc = GELocations.map((itemLocations: LocationInfo[]) => {
-      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
-      closestLocationsList.push(loc);
-      return loc;
-    });
-    let closestRELoc = RELocations.map((itemLocations: LocationInfo[]) => {
-      if (itemLocations.length === 0) {
-        return null;
-      }
-      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
-      closestLocationsList.push(loc);
-      return loc;
-    });
-    let closestEELoc = EELocations.map((itemLocations: LocationInfo[]) => {
-      const loc: LocationInfo = closestLocation(itemLocations, userLocation);
-      closestLocationsList.push(loc);
-      return loc;
-    });
-
-    // For each loc in closestLocationsList, check if there are other locations with the same coordinates.
-    // If so, combine their item strings into a single string
-    const len = closestLocationsList.length;
-    for (let i = 0; i < len; i++) {
-      const loc: LocationInfo = closestLocationsList[i];
-      if (loc === null) continue;
-      // Don't process the location if another location with the same coordinates has already been processed
-      if (
-        multipurposeLocationsList.filter(
-          (multipurposeLoc: LocationInfo) =>
-            multipurposeLoc["lat"] === loc["lat"] &&
-            multipurposeLoc["lng"] === loc["lng"]
-        ).length === 1
-      ) {
-        continue;
-      }
-      let newItemString = loc["item"];
-      let itemStringChanged = false;
-      for (let j = 0; j < len; j++) {
-        const otherLoc: LocationInfo = closestLocationsList[j];
-        if (otherLoc === null) continue;
-        if (
-          i != j &&
-          loc["lat"] === otherLoc["lat"] &&
-          loc["lng"] === otherLoc["lng"]
-        ) {
-          newItemString += ", " + otherLoc["item"];
-          itemStringChanged = true;
-        }
-      }
-      if (itemStringChanged) {
-        const newLoc: LocationInfo = {
-          locationType: "multipurpose",
-          item: newItemString,
-          name: loc["name"],
-          address: loc["address"],
-          contact: loc["contact"],
-          lat: loc["lat"],
-          lng: loc["lng"],
-        };
-        multipurposeLocationsList.push(newLoc);
-      }
+    /**
+     * Helper function to get all closest locations for every item type, such that
+     * locations with the same coordinates but different items are merged into a
+     * single LocationInfo object with concatenated item names.
+     * Item types accepted here are GD/GE/EE items, because they all have at least 1
+     * result location and hence a non-null closest location.
+     * @param allItemLocations - Result locations for GE/GE/EE
+     * @returns {LocationInfo[]} - Closest merged locations for GE/GE/EE
+     */
+    function getClosestWithMerge(allItemLocations: LocationInfo[][]) {
+      return allItemLocations.map((itemLocations: LocationInfo[]) => {
+        return merge(closestLocation(itemLocations, userLocation));
+      });
     }
 
-    // Replace closest locations with multipurpose locations if they have the same coordinates
-    closestGDLoc = closestGDLoc.map((loc: LocationInfo) => {
-      for (const multipurposeLoc of multipurposeLocationsList) {
-        if (
-          loc["lat"] === multipurposeLoc["lat"] &&
-          loc["lng"] === multipurposeLoc["lng"]
-        ) {
-          const newLoc: LocationInfo = {
-            locationType: loc["locationType"],
-            item: multipurposeLoc["item"],
-            name: loc["name"],
-            address: loc["address"],
-            contact: loc["contact"],
-            lat: loc["lat"],
-            lng: loc["lng"],
-          };
-          return newLoc;
-        }
-      }
-      return loc;
-    });
-    closestRDLoc = closestRDLoc.map((loc: LocationInfo | null) => {
-      if (loc === null) return null;
-      for (const multipurposeLoc of multipurposeLocationsList) {
-        if (
-          loc["lat"] === multipurposeLoc["lat"] &&
-          loc["lng"] === multipurposeLoc["lng"]
-        ) {
-          const newLoc: LocationInfo = {
-            locationType: loc["locationType"],
-            item: multipurposeLoc["item"],
-            name: loc["name"],
-            address: loc["address"],
-            contact: loc["contact"],
-            lat: loc["lat"],
-            lng: loc["lng"],
-          };
-          return newLoc;
-        }
-      }
-      return loc;
-    });
-    closestGELoc = closestGELoc.map((loc: LocationInfo) => {
-      for (const multipurposeLoc of multipurposeLocationsList) {
-        if (
-          loc["lat"] === multipurposeLoc["lat"] &&
-          loc["lng"] === multipurposeLoc["lng"]
-        ) {
-          const newLoc: LocationInfo = {
-            locationType: loc["locationType"],
-            item: multipurposeLoc["item"],
-            name: loc["name"],
-            address: loc["address"],
-            contact: loc["contact"],
-            lat: loc["lat"],
-            lng: loc["lng"],
-          };
-          return newLoc;
-        }
-      }
-      return loc;
-    });
-    closestRELoc = closestRELoc.map((loc: LocationInfo | null) => {
-      if (loc === null) return null;
-      for (const multipurposeLoc of multipurposeLocationsList) {
-        if (
-          loc["lat"] === multipurposeLoc["lat"] &&
-          loc["lng"] === multipurposeLoc["lng"]
-        ) {
-          const newLoc: LocationInfo = {
-            locationType: loc["locationType"],
-            item: multipurposeLoc["item"],
-            name: loc["name"],
-            address: loc["address"],
-            contact: loc["contact"],
-            lat: loc["lat"],
-            lng: loc["lng"],
-          };
-          return newLoc;
-        }
-      }
-      return loc;
-    });
-    closestEELoc = closestEELoc.map((loc: LocationInfo) => {
-      for (const multipurposeLoc of multipurposeLocationsList) {
-        if (
-          loc["lat"] === multipurposeLoc["lat"] &&
-          loc["lng"] === multipurposeLoc["lng"]
-        ) {
-          const newLoc: LocationInfo = {
-            locationType: loc["locationType"],
-            item: multipurposeLoc["item"],
-            name: loc["name"],
-            address: loc["address"],
-            contact: loc["contact"],
-            lat: loc["lat"],
-            lng: loc["lng"],
-          };
-          return newLoc;
-        }
-      }
-      return loc;
-    });
+    /**
+     * Same as getClosestWithMerge() but allows for null closest locations, in
+     * particular for RD/RE items which may have 0 result locations and hence
+     * no closest locations.
+     * @param allItemLocations - Result locations for RD/RE
+     * @returns {(LocationInfo | null)[]} - Nullable closest merged locations for RD/RE
+     */
+    function getClosestWithMergeNullable(allItemLocations: LocationInfo[][]) {
+      return allItemLocations.map((itemLocations: LocationInfo[]) => {
+        if (itemLocations.length === 0) return null;
+        return merge(closestLocation(itemLocations, userLocation));
+      });
+    }
+
+    /**
+     * Helper function to merge the different items accepted by the same
+     * closest location.
+     * @param loc - LocationInfo object to be merged if another LocationInfo
+     *      object with the same coordinates already exists
+     * @returns {LocationInfo} - Merged LocationInfo object
+     */
+    function merge(loc: LocationInfo) {
+      if (!mergedLocs.has(loc["key"])) {
+        // If same closest location doesn't
+        mergedLocs.set(loc["key"], loc); // exist yet, don't need to merge
+        return loc;
+      } // Else if same location already exists, merge the item names
+      const mergedLoc = mergedLocs.get(loc["key"]);
+      if (mergedLoc === undefined) return loc; // guard for get()'s | undefined
+      mergedLoc.item = mergedLoc.item + ", " + loc["item"];
+      return mergedLoc;
+    }
+
+    const closestBluebinLoc = closestLocation(BBLocations, userLocation);
+    const closestGDLoc = getClosestWithMerge(GDLocations);
+    const closestRDLoc = getClosestWithMergeNullable(RDLocations);
+    const closestGELoc = getClosestWithMerge(GELocations);
+    const closestRELoc = getClosestWithMergeNullable(RELocations);
+    const closestEELoc = getClosestWithMerge(EELocations);
+
     // Then save all closest locations in this component's state as defined earlier
     setClosestBBLoc(closestBluebinLoc);
     setClosestGDLoc(closestGDLoc);
@@ -650,7 +530,7 @@ export default function MapLocations({
 
   return (
     <div style={{ position: "relative", width: "95%", height: "60%" }}>
-      <Map
+      <MainMap
         initialViewState={{
           latitude: 1.36,
           longitude: 103.803,
@@ -733,7 +613,7 @@ export default function MapLocations({
             </div>
           </Popup>
         )}
-      </Map>
+      </MainMap>
       <div
         style={{
           margin: 0,

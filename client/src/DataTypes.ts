@@ -141,6 +141,7 @@ export type EbinLocations = {
 
 // Location Info needed to render Location Marker of item on the Map
 export type LocationInfo = {
+  key: string;
   locationType: string;
   item: string;
   name: string;
