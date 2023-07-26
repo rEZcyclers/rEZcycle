@@ -671,16 +671,33 @@ export default function MapLocations({
             longitude={closestBBLoc.lng}
             onClick={() => setActiveMarker(closestBBLoc)}
           >
-            <RecyclingIcon
-              sx={{
-                backgroundColor: recyclableColor,
-                color: "white",
-                border: "2px solid white",
-                width: 27,
-                height: 27,
-                borderRadius: 14,
-              }}
-            />
+            <div style={{ position: "relative" }}>
+              <RecyclingIcon
+                sx={{
+                  backgroundColor: recyclableColor,
+                  color: "white",
+                  border: "3px solid green",
+                  width: 27,
+                  height: 27,
+                  borderRadius: 14,
+                }}
+              />
+              <Typography
+                sx={{
+                  color: "black",
+                  position: "absolute",
+                  left: "50%", // Center the text horizontally
+                  transform: "translateX(-50%)", // Center the text horizontally
+                  backgroundColor: "white",
+                  borderRadius: 3,
+                  padding: 1,
+                  fontSize: 11,
+                  fontWeight: "bold",
+                }}
+              >
+                bluebin
+              </Typography>
+            </div>
           </Marker>
         )}
         {markersToRender.map((params, i) => (

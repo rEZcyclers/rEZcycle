@@ -18,7 +18,7 @@ export default function RecyclablesResults({
         <Box flex={1}>
           <h2>Recyclables</h2>
           <h4 style={{ margin: 0 }}>
-            These items can be recycled at the nearest blue bins:
+            These items can be recycled at your nearest blue bin:
           </h4>
           <p style={{ margin: 0, color: "red" }}>
             {showClosest &&
