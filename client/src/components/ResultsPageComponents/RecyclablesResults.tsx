@@ -1,17 +1,15 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { LocationInfo, RecyclableItem } from "../../DataTypes";
 
 interface Props {
   recyclablesResults: RecyclableItem[];
-  showBluebin: boolean;
-  handleShowBluebin: () => void;
+  showClosest: boolean;
   closestBBLoc: LocationInfo | null;
 }
 
 export default function RecyclablesResults({
   recyclablesResults,
-  showBluebin,
-  handleShowBluebin,
+  showClosest,
   closestBBLoc,
 }: Props) {
   return (
@@ -23,24 +21,10 @@ export default function RecyclablesResults({
             These items can be recycled at the nearest blue bins:
           </h4>
           <p style={{ margin: 0, color: "red" }}>
-            {showBluebin &&
+            {showClosest &&
               closestBBLoc != null &&
               `Closest bluebin: ${closestBBLoc["address"]}`}
           </p>
-          <Button
-            variant={showBluebin ? "contained" : "outlined"}
-            sx={{
-              mt: 1,
-              height: 50,
-              fontSize: "small",
-            }}
-            disabled={closestBBLoc === null}
-            onClick={() => {
-              handleShowBluebin();
-            }}
-          >
-            Show nearest Blue Bin
-          </Button>
           <ul>
             {recyclablesResults.map((item: RecyclableItem) => {
               return (

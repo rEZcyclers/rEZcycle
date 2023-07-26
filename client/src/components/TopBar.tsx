@@ -53,7 +53,7 @@ function TopBar({ sideBarState }: Props) {
           }}
         ></Typography>
         <Typography sx={{ color: "white", marginRight: "3%" }}>
-          Source:{" "}
+          Data:{" "}
           <a
             href="https://www.nea.gov.sg/our-services/towards-zero-waste"
             target="_blank"

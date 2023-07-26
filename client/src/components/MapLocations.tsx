@@ -36,7 +36,6 @@ interface Props {
   repairEwaste: EwasteItem[];
 
   // 'Show on Map' button states for every selected item
-  showBluebin: boolean;
   showGDMarkers: boolean[]; // Good Donatables (GD)
   showRDMarkers: boolean[]; // Repairable Donatables (RD)
   showGEMarkers: boolean[]; // Good Ewaste (GE)
@@ -66,7 +65,6 @@ interface Props {
 
   showClosest: boolean;
   setShowClosest: (toggle: boolean) => void;
-  setShowBluebin: (show: boolean) => void;
 
   isRecyclableSelected: boolean;
 }
@@ -119,7 +117,6 @@ export default function MapLocations({
   repairDonatables,
   goodEwaste,
   repairEwaste,
-  showBluebin,
   showGDMarkers,
   showRDMarkers,
   showGEMarkers,
@@ -142,7 +139,6 @@ export default function MapLocations({
   setPreferredEELoc,
   showClosest,
   setShowClosest,
-  setShowBluebin,
   isRecyclableSelected,
 }: Props) {
   ////////// Data needed to display result items on the map
@@ -669,7 +665,7 @@ export default function MapLocations({
           position="top-left"
           getClosestLocations={getClosestLocations}
         />
-        {isRecyclableSelected && showBluebin && closestBBLoc != null && (
+        {isRecyclableSelected && showClosest && closestBBLoc != null && (
           <Marker
             latitude={closestBBLoc.lat}
             longitude={closestBBLoc.lng}
@@ -746,7 +742,6 @@ export default function MapLocations({
                 }
                 setShowAlert(false);
                 setShowClosest(!showClosest);
-                if (!showClosest && isRecyclableSelected) setShowBluebin(true);
               }}
               color="secondary"
               size="medium"

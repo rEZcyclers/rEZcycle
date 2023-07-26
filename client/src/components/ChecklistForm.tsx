@@ -87,7 +87,12 @@ function ChecklistForm({
 
   const isChecklistComplete = () => {
     for (let i = 0; i < selectedRecyclables.length; i++) {
-      if (selectedRecyclables[i] && !recyclableConditions[i]) return false;
+      if (
+        recyclablesData[i]["bluebin_eligibility"] != 0 &&
+        selectedRecyclables[i] &&
+        !recyclableConditions[i]
+      )
+        return false;
     }
     for (let i = 0; i < selectedDonatables.length; i++) {
       if (selectedDonatables[i] && !donatableConditions[i]) return false;
