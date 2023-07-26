@@ -180,15 +180,11 @@ function ResultsPage({
   };
 
   ////////// States for deciding whether to show map location markers for every result item or not //////////
-  const [showBluebin, setShowBluebin] = useState<boolean>(false);
   const [showGDMarkers, setShowGDMarkers] = useState<boolean[]>([]);
   const [showRDMarkers, setShowRDMarkers] = useState<boolean[]>([]);
   const [showEEMarkers, setShowEEMarkers] = useState<boolean[]>([]);
   const [showGEMarkers, setShowGEMarkers] = useState<boolean[]>([]);
   const [showREMarkers, setShowREMarkers] = useState<boolean[]>([]);
-  const handleShowBluebin = () => {
-    setShowBluebin(!showBluebin);
-  };
   const handleShowGDMarkers = (index: number) => {
     setShowGDMarkers([
       ...showGDMarkers.slice(0, index),
@@ -503,7 +499,6 @@ function ResultsPage({
             repairDonatables={repairDonatables}
             goodEwaste={goodEwaste}
             repairEwaste={repairEwaste}
-            showBluebin={showBluebin}
             showGDMarkers={showGDMarkers}
             showRDMarkers={showRDMarkers}
             showGEMarkers={showGEMarkers}
@@ -526,7 +521,6 @@ function ResultsPage({
             setPreferredEELoc={setPreferredEELoc}
             showClosest={showClosest}
             setShowClosest={setShowClosest}
-            setShowBluebin={setShowBluebin}
             isRecyclableSelected={recyclablesResults.length > 0}
           />
           <Stack
@@ -535,8 +529,7 @@ function ResultsPage({
           >
             <RecyclablesResults
               recyclablesResults={recyclablesResults}
-              showBluebin={showBluebin}
-              handleShowBluebin={handleShowBluebin}
+              showClosest={showClosest}
               closestBBLoc={closestBBLoc}
             />
 
