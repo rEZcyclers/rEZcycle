@@ -24,7 +24,7 @@ export default function UserSavedResults({
     })
       .then(() => {
         setLocalSavedRes(
-          userSavedResults.filter(
+          localSavedRes.filter(
             (savedRes: UserSavedResult) => savedRes["res_id"] != resId
           )
         );
