@@ -493,7 +493,7 @@ function ResultsPage({
         <span>Loading...</span>
       ) : (
         <>
-          <h1 style={{ margin: 0 }}>
+          <h1 style={{ margin: 0, textAlign: "center" }}>
             Here's where to recycle / donate your items
           </h1>
           {userLocation === null && (
