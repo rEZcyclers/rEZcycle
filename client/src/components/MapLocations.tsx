@@ -529,7 +529,7 @@ export default function MapLocations({
   ];
 
   return (
-    <div style={{ position: "relative", width: "95%", height: "60%" }}>
+    <div style={{ position: "relative", width: "100%", height: "60%" }}>
       <MainMap
         initialViewState={{
           latitude: 1.36,

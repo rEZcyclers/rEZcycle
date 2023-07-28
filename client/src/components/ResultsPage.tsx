@@ -496,13 +496,15 @@ function ResultsPage({
           <h1 style={{ margin: 0 }}>
             Here's where to recycle / donate your items
           </h1>
-          <Stack direction={"row"} alignItems={"center"} sx={{ mt: -1 }}>
-            <InfoIcon sx={{ mr: 1 }} color={"info"} />
-            <p>
-              Input your location to see recycling/donation/repair services near
-              you
-            </p>
-          </Stack>
+          {userLocation === null && (
+            <Stack direction={"row"} alignItems={"center"}>
+              <InfoIcon sx={{ mr: 1 }} color={"warning"} />
+              <p style={{ margin: 0, marginBottom: 1 }}>
+                Please input your location to see recycling/donation/repair
+                services near you
+              </p>
+            </Stack>
+          )}
           <MapLocations
             goodDonatables={goodDonatables}
             repairDonatables={repairDonatables}
@@ -535,6 +537,12 @@ function ResultsPage({
           <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={{ xs: 1, sm: 2, md: 4 }}
+            sx={{
+              backgroundColor: "white",
+              padding: "0px 20px 20px 20px",
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+            }}
           >
             <RecyclablesResults
               recyclablesResults={recyclablesResults}
@@ -609,7 +617,7 @@ function ResultsPage({
             <Button
               variant="outlined"
               onClick={handleBackClick}
-              sx={{ mr: 5, mb: 10 }}
+              sx={{ mr: 5, mb: 10, backgroundColor: "white" }}
             >
               Back
             </Button>
@@ -617,7 +625,7 @@ function ResultsPage({
               variant="outlined"
               color="secondary"
               onClick={restartQuery}
-              sx={{ mr: 5, mb: 10 }}
+              sx={{ mr: 5, mb: 10, backgroundColor: "white" }}
             >
               Start new query
             </Button>
@@ -638,7 +646,14 @@ function ResultsPage({
                     processUserResults();
                     setShowConfirmUserResults(true);
                   }}
-                  sx={{ mr: 10, mb: 10 }}
+                  sx={{
+                    mr: 10,
+                    mb: 10,
+                    backgroundColor:
+                      userLocation === null || userSession === null
+                        ? "transparent"
+                        : "white",
+                  }}
                 >
                   Save results
                 </Button>

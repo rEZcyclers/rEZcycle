@@ -67,7 +67,15 @@ function Donatables({
         <h3>Loading...</h3>
       ) : (
         <>
-          <Box display="flex" sx={{ flexWrap: "wrap" }}>
+          <Box
+            display="flex"
+            sx={{
+              flexWrap: "wrap",
+              backgroundColor: "rgba(255,255,255,0.9)",
+              borderRadius: 10,
+              padding: 2,
+            }}
+          >
             {donatablesData.map((item: DonatableItem) => {
               return (
                 <div

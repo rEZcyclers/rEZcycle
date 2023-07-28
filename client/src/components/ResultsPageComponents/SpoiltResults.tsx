@@ -1,5 +1,6 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { DonatableItem, RecyclableItem } from "../../DataTypes";
+import { Margin } from "@mui/icons-material";
 
 interface Props {
   unrecyclablesResults: RecyclableItem[];
@@ -13,12 +14,21 @@ export default function SpoiltResults({
   return (
     <>
       {(unrecyclablesResults.length != 0 || spoiltDonatables.length != 0) && (
-        <>
-          <h2>These items need to be disposed as general waste:</h2>
+        <Box
+          sx={{
+            backgroundColor: "white",
+            borderRadius: 5,
+            padding: 2,
+            marginTop: 3,
+          }}
+        >
+          <h2 style={{ margin: 0 }}>
+            These items need to be disposed as general waste:
+          </h2>
           <Stack>
             {unrecyclablesResults.length != 0 && (
               <>
-                <h3>
+                <h3 style={{ margin: 0, fontStyle: "italic" }}>
                   (The following items may be of recyclable material, but its
                   usage or condition renders them unrecyclable)
                 </h3>
@@ -31,7 +41,9 @@ export default function SpoiltResults({
             )}
             {spoiltDonatables.length != 0 && (
               <>
-                <h3>(Spoilt Donatables)</h3>
+                <h3 style={{ margin: 0, fontStyle: "italic" }}>
+                  (Spoilt Donatables)
+                </h3>
                 {spoiltDonatables.map((item: DonatableItem) => {
                   return (
                     <Typography variant="body1">
@@ -42,7 +54,7 @@ export default function SpoiltResults({
               </>
             )}
           </Stack>
-        </>
+        </Box>
       )}
     </>
   );

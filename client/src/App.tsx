@@ -34,7 +34,7 @@ const serverAPI = "https://rezcycle-server.onrender.com";
 
 function App() {
   // SideBar state
-  const [sideBarOpen, setSideBarOpen] = useState<boolean>(true);
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
 
   // User Profile Data
   const [userSession, setUserSession] = useState<Session | null>(null);
