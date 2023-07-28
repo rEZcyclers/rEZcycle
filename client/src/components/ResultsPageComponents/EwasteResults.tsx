@@ -145,7 +145,12 @@ export default function ({
                           showEEMarkers[index] ? "contained" : "outlined"
                         }
                         color="primary"
-                        sx={{ mt: 1, height: 50, fontSize: "small" }}
+                        sx={{
+                          mt: 1,
+                          height: 50,
+                          fontSize: "small",
+                          maxWidth: 100,
+                        }}
                         onClick={() => {
                           handleShowEEMarkers(index);
                         }}
@@ -266,7 +271,12 @@ export default function ({
                           showGEMarkers[index] ? "contained" : "outlined"
                         }
                         color="primary"
-                        sx={{ mt: 1, height: 50, fontSize: "small" }}
+                        sx={{
+                          mt: 1,
+                          height: 50,
+                          fontSize: "small",
+                          maxWidth: 100,
+                        }}
                         onClick={() => {
                           handleShowGEMarkers(index);
                         }}
@@ -363,7 +373,12 @@ export default function ({
                               showREMarkers[index] ? "contained" : "outlined"
                             }
                             color="primary"
-                            sx={{ mt: 1, height: 50, fontSize: "small" }}
+                            sx={{
+                              mt: 1,
+                              height: 50,
+                              fontSize: "small",
+                              maxWidth: 100,
+                            }}
                             onClick={() => {
                               handleShowREMarkers(index);
                             }}

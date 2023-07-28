@@ -9,7 +9,7 @@ function ProfilePage() {
     useContext(backendContext);
 
   return (
-    <Base>
+    <Base bgiAbsolutePath="/test5.jpg">
       {userSession == null ? (
         <h1> Please log in to view profile page </h1>
       ) : (

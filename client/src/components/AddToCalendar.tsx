@@ -1,6 +1,6 @@
 import { AddToCalendarButton } from "add-to-calendar-button-react";
 import { DonatableItem, EwasteItem, LocationInfo } from "../DataTypes";
-import { Box } from "@mui/material";
+
 interface Props {
   closestBBLoc: LocationInfo | null;
 
@@ -111,7 +111,7 @@ function AddtoCalendar({
     description += newline;
   }
   return (
-    <Box sx={{ mr: 10, mb: 10 }}>
+    <>
       <AddToCalendarButton
         name="Recycling Trip"
         description={description}
@@ -131,7 +131,7 @@ function AddtoCalendar({
         timeZone="Asia/Singapore"
         buttonStyle="flat"
       ></AddToCalendarButton>
-    </Box>
+    </>
   );
 }
 
