@@ -4,6 +4,7 @@ import QueryForm from "../components/QueryForm";
 import ChecklistForm from "../components/ChecklistForm";
 // import ResultsPage from "../components/ResultsPage";
 import ResultsPage from "../components/ResultsPage";
+import Bgi from "../images/test7.jpg";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
@@ -50,7 +51,7 @@ function HomePage() {
 
   return (
     // Base param: bgiAbsolutePath={stage != 3 ? "/src/images/test.jpeg" : undefined}
-    <Base bgiAbsolutePath={"/src/images/test7.jpg"}>
+    <Base bgiAbsolutePath={"/test7.jpg"}>
       {stage == 1 ? (
         <QueryForm
           setStage={setStage}
