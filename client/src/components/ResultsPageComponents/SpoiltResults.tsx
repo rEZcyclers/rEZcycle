@@ -1,6 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { DonatableItem, RecyclableItem } from "../../DataTypes";
-import { Margin } from "@mui/icons-material";
 
 interface Props {
   unrecyclablesResults: RecyclableItem[];

@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Recyclables from "./QueryFormComponents/Recyclables";
 import Donatables from "./QueryFormComponents/Donatables";
 import Ewaste from "./QueryFormComponents/Ewaste";
-import { Alert, Button, Snackbar, Typography } from "@mui/material";
+import { Alert, Button, Snackbar } from "@mui/material";
 import { useState } from "react";
 // import recyclablesPoster from "../images/bluebin-label.jpg";
 
