@@ -150,7 +150,12 @@ export default function DonatablesResults({
                     <Button
                       variant={showGDMarkers[index] ? "contained" : "outlined"}
                       color="primary"
-                      sx={{ mt: 1, height: 50, fontSize: "small" }}
+                      sx={{
+                        mt: 1,
+                        height: 50,
+                        fontSize: "small",
+                        maxWidth: 100,
+                      }}
                       onClick={() => {
                         handleShowGDMarkers(index);
                       }}
@@ -240,7 +245,12 @@ export default function DonatablesResults({
                     <Button
                       variant={showRDMarkers[index] ? "contained" : "outlined"}
                       color="primary"
-                      sx={{ mt: 1, height: 50, fontSize: "small" }}
+                      sx={{
+                        mt: 1,
+                        height: 50,
+                        fontSize: "small",
+                        maxWidth: 100,
+                      }}
                       onClick={() => {
                         handleShowRDMarkers(index);
                       }}

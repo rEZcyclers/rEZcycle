@@ -111,7 +111,7 @@ function AddtoCalendar({
     description += newline;
   }
   return (
-    <Box sx={{ mr: 10, mb: 10 }}>
+    <>
       <AddToCalendarButton
         name="Recycling Trip"
         description={description}
@@ -131,7 +131,7 @@ function AddtoCalendar({
         timeZone="Asia/Singapore"
         buttonStyle="flat"
       ></AddToCalendarButton>
-    </Box>
+    </>
   );
 }
 

@@ -529,14 +529,26 @@ export default function MapLocations({
   ];
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "60%" }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "85%",
+      }}
+    >
       <MainMap
         initialViewState={{
           latitude: 1.36,
           longitude: 103.803,
           zoom: 10.5,
         }}
-        style={{ position: "relative", width: "100%", height: "100%" }}
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX_TOKEN}
       >
@@ -618,10 +630,10 @@ export default function MapLocations({
         style={{
           margin: 0,
           width: "15%",
-          minWidth: 70,
+          minWidth: 80,
           maxWidth: 100,
           position: "absolute",
-          top: "1rem",
+          top: "3rem",
           right: "1rem",
           zIndex: 1,
           borderRadius: "2rem",

@@ -499,9 +499,9 @@ function ResultsPage({
           {userLocation === null && (
             <Stack direction={"row"} alignItems={"center"}>
               <InfoIcon sx={{ mr: 1 }} color={"warning"} />
-              <p style={{ margin: 0, marginBottom: 1 }}>
-                Please input your location to see recycling/donation/repair
-                services near you
+              <p style={{ margin: "0px 0px 2px 0px", color: "red" }}>
+                Please input your location to see the closest
+                recycling/donation/repair services near you
               </p>
             </Stack>
           )}
@@ -598,7 +598,17 @@ function ResultsPage({
             unrecyclablesResults={unrecyclablesResults}
             spoiltDonatables={spoiltDonatables}
           />
-          <Box display="flex" justifyContent="right" sx={{ mt: 4 }}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+            sx={{
+              flexWrap: "wrap",
+              mt: 3,
+              mr: 3,
+              justifyContent: "right",
+              alignItems: "center",
+            }}
+          >
             {userLocation != null && (
               <AddtoCalendar
                 closestBBLoc={closestBBLoc}
@@ -614,21 +624,23 @@ function ResultsPage({
                 preferredEELoc={preferredEELoc}
               />
             )}
-            <Button
-              variant="outlined"
-              onClick={handleBackClick}
-              sx={{ mr: 5, mb: 10, backgroundColor: "white" }}
-            >
-              Back
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={restartQuery}
-              sx={{ mr: 5, mb: 10, backgroundColor: "white" }}
-            >
-              Start new query
-            </Button>
+            <div>
+              <Button
+                variant="outlined"
+                onClick={handleBackClick}
+                sx={{ mr: 5, backgroundColor: "white" }}
+              >
+                Back
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={restartQuery}
+                sx={{ backgroundColor: "white" }}
+              >
+                Start new query
+              </Button>
+            </div>
             <Tooltip
               title={
                 userLocation === null || userSession === null
@@ -647,8 +659,6 @@ function ResultsPage({
                     setShowConfirmUserResults(true);
                   }}
                   sx={{
-                    mr: 10,
-                    mb: 10,
                     backgroundColor:
                       userLocation === null || userSession === null
                         ? "transparent"
@@ -659,7 +669,7 @@ function ResultsPage({
                 </Button>
               </div>
             </Tooltip>
-          </Box>
+          </Stack>
           <Modal open={showConfirmUserResults}>
             <Box
               flex={1}

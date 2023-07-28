@@ -179,6 +179,7 @@ export default function ProfileCard({ server, userProfile }: Props) {
           border: "1px solid",
           boxShadow: "10px 5px 20px #83F33A",
           borderRadius: ".5rem",
+          backgroundColor: "white",
         }}
       >
         <Box

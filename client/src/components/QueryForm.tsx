@@ -106,7 +106,7 @@ function QueryForm({
           disabled={numSelectedItems === 0}
           sx={{
             mr: 10,
-            backgroundColor: numSelectedItems === 0 ? "gray" : "white",
+            backgroundColor: numSelectedItems === 0 ? "transparent" : "white",
           }}
         >
           Clear
