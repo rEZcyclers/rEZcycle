@@ -4,7 +4,6 @@ import QueryForm from "../components/QueryForm";
 import ChecklistForm from "../components/ChecklistForm";
 // import ResultsPage from "../components/ResultsPage";
 import ResultsPage from "../components/ResultsPage";
-import Bgi from "../images/test7.jpg";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
 
