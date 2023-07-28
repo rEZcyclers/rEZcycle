@@ -1,15 +1,31 @@
 /* styling for base layout */
+.AppContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.TopBar {
+    height: 49px; /* Fixed height */
+    background-color: rgb(13, 172, 130);
+    padding: 0;
+    border-bottom: solid 2px rgb(19, 161, 114);
+}
+
 
 .FlexContainer {
-    height: 100vh;
+    flex-grow: 1; /* Fills up vertical space after TopBar */
+    height: 50vh; /* Forces overflow scroll to be only in WebPage */
     display: flex;
     flex-wrap: nowrap;
     background-color: rgb(255, 255, 255);
     position: relative; /* allows background image to take reference to this div */
 }
 
+
 .SideBar {
-    height: 100%;
+    flex-grow: 1;  /* Fills up vertical space after TopBar */
+    height: 92vh; /* Forces overflow scroll to be only in WebPage */
     width: 25vw;
     min-width: 120px;
     max-width: 200px;
@@ -20,8 +36,9 @@
 
 .WebPage {
     width: 100vw;
-    padding-left: 3%;
+    padding: 0% 3% 3% 3%;
     z-index: 1; /* overlays background image */
+    overflow-y: scroll;
 }
 
 .SideBarList {
@@ -69,8 +86,3 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'sLucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-.TopBar {
-    background-color: rgb(13, 172, 130);
-    padding: 0;
-    border-bottom: solid 2px rgb(19, 161, 114);
-}
