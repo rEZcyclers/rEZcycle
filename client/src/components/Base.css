@@ -25,7 +25,7 @@
 
 .SideBar {
     flex-grow: 1;  /* Fills up vertical space after TopBar */
-    height: 92vh; /* Forces overflow scroll to be only in WebPage */
+    height: 90vh; /* Forces overflow scroll to be only in WebPage */
     width: 25vw;
     min-width: 120px;
     max-width: 200px;

@@ -50,7 +50,7 @@ function HomePage() {
 
   return (
     // Base param: bgiAbsolutePath={stage != 3 ? "/src/images/test.jpeg" : undefined}
-    <Base bgiAbsolutePath={"/src/images/test7.jpg"}>
+    <Base bgiAbsolutePath={"/test7.jpg"}>
       {stage == 1 ? (
         <QueryForm
           setStage={setStage}
