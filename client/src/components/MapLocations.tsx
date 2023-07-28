@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Map as MainMap, Marker, Popup } from "react-map-gl";
 import ContactEmailButton from "./MapComponents/ContactEmailButton";
 import {
@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import GeocoderControl from "./MapComponents/GeocoderControl";
 import MarkerRenderer from "./MapComponents/MarkerRenderer";
+import { backendContext } from "../App";
 
 interface Props {
   // Selected Items
@@ -33,7 +34,6 @@ interface Props {
   repairDonatables: DonatableItem[];
   goodEwaste: EwasteItem[];
   repairEwaste: EwasteItem[];
-  ebinEwaste: EwasteItem[];
 
   // 'Show on Map' button states for every selected item
   showGDMarkers: boolean[]; // Good Donatables (GD)
@@ -117,7 +117,6 @@ export default function MapLocations({
   repairDonatables,
   goodEwaste,
   repairEwaste,
-  ebinEwaste,
   showGDMarkers,
   showRDMarkers,
   showGEMarkers,
@@ -142,6 +141,9 @@ export default function MapLocations({
   setShowClosest,
   isRecyclableSelected,
 }: Props) {
+  ////////// Data needed to display result items on the map
+  const { ewasteData } = useContext(backendContext);
+
   ////////// States to save the location information for every result item
   const [BBLocations, setBBLocations] = useState<LocationInfo[]>([]);
   const [GDLocations, setGDLocations] = useState<LocationInfo[][]>([]);
@@ -287,7 +289,7 @@ export default function MapLocations({
               const locationInfo: LocationInfo = {
                 key: `ebin${location["ebinLoc_id"]}`,
                 locationType: "ebin",
-                item: ebinEwaste[i]["ewaste_type"],
+                item: ewasteData[i]["ewaste_type"],
                 name: ebin["ebin_name"],
                 address: location["address"],
                 contact: "No contact available",
