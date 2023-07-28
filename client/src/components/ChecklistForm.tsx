@@ -221,48 +221,115 @@ function ChecklistForm({
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
-        sx={{ flexWrap: "wrap" }}
+        sx={{ flexWrap: "wrap", marginTop: 5 }}
       >
         {(recyclablesChecklist.length !== 0 || unrecyclables.length !== 0) && (
-          <Box flex={1}>
-            <h2>Recyclables</h2>
+          <Box
+            flex={1}
+            sx={{
+              borderRadius: 5,
+              backgroundColor: "rgba(255,255,255,0.5)",
+              maxWidth: 600,
+              padding: "0px 20px 20px 20px",
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>Recyclables</h2>
             {recyclablesChecklist.length !== 0 && (
               <>
-                <h4>Have you checked your recyclables?</h4>
-                <FormGroup>{recyclablesChecklist}</FormGroup>
+                <h4 style={{ textAlign: "center" }}>
+                  Have you checked your recyclables?
+                </h4>
+                <FormGroup
+                  sx={{
+                    padding: 2,
+                    borderRadius: 5,
+                    backgroundColor: "rgba(255,255,255,0.8)",
+                    maxWidth: 600,
+                  }}
+                >
+                  {recyclablesChecklist}
+                </FormGroup>
               </>
             )}
             {unrecyclables.length !== 0 && (
               <>
-                <h4>
+                <h4 style={{ color: "red" }}>
                   These items are not recyclable, please dispose of them as
                   general waste:
                 </h4>
-                <ul>{unrecyclables}</ul>
+                <Box
+                  sx={{
+                    backgroundColor: "white",
+                    borderRadius: 5,
+                    padding: 1,
+                  }}
+                >
+                  <ul style={{ marginLeft: -10 }}>{unrecyclables}</ul>
+                </Box>
               </>
             )}
           </Box>
         )}
         {donatablesChecklist.length !== 0 && (
-          <Box flex={1}>
-            <h2>Donatables</h2>
-            <h4>What is the condition of your donatable?</h4>
+          <Box
+            flex={1}
+            sx={{
+              borderRadius: 5,
+              backgroundColor: "rgba(255,255,255,0.7)",
+              maxWidth: 500,
+              padding: "0px 20px 20px 20px",
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>Donatables</h2>
+            <h4 style={{ textAlign: "center" }}>
+              What is the condition of your donatable?
+            </h4>
             <Stack direction={"row"} alignItems={"center"} sx={{ mt: -3 }}>
               <InfoIcon sx={{ mr: 1 }} color={"info"} />
               <p>Items in different conditions will be processed differently</p>
             </Stack>
-            <Stack spacing={1}>{donatablesChecklist}</Stack>
+            <Stack
+              spacing={1}
+              sx={{
+                padding: 2,
+                borderRadius: 5,
+                backgroundColor: "white",
+                maxWidth: 500,
+              }}
+            >
+              {donatablesChecklist}
+            </Stack>
           </Box>
         )}
         {ewasteChecklist.length !== 0 && (
-          <Box flex={1}>
-            <h2>E-waste</h2>
-            <h4>What is the condition of your E-waste?</h4>
+          <Box
+            flex={1}
+            sx={{
+              borderRadius: 5,
+              backgroundColor: "rgba(255,255,255,0.7)",
+              maxWidth: 500,
+              padding: "0px 20px 20px 20px",
+            }}
+          >
+            <h2 style={{ textAlign: "center" }}>E-waste</h2>
+            <h4 style={{ textAlign: "center" }}>
+              What is the condition of your E-waste?
+            </h4>
             <Stack direction={"row"} alignItems={"center"} sx={{ mt: -3 }}>
               <InfoIcon sx={{ mr: 1 }} color={"info"} />
               <p>Items in different conditions will be processed differently</p>
             </Stack>
-            <Stack spacing={1}>{ewasteChecklist}</Stack>
+            <Stack
+              spacing={1}
+              sx={{
+                padding: 2,
+                borderRadius: 5,
+                backgroundColor: "white",
+                maxWidth: 500,
+              }}
+            >
+              {ewasteChecklist}
+            </Stack>
           </Box>
         )}
       </Stack>
@@ -278,14 +345,14 @@ function ChecklistForm({
         <Button
           variant="outlined"
           onClick={handleBackClick}
-          sx={{ mr: 10, mb: 10 }}
+          sx={{ mr: 10, mb: 10, backgroundColor: "white" }}
         >
           Back
         </Button>
         <Button
           variant="outlined"
           onClick={handleNextClick}
-          sx={{ mr: 10, mb: 10 }}
+          sx={{ mr: 10, mb: 10, backgroundColor: "white" }}
         >
           Next
         </Button>

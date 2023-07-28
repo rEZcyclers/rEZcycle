@@ -5,7 +5,7 @@ import Autocomplete, {
 import { useContext } from "react";
 import { backendContext } from "../../App";
 import { RecyclableItem } from "../../DataTypes";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 interface Props {
   selectedRecyclables: boolean[];
@@ -70,7 +70,14 @@ export default function Recyclables({
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        backgroundColor: "rgba(255,255,255,0.9)",
+        borderRadius: 5,
+        padding: 2,
+        maxWidth: 380,
+      }}
+    >
       {materialArrays.map(
         (materialArray: RecyclableItem[], materialIndex: number) => {
           return (
@@ -123,7 +130,7 @@ export default function Recyclables({
           );
         }
       )}
-    </>
+    </Box>
   );
 }
 

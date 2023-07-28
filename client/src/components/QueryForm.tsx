@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Recyclables from "./QueryFormComponents/Recyclables";
 import Donatables from "./QueryFormComponents/Donatables";
 import Ewaste from "./QueryFormComponents/Ewaste";
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
 import { useState } from "react";
 // import recyclablesPoster from "../images/bluebin-label.jpg";
 
@@ -61,14 +61,16 @@ function QueryForm({
 
   return (
     <div data-testid="query-form">
-      <h1>What would you like to recycle today?</h1>
+      <h1 style={{ textAlign: "center" }}>
+        What would you like to recycle today?
+      </h1>
       <Stack
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
         sx={{ flexWrap: "wrap" }}
       >
         <Box flex={1}>
-          <h2>Recyclables</h2>
+          <h2 style={{ margin: 0, textAlign: "center" }}>Recyclables</h2>
           <Recyclables
             selectedRecyclables={selectedRecyclables}
             setSelectedRecyclables={setSelectedRecyclables}
@@ -78,7 +80,7 @@ function QueryForm({
           {/* <img src={recyclablesPoster} style={{ height: 150 }} /> */}
         </Box>
         <Box flex={1}>
-          <h2>Donatables</h2>
+          <h2 style={{ margin: 0, textAlign: "center" }}>Donatables</h2>
           <Donatables
             selectedDonatables={selectedDonatables}
             setSelectedDonatables={setSelectedDonatables}
@@ -87,7 +89,7 @@ function QueryForm({
           />
         </Box>
         <Box flex={1}>
-          <h2>E-waste</h2>
+          <h2 style={{ margin: 0, textAlign: "center" }}>E-waste</h2>
           <Ewaste
             selectedEwaste={selectedEwaste}
             setSelectedEwaste={setSelectedEwaste}
@@ -102,11 +104,18 @@ function QueryForm({
           color="secondary"
           onClick={clearForm}
           disabled={numSelectedItems === 0}
-          sx={{ mr: 10 }}
+          sx={{
+            mr: 10,
+            backgroundColor: numSelectedItems === 0 ? "gray" : "white",
+          }}
         >
           Clear
         </Button>
-        <Button variant="outlined" onClick={proceedToChecklist} sx={{ mr: 10 }}>
+        <Button
+          variant="outlined"
+          onClick={proceedToChecklist}
+          sx={{ mr: 10, backgroundColor: "white" }}
+        >
           Next
         </Button>
       </Box>
