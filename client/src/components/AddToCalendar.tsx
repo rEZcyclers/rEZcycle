@@ -1,6 +1,6 @@
 import { AddToCalendarButton } from "add-to-calendar-button-react";
 import { DonatableItem, EwasteItem, LocationInfo } from "../DataTypes";
-import { Box } from "@mui/material";
+
 interface Props {
   closestBBLoc: LocationInfo | null;
 
