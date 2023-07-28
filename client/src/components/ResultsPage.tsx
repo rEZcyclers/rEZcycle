@@ -510,6 +510,7 @@ function ResultsPage({
             repairDonatables={repairDonatables}
             goodEwaste={goodEwaste}
             repairEwaste={repairEwaste}
+            ebinEwaste={ebinEwaste}
             showGDMarkers={showGDMarkers}
             showRDMarkers={showRDMarkers}
             showGEMarkers={showGEMarkers}
