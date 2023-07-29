@@ -531,7 +531,7 @@ export default function MapLocations({
       style={{
         position: "relative",
         width: "100%",
-        height: "85%",
+        height: "75%",
       }}
     >
       <MainMap
