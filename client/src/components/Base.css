@@ -6,7 +6,7 @@
 }
 
 .TopBar {
-    height: 49px; /* Fixed height */
+    height: 50px; /* Fixed height */
     background-color: rgb(13, 172, 130);
     padding: 0;
     border-bottom: solid 2px rgb(19, 161, 114);
@@ -35,8 +35,9 @@
 }
 
 .WebPage {
+    flex-grow: 1;
     width: 100vw;
-    padding: 0% 3% 3% 3%;
+    padding: 0% 3% 10% 3%;
     z-index: 1; /* overlays background image */
     overflow-y: scroll;
 }
