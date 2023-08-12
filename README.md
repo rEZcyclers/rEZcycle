@@ -24,3 +24,5 @@ Tutorials used:
 - SWE Practices were taken into consideration from websites such as https://www.thinkful.com/blog/software-engineering-best-practices/ and NUS Mission Control’s SWE workshop
 - React with Mosh to initialise React App using Vite and TypeScript, in addition to various other YouTube tutorials: https://youtube.com/playlist?list=PLBmGY0W5-2Wmkdh4ixIPtAhwlWC4xvhvj 
 - Codecademy Tutorials for React, Node, Jest
+
+Data Source: NEA (https://www.nea.gov.sg/our-services/towards-zero-waste) 
