@@ -29,7 +29,7 @@ import { createTheme } from "@mui/material";
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
-const serverAPI = "https://rezcycle-dev-fzbt.2.sg-1.fl0.io/";
+const serverAPI = "https://rezcycle-dev-fzbt.2.sg-1.fl0.io";
 // const serverAPI = "https://rezcycle-server.onrender.com";
 // const serverAPI = "http://localhost:8000";
 
