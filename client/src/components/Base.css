@@ -1,89 +1,87 @@
 /* styling for base layout */
 .AppContainer {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: hidden;
 }
 
 .TopBar {
-    height: 50px; /* Fixed height */
-    background-color: rgb(13, 172, 130);
-    padding: 0;
-    border-bottom: solid 2px rgb(19, 161, 114);
+  height: 50px; /* Fixed height */
+  background-color: rgb(13, 172, 130);
+  padding: 0;
+  border-bottom: solid 2px rgb(19, 161, 114);
 }
-
 
 .FlexContainer {
-    flex-grow: 1; /* Fills up vertical space after TopBar */
-    height: 50vh; /* Forces overflow scroll to be only in WebPage */
-    display: flex;
-    flex-wrap: nowrap;
-    background-color: rgb(255, 255, 255);
-    position: relative; /* allows background image to take reference to this div */
+  flex-grow: 1; /* Fills up vertical space after TopBar */
+  height: 50vh; /* Forces overflow scroll to be only in WebPage */
+  display: flex;
+  flex-wrap: nowrap;
+  background-color: rgb(255, 255, 255);
+  position: relative; /* allows background image to take reference to this div */
 }
 
-
 .SideBar {
-    flex-grow: 1;  /* Fills up vertical space after TopBar */
-    height: 90vh; /* Forces overflow scroll to be only in WebPage */
-    width: 25vw;
-    min-width: 120px;
-    max-width: 200px;
-    border-right: solid 1px rgb(216, 216, 216);
-    background-color: white;
-    z-index: 1; /* overlays background image */
+  flex-grow: 1; /* Fills up vertical space after TopBar */
+  width: 25vw;
+  min-width: 120px;
+  max-width: 200px;
+  border-right: solid 1px rgb(216, 216, 216);
+  background-color: white;
+  z-index: 1; /* overlays background image */
 }
 
 .WebPage {
-    flex-grow: 1;
-    width: 100vw;
-    padding: 0% 3% 10% 3%;
-    z-index: 1; /* overlays background image */
-    overflow-y: scroll;
+  flex-grow: 1;
+  width: 100vw;
+  padding: 0% 3% 10% 3%;
+  z-index: 1; /* overlays background image */
+  overflow-y: scroll;
 }
 
 .SideBarList {
-    height: 100%;
-    padding-left: 5%;
-    width: 100%;
-    margin-top: 8px;
-    justify-content: center;
+  height: 100%;
+  padding-left: 5%;
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
 }
 
 .SideBarList .SideBarItem {
-    width: 93%;
-    height: 55px;
-    /* border: 1px solid white; */
-    list-style-type: none;
-    margin-top: 0px;
-    display: flex;
-    flex-direction: row;
-    color: black;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Courier New', Courier, monospace;
-    border-radius: 15px;
+  width: 93%;
+  height: 55px;
+  /* border: 1px solid white; */
+  list-style-type: none;
+  margin-top: 0px;
+  display: flex;
+  flex-direction: row;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  font-family: "Courier New", Courier, monospace;
+  border-radius: 15px;
 }
 
 .SideBarList .SideBarItem:hover {
-    cursor: pointer;
-    /* background-color: rgb(81, 208, 81); */
-    background-color: rgb(207, 253, 207);
+  cursor: pointer;
+  /* background-color: rgb(81, 208, 81); */
+  background-color: rgb(207, 253, 207);
 }
 
 .SideBarList #active {
-    background-color: rgb(104, 241, 104);
+  background-color: rgb(104, 241, 104);
 }
 
 .SideBarItem #icon {
-    flex: 30%;
-    display: grid;
-    place-items: center;
+  flex: 30%;
+  display: grid;
+  place-items: center;
 }
 
 .SideBarItem #name {
-    flex: 70%;
-    font-size: medium;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'sLucida Sans Unicode', Geneva, Verdana, sans-serif;
+  flex: 70%;
+  font-size: medium;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "sLucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
-
