@@ -73,6 +73,7 @@ function Ewaste({
             backgroundColor: "rgba(255,255,255,0.9)",
             borderRadius: 10,
             padding: 2,
+            minWidth: 230,
           }}
         >
           {ewasteData.map((item: EwasteItem) => {

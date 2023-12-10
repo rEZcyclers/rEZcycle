@@ -71,12 +71,19 @@ function QueryForm({
       >
         <Box flex={1}>
           <h2 style={{ margin: 0, textAlign: "center" }}>Recyclables</h2>
-          <Recyclables
-            selectedRecyclables={selectedRecyclables}
-            setSelectedRecyclables={setSelectedRecyclables}
-            numSelectedItems={numSelectedItems}
-            setNumSelectedItems={setNumSelectedItems}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Recyclables
+              selectedRecyclables={selectedRecyclables}
+              setSelectedRecyclables={setSelectedRecyclables}
+              numSelectedItems={numSelectedItems}
+              setNumSelectedItems={setNumSelectedItems}
+            />
+          </Box>
           {/* <img src={recyclablesPoster} style={{ height: 150 }} /> */}
         </Box>
         <Box flex={1}>

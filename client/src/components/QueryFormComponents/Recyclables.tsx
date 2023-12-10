@@ -73,9 +73,10 @@ export default function Recyclables({
     <Box
       sx={{
         backgroundColor: "rgba(255,255,255,0.9)",
-        borderRadius: 5,
-        padding: 2,
+        borderRadius: 8,
+        padding: "19px 30px 9px 30px",
         maxWidth: 380,
+        flexGrow: 1,
       }}
     >
       {materialArrays.map(
@@ -112,7 +113,7 @@ export default function Recyclables({
                 </TextField>
               )}
               sx={{
-                minWidth: 240,
+                minWidth: 230,
                 maxWidth: 350,
                 marginBottom: 1,
               }}
