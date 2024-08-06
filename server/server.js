@@ -1,4 +1,5 @@
 import express from "express";
+import * as dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 import multer from "multer";
@@ -20,11 +21,10 @@ const storage = multer.memoryStorage({
 const upload = multer({ storage });
 // Impt for req.body image files to be read properly so it won't be {}
 
+dotenv.config();
 const PORT = process.env.PORT || 8000;
-
-const SUPABASE_URL = "https://rtgficcuqderxusnmkkh.supabase.co";
-const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ0Z2ZpY2N1cWRlcnh1c25ta2toIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODUwNzI0NjcsImV4cCI6MjAwMDY0ODQ2N30.2L7pCi3tu8PRoDRFeCFvS6KPEIqxLi9OqVcVVv-ZtFk";
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Root
