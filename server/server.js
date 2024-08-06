@@ -25,8 +25,6 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
-console.log(SUPABASE_URL);
-console.log(SUPABASE_KEY);
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Root
