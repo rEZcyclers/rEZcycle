@@ -3,10 +3,12 @@ import * as dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 import multer from "multer";
+import serverless from "serverless-http";
 
 const app = express();
 app.use(express.json()); // Impt for req.body JSON files to be read properly so it won't be undefined
 app.use(cors());
+export const handler = serverless(app);
 
 // Multer configuration with memory storage
 const storage = multer.memoryStorage({
