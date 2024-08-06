@@ -6,7 +6,12 @@ import multer from "multer";
 
 const app = express();
 app.use(express.json()); // Impt for req.body JSON files to be read properly so it won't be undefined
-app.use(cors());
+dotenv.config();
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // Multer configuration with memory storage
 const storage = multer.memoryStorage({
@@ -18,10 +23,9 @@ const storage = multer.memoryStorage({
   },
 });
 
-const upload = multer({ storage });
 // Impt for req.body image files to be read properly so it won't be {}
+const upload = multer({ storage });
 
-dotenv.config();
 const PORT = process.env.PORT || 8000;
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
