@@ -73,8 +73,7 @@ const recyclableColor = "#00FF00";
 const donatableColor = "#FC2BA1";
 const ewasteColor = "#FFC300";
 
-const MAPBOX_TOKEN =
-  "pk.eyJ1IjoiaWFuNDQ0NCIsImEiOiJjbGhpeTVrMjcwY253M2RwNThlY2wzMWJ6In0.f3cyuNBJ5dmOBt-JTI6iCw";
+const MAPBOX_TOKEN = process.env.MAPBOX_TOKEN;
 
 /**
  * Calculates the distance between two locations using the Haversine formula. Credits to
