@@ -29,7 +29,7 @@ import { createTheme } from "@mui/material";
 
 // backendContext object allows for sharing of state globally as seen later on
 export const backendContext = createContext<any>(null);
-const serverAPI = process.env.VITE_API_URL;
+const serverAPI = import.meta.env.VITE_API_URL;
 
 function App() {
   // SideBar state

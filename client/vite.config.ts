@@ -4,10 +4,12 @@ import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
+  const env = loadEnv(mode, process.cwd(), "VITE_");
   return {
     define: {
-      "process.env": env,
+      // For legacy code requiring process.env, avoid exposing non-VITE vars.
+      "process.env": {},
+      "import.meta.env": env,
     },
     plugins: [react()],
     test: {
