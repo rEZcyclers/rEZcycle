@@ -25,14 +25,14 @@ export default function Recyclables({
   const materials = ["PAPER", "PLASTIC", "GLASS", "METAL"];
   const materialArrays = materials.map((material) => {
     return recyclablesData.filter(
-      (item: RecyclableItem) => item["material"] === material
+      (item: RecyclableItem) => item["material"] === material,
     );
   });
 
   const handleChange = (
     reason: string,
     details: AutocompleteChangeDetails<RecyclableItem> | undefined,
-    materialIndex: number
+    materialIndex: number,
   ) => {
     if ((reason === "selectOption" || reason === "removeOption") && details) {
       const target: RecyclableItem = details["option"];
@@ -46,7 +46,7 @@ export default function Recyclables({
 
   const toggleRecyclableSelection = (index: number) => {
     setNumSelectedItems(
-      selectedRecyclables[index] ? numSelectedItems - 1 : numSelectedItems + 1
+      selectedRecyclables[index] ? numSelectedItems - 1 : numSelectedItems + 1,
     );
     setSelectedRecyclables([
       ...selectedRecyclables.slice(0, index),
@@ -86,7 +86,7 @@ export default function Recyclables({
               key={materialIndex}
               multiple
               value={materialArray.filter(
-                (item) => selectedRecyclables[item["recyclable_id"] - 1]
+                (item) => selectedRecyclables[item["recyclable_id"] - 1],
               )}
               id={`tags-standard${materialIndex}`}
               options={materialArray}
@@ -129,7 +129,7 @@ export default function Recyclables({
               }}
             />
           );
-        }
+        },
       )}
     </Box>
   );
