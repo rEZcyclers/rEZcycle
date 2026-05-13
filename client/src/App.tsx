@@ -39,7 +39,7 @@ function App() {
   const [userSession, setUserSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userSavedResults, setUserSavedResults] = useState<UserSavedResult[]>(
-    []
+    [],
   );
 
   // Item Data

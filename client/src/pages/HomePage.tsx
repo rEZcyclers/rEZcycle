@@ -2,7 +2,6 @@ import { useState } from "react";
 import Base from "../components/Base";
 import QueryForm from "../components/QueryForm";
 import ChecklistForm from "../components/ChecklistForm";
-// import ResultsPage from "../components/ResultsPage";
 import ResultsPage from "../components/ResultsPage";
 
 type Condition = "Good" | "Repairable" | "Spoilt" | "";
@@ -12,24 +11,24 @@ function HomePage() {
 
   // (1) selected items
   const [selectedRecyclables, setSelectedRecyclables] = useState<boolean[]>(
-    new Array<boolean>(62)
+    new Array<boolean>(62),
   );
   const [selectedDonatables, setSelectedDonatables] = useState<boolean[]>(
-    new Array<boolean>(9)
+    new Array<boolean>(9),
   );
   const [selectedEwaste, setSelectedEwaste] = useState<boolean[]>(
-    new Array<boolean>(6)
+    new Array<boolean>(6),
   );
 
   // (2) selected item conditions
   const [recyclableConditions, setRecyclableConditions] = useState(
-    selectedRecyclables.map(() => false)
+    selectedRecyclables.map(() => false),
   );
   const [donatableConditions, setDonatableConditions] = useState<Condition[]>(
-    selectedDonatables.map(() => "")
+    selectedDonatables.map(() => ""),
   );
   const [ewasteConditions, setEwasteConditions] = useState<Condition[]>(
-    selectedEwaste.map(() => "")
+    selectedEwaste.map(() => ""),
   );
 
   // (3) which stage we're at
